@@ -1,0 +1,17 @@
+{
+  "name": "@slipjot/slip-reader",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Reads Thai bank transfer slips (Gemini vision, or local Thai OCR without a key) and returns validated JSON with per-field confidence.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./image": "./src/image.ts"
+  },
+  "dependencies": {
+    "jsqr": "^1.4.0",
+    "sharp": "^0.35.5",
+    "tesseract.js": "^7.0.0",
+    "zod": "^4.6.7"
+  }
+}

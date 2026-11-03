@@ -1,0 +1,1128 @@
+{
+  "provider": "ocr",
+  "set": "synthetic",
+  "ranAt": "2026-11-03T22:09:22.852Z",
+  "slips": 60,
+  "avgMs": 737,
+  "costUsdPerSlip": 0,
+  "summary": {
+    "KBANK": {
+      "n": 12,
+      "amount": 1,
+      "dateTime": 0.9166666666666666,
+      "receiverName": 0.75,
+      "receiverNameClose": 1,
+      "receiverBank": 1,
+      "receiverLast4": 1,
+      "senderName": 0.9166666666666666,
+      "senderLast4": 1,
+      "reference": 1,
+      "memo": 1,
+      "keyFields": 0.9166666666666666,
+      "needsReview": 0.8333333333333334,
+      "silentErrors": 0
+    },
+    "SCB": {
+      "n": 12,
+      "amount": 1,
+      "dateTime": 0.9166666666666666,
+      "receiverName": 0.6666666666666666,
+      "receiverNameClose": 1,
+      "receiverBank": 1,
+      "receiverLast4": 1,
+      "senderName": 0.8333333333333334,
+      "senderLast4": 1,
+      "reference": 1,
+      "memo": 1,
+      "keyFields": 0.9166666666666666,
+      "needsReview": 0.4166666666666667,
+      "silentErrors": 0
+    },
+    "BBL": {
+      "n": 12,
+      "amount": 1,
+      "dateTime": 1,
+      "receiverName": 1,
+      "receiverNameClose": 1,
+      "receiverBank": 1,
+      "receiverLast4": 1,
+      "senderName": 1,
+      "senderLast4": 1,
+      "reference": 1,
+      "memo": 1,
+      "keyFields": 1,
+      "needsReview": 0,
+      "silentErrors": 0
+    },
+    "KTB": {
+      "n": 12,
+      "amount": 1,
+      "dateTime": 0.9166666666666666,
+      "receiverName": 0.6666666666666666,
+      "receiverNameClose": 1,
+      "receiverBank": 1,
+      "receiverLast4": 1,
+      "senderName": 0.75,
+      "senderLast4": 1,
+      "reference": 1,
+      "memo": 1,
+      "keyFields": 0.9166666666666666,
+      "needsReview": 0.08333333333333333,
+      "silentErrors": 0
+    },
+    "BAY": {
+      "n": 12,
+      "amount": 1,
+      "dateTime": 1,
+      "receiverName": 0.5833333333333334,
+      "receiverNameClose": 1,
+      "receiverBank": 1,
+      "receiverLast4": 1,
+      "senderName": 0.8333333333333334,
+      "senderLast4": 1,
+      "reference": 1,
+      "memo": 1,
+      "keyFields": 1,
+      "needsReview": 0.08333333333333333,
+      "silentErrors": 0
+    },
+    "ALL": {
+      "n": 60,
+      "amount": 1,
+      "dateTime": 0.95,
+      "receiverName": 0.7333333333333333,
+      "receiverNameClose": 1,
+      "receiverBank": 1,
+      "receiverLast4": 1,
+      "senderName": 0.8666666666666667,
+      "senderLast4": 1,
+      "reference": 1,
+      "memo": 1,
+      "keyFields": 0.95,
+      "needsReview": 0.2833333333333333,
+      "silentErrors": 0
+    }
+  },
+  "perSlip": [
+    {
+      "file": "kbank-01.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": false,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "kbank-02.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": false,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": true
+    },
+    {
+      "file": "kbank-03.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": false,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": true
+    },
+    {
+      "file": "kbank-04.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": true
+    },
+    {
+      "file": "kbank-05.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "kbank-06.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": false,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": true
+    },
+    {
+      "file": "kbank-07.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": false,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": false
+      },
+      "needsReview": true
+    },
+    {
+      "file": "kbank-08.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": true
+    },
+    {
+      "file": "kbank-09.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": true
+    },
+    {
+      "file": "kbank-10.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": true
+    },
+    {
+      "file": "kbank-11.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": true
+    },
+    {
+      "file": "kbank-12.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": true
+    },
+    {
+      "file": "scb-01.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": true
+    },
+    {
+      "file": "scb-02.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": false,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": true
+    },
+    {
+      "file": "scb-03.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "scb-04.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": false,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "scb-05.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "scb-06.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": false,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": true
+    },
+    {
+      "file": "scb-07.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": false,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": false
+      },
+      "needsReview": true
+    },
+    {
+      "file": "scb-08.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": false,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "scb-09.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "scb-10.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": false,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": true
+    },
+    {
+      "file": "scb-11.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "scb-12.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": false,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "bbl-01.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "bbl-02.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "bbl-03.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "bbl-04.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "bbl-05.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "bbl-06.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "bbl-07.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "bbl-08.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "bbl-09.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "bbl-10.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "bbl-11.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "bbl-12.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "ktb-01.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "ktb-02.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": false,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "ktb-03.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": false,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": false,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "ktb-04.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "ktb-05.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "ktb-06.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "ktb-07.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "ktb-08.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": false,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "ktb-09.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "ktb-10.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": false,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": false,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": false
+      },
+      "needsReview": true
+    },
+    {
+      "file": "ktb-11.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": false,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "ktb-12.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": false,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "bay-01.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "bay-02.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": true
+    },
+    {
+      "file": "bay-03.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": false,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "bay-04.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": false,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "bay-05.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": false,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "bay-06.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "bay-07.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "bay-08.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": false,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": false,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "bay-09.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "bay-10.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": false,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "bay-11.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": false,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "bay-12.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    }
+  ]
+}
