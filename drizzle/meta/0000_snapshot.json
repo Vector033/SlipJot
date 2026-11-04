@@ -1,12 +1,12 @@
 {
-  "id": "a6a6065e-3518-4a2f-b6c8-b3d849d9ff34",
+  "id": "7c17a482-177e-4f8c-b9d6-f4f9092c31bf",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.ai_usage": {
+    "slipjot.ai_usage": {
       "name": "ai_usage",
-      "schema": "",
+      "schema": "slipjot",
       "columns": {
         "id": {
           "name": "id",
@@ -107,9 +107,9 @@
       "checkConstraints": {},
       "isRLSEnabled": true
     },
-    "public.categories": {
+    "slipjot.categories": {
       "name": "categories",
-      "schema": "",
+      "schema": "slipjot",
       "columns": {
         "id": {
           "name": "id",
@@ -238,9 +238,9 @@
       "checkConstraints": {},
       "isRLSEnabled": true
     },
-    "public.expenses": {
+    "slipjot.expenses": {
       "name": "expenses",
-      "schema": "",
+      "schema": "slipjot",
       "columns": {
         "id": {
           "name": "id",
@@ -508,6 +508,7 @@
           "name": "expenses_category_id_categories_id_fk",
           "tableFrom": "expenses",
           "tableTo": "categories",
+          "schemaTo": "slipjot",
           "columnsFrom": [
             "category_id"
           ],
@@ -524,9 +525,9 @@
       "checkConstraints": {},
       "isRLSEnabled": true
     },
-    "public.payee_rules": {
+    "slipjot.payee_rules": {
       "name": "payee_rules",
-      "schema": "",
+      "schema": "slipjot",
       "columns": {
         "id": {
           "name": "id",
@@ -623,6 +624,7 @@
           "name": "payee_rules_category_id_categories_id_fk",
           "tableFrom": "payee_rules",
           "tableTo": "categories",
+          "schemaTo": "slipjot",
           "columnsFrom": [
             "category_id"
           ],
@@ -639,9 +641,9 @@
       "checkConstraints": {},
       "isRLSEnabled": true
     },
-    "public.settings": {
+    "slipjot.settings": {
       "name": "settings",
-      "schema": "",
+      "schema": "slipjot",
       "columns": {
         "user_id": {
           "name": "user_id",
@@ -694,9 +696,9 @@
       "checkConstraints": {},
       "isRLSEnabled": true
     },
-    "public.slip_images": {
+    "slipjot.slip_images": {
       "name": "slip_images",
-      "schema": "",
+      "schema": "slipjot",
       "columns": {
         "expense_id": {
           "name": "expense_id",
@@ -759,6 +761,7 @@
           "name": "slip_images_expense_id_expenses_id_fk",
           "tableFrom": "slip_images",
           "tableTo": "expenses",
+          "schemaTo": "slipjot",
           "columnsFrom": [
             "expense_id"
           ],
@@ -791,7 +794,9 @@
     }
   },
   "enums": {},
-  "schemas": {},
+  "schemas": {
+    "slipjot": "slipjot"
+  },
   "sequences": {},
   "roles": {},
   "policies": {},

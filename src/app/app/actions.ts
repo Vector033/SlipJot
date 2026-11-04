@@ -3,8 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { createClient as createAdminClient } from "@supabase/supabase-js";
 import * as data from "@/lib/data";
+import { createAdminClient, isDemoUser } from "@/lib/supabase/admin";
 import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { fromLocalInput } from "@/lib/core/format";
@@ -103,12 +103,21 @@ export async function deleteCategoryAction(fd: FormData) {
 }
 
 export async function setKeepImagesAction(fd: FormData) {
+  await blockDemo();
   await data.setKeepImages(form(fd).keep === "on");
   revalidateAll();
 }
 
+/** The shared demo account stays intact for the next visitor. */
+async function blockDemo() {
+  const user = await requireUser();
+  if (isDemoUser(user.email)) redirect("/app/settings?demo=1");
+  return user;
+}
+
 export async function deleteAllDataAction(fd: FormData) {
   if (form(fd).confirm !== "ลบ") return;
+  await blockDemo();
   await data.deleteAllData();
   revalidateAll();
   redirect("/app?wiped=1");
@@ -121,13 +130,10 @@ export async function signOutAction() {
 }
 
 export async function deleteAccountAction(fd: FormData) {
-  const user = await requireUser();
   if (form(fd).confirm !== "ลบบัญชี") return;
-  const admin = createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SECRET_KEY!, {
-    auth: { persistSession: false },
-  });
+  const user = await blockDemo();
   // Deleting the auth user cascades to every SlipJot table.
-  const { error } = await admin.auth.admin.deleteUser(user.id);
+  const { error } = await createAdminClient().auth.admin.deleteUser(user.id);
   if (error) throw new Error(error.message);
   const supabase = await createClient();
   await supabase.auth.signOut();

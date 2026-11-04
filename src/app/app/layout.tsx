@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { requireUser } from "@/lib/auth";
 import { ensureSetup, reviewCount } from "@/lib/data";
+import { isDemoUser } from "@/lib/supabase/admin";
 import { DesktopNav, MobileNav } from "./nav";
 
 export default async function AppLayout({ children }: LayoutProps<"/app">) {
@@ -20,6 +21,9 @@ export default async function AppLayout({ children }: LayoutProps<"/app">) {
           </div>
         </div>
       </header>
+      {isDemoUser(user.email) && (
+        <p className="bg-marker/70 px-4 py-1.5 text-center text-xs">บัญชีเดโม: ข้อมูลทั้งหมดเป็นข้อมูลสมมติ และคนอื่นก็เห็นสิ่งที่คุณเพิ่ม</p>
+      )}
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 pt-5 pb-28 sm:px-6 sm:pb-12">{children}</main>
       <MobileNav reviewCount={pending} />
     </div>

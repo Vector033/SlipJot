@@ -2,12 +2,14 @@
 
 **ถ่ายสลิป แล้วระบบบันทึกรายจ่ายและจัดหมวดให้.** Send the transfer slips you already have, and SlipJot turns them into a categorised expense log.
 
+**Live:** https://slipjot.vercel.app (press **ลองดูด้วยบัญชีเดโม** on the login page to open a shared demo account with fictional data)
+
 Thais pay almost everything by mobile banking and PromptPay, so the slips end up piling up in the photo album and nobody
 tracks where the money went. Expense apps that need every payment typed in get abandoned within a week. SlipJot reads the
 slip images (Gemini vision, or local Thai OCR with no API key), learns which payee belongs in which category, and shows
 the month at a glance on a phone.
 
-> Status: MVP working locally (all six brief items), Gemini measured. Not deployed yet. Accuracy numbers below come from **fictional
+> Status: MVP deployed (all six brief items), Gemini measured. Accuracy numbers below come from **fictional
 > synthetic slips**, not real ones. See [Evaluation](#evaluation).
 
 | Dashboard | Review queue | Expenses |
@@ -137,6 +139,33 @@ npm run eval:categorize
 npm run lint && npm run typecheck
 ```
 
+## Deploy
+
+Vercel (region `sin1`) + hosted Supabase (Singapore). The Supabase free plan allows two active projects, so SlipJot
+shares HarnKan's project. Its tables live in their own `slipjot` Postgres schema, with the migration log kept there too.
+The two apps share only `auth.users`; HarnKan's tables and auth settings are untouched. Sign-up creates confirmed users
+through the admin API, so SlipJot needs no confirmation emails and no redirect URLs on the shared project. The trade-off is
+that email addresses are not verified (SlipJot never emails anyone).
+
+```bash
+# production values live in .env.vercel-production (gitignored; a name Next.js never loads by itself)
+DATABASE_URL=<session pooler :5432 URL> npx drizzle-kit migrate            # schema "slipjot" only
+SEED_ALLOW_REMOTE=1 node --env-file=.env.vercel-production scripts/seed-demo.mts
+npx vercel env add <NAME> production                                        # Supabase URL/keys, DATABASE_URL, DB_POOL_MAX, GEMINI_*, DEMO_*
+npx vercel deploy --prod
+E2E_BASE_URL=https://slipjot.vercel.app npx playwright test live            # demo login → dashboard → read one slip → delete it
+```
+
+Two things learned on the way:
+- **Use Supabase's session pooler (:5432), not the transaction pooler (:6543).** Pages run several queries at once.
+  When they outnumber the pool's connections, postgres.js pipelines them, and pipelined queries hang on the transaction
+  pooler until the statement times out. `src/db/index.ts` uses a small pool with a short idle timeout instead.
+- **tesseract.js needs `outputFileTracingIncludes`** (see `next.config.ts`), because its worker starts from a file path
+  that Vercel's tracer cannot follow.
+
+The demo account cannot wipe its data, delete itself or change image retention. Anything a visitor adds stays visible
+to the next visitor, which the app says in a banner.
+
 ## Roadmap
 
 - [x] Slip reader package (Gemini + local OCR), synthetic eval set, per-bank scores
@@ -145,4 +174,4 @@ npm run lint && npm run typecheck
 - [x] Dashboard, budgets, CSV export, PWA share target, e2e tests, CI
 - [x] Measure Gemini accuracy and cost per slip (synthetic set), retries + OCR fallback
 - [ ] Use it daily for 2–4 weeks; evaluate on a private set of real slips kept outside the repo
-- [ ] Deploy (Vercel + hosted Supabase), then add the live link here
+- [x] Deploy (Vercel `sin1` + hosted Supabase in Singapore), demo account, live smoke test

@@ -49,7 +49,7 @@ export async function setKeepImages(keep: boolean) {
       .set({ expiresAt: sql`now() + interval '7 days'` })
       .where(and(eq(slipImages.userId, id), sql`${slipImages.expiresAt} is null`));
     await db.execute(sql`
-      delete from slip_images si using expenses e
+      delete from slipjot.slip_images si using slipjot.expenses e
       where si.expense_id = e.id and si.user_id = ${id} and e.status = 'confirmed'`);
   }
 }

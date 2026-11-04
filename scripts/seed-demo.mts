@@ -1,35 +1,38 @@
-// Creates a demo account with ~3 months of FICTIONAL expenses on the LOCAL Supabase stack,
-// for screenshots and manual testing. Run: npm run seed:demo  (re-running resets the account)
-// Shops and people below are made up; never seed real financial data.
+// Creates a demo account with ~3 months of FICTIONAL expenses, for screenshots, manual testing
+// and the "try the demo" button. Run: npm run seed:demo  (re-running resets the account)
+// Production: SEED_ALLOW_REMOTE=1 node --env-file=.env.vercel-production scripts/seed-demo.mts
+// (uses DEMO_EMAIL / DEMO_PASSWORD from that gitignored file). Shops and people below are made up.
 
 import { createClient } from "@supabase/supabase-js";
 import postgres from "postgres";
 import { DEFAULT_CATEGORIES } from "../src/lib/core/categories.ts";
 import { rng } from "./synthetic-slips.mts";
 
-export const DEMO_EMAIL = "demo@slipjot.test";
-export const DEMO_PASSWORD = "slipjot-demo-2026";
+export const DEMO_EMAIL = process.env.DEMO_EMAIL || "demo@slipjot.test";
+export const DEMO_PASSWORD = process.env.DEMO_PASSWORD || "slipjot-demo-2026";
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-if (!/127\.0\.0\.1|localhost/.test(url)) throw new Error("seed-demo only runs against local Supabase");
+if (!/127\.0\.0\.1|localhost/.test(url) && process.env.SEED_ALLOW_REMOTE !== "1") {
+  throw new Error("seed-demo runs against local Supabase unless SEED_ALLOW_REMOTE=1");
+}
 
 const admin = createClient(url, process.env.SUPABASE_SECRET_KEY!, { auth: { persistSession: false } });
-const sql = postgres(process.env.DATABASE_URL!, { prepare: false });
+const sql = postgres(process.env.MIGRATE_DATABASE_URL || process.env.DATABASE_URL!, { prepare: false });
 
-// Delete and recreate the demo user (cascades to all of its rows).
-const { data: list } = await admin.auth.admin.listUsers();
-const old = list.users.find((u) => u.email === DEMO_EMAIL);
+// Delete and recreate the demo user (cascades to all of its rows). Looked up by email in SQL:
+// the hosted project is shared with HarnKan, whose many anonymous users would page past it.
+const [old] = await sql`select id from auth.users where lower(email) = lower(${DEMO_EMAIL})`;
 if (old) await admin.auth.admin.deleteUser(old.id);
 const { data: created, error } = await admin.auth.admin.createUser({ email: DEMO_EMAIL, password: DEMO_PASSWORD, email_confirm: true });
 if (error) throw error;
 const userId = created.user.id;
 
-await sql`insert into settings (user_id) values (${userId})`;
+await sql`insert into slipjot.settings (user_id) values (${userId})`;
 const budgets: Record<string, number> = { food: 4500, transport: 1200, shopping: 1500, entertainment: 400 };
 const catIds: Record<string, string> = {};
 for (const [i, c] of DEFAULT_CATEGORIES.entries()) {
   const [row] = await sql`
-    insert into categories (user_id, slug, name, icon, color, sort, monthly_budget)
+    insert into slipjot.categories (user_id, slug, name, icon, color, sort, monthly_budget)
     values (${userId}, ${c.slug}, ${c.name}, ${c.icon}, ${c.color}, ${i}, ${budgets[c.slug] ?? null})
     returning id`;
   catIds[c.slug] = row.id;
@@ -91,18 +94,18 @@ function expense(name: string, slug: string, amount: number, at: Date, bank: str
   };
 }
 
-await sql`insert into expenses ${sql(rows)}`;
+await sql`insert into slipjot.expenses ${sql(rows)}`;
 // Two unsure reads waiting in the review queue.
-await sql`insert into expenses ${sql([
+await sql`insert into slipjot.expenses ${sql([
   { ...expense("ร้านข้าวมันไก่ป่าแดง", "food", 55, new Date(Date.UTC(2026, 10, 4, 4, 12)), "KBANK", "keyword"), status: "review", confidence: 0.62, issues: JSON.stringify(["ไม่แน่ใจ: ชื่อผู้รับ"]) },
   { ...expense("", "other", 0, new Date(Date.UTC(2026, 10, 3, 11, 40)), "SCB", "none"), category_id: null, category_source: "none", auto_category_source: "none", status: "review", confidence: 0, issues: JSON.stringify(["อ่านยอดเงินไม่ได้", "อ่านชื่อผู้รับไม่ได้"]) },
 ])}`;
 
 // Learned rules, as if the user had corrected these payees once.
 for (const p of payees.filter((p) => p.source !== "keyword")) {
-  await sql`insert into payee_rules (user_id, payee_key, category_id, source, hits)
+  await sql`insert into slipjot.payee_rules (user_id, payee_key, category_id, source, hits)
             values (${userId}, ${expense(p.name, p.slug, 0, new Date(), p.bank, "rule").payee_key}, ${catIds[p.slug]}, ${p.source === "llm" ? "llm" : "user"}, 5)`;
 }
 
-console.log(`demo account ${DEMO_EMAIL} / ${DEMO_PASSWORD}: ${rows.length + 2} expenses`);
+console.log(`demo account ${DEMO_EMAIL}: ${rows.length + 2} expenses`);
 await sql.end();

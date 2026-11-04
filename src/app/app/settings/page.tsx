@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getOptionalUser } from "@/lib/auth";
 import { getCategories, getInsights, getSettings } from "@/lib/data";
 import { llmEnabled } from "@/lib/llm/categorize-llm";
+import { isDemoUser } from "@/lib/supabase/admin";
 import {
   deleteAccountAction,
   deleteAllDataAction,
@@ -24,6 +25,11 @@ export default async function SettingsPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <h1 className="text-2xl font-bold">ตั้งค่า</h1>
+      {isDemoUser(user?.email) && (
+        <p role="status" className="rounded-xl bg-marker/60 px-4 py-3 text-sm">
+          นี่คือบัญชีเดโมที่ทุกคนใช้ร่วมกัน: ลองแก้หมวด ตั้งงบ หรือส่งสลิปได้ แต่ลบข้อมูล ลบบัญชี และเปลี่ยนการเก็บรูปไม่ได้
+        </p>
+      )}
 
       <section id="categories" className="card p-5">
         <h2 className="font-semibold">หมวดและงบรายเดือน</h2>

@@ -14,6 +14,9 @@ async function upload(page: Page, ...ids: string[]) {
   await expect(page.getByText(/รอคิว|กำลังอ่านสลิป/)).toHaveCount(0, { timeout: 90_000 });
 }
 
+// Creates throwaway accounts, so it only runs against a local stack, never a deployed site.
+test.skip(!!process.env.E2E_BASE_URL && !/127.0.0.1|localhost/.test(process.env.E2E_BASE_URL), "local only");
+
 test.describe.configure({ mode: "serial" });
 
 test("sign up lands on an empty dashboard", async ({ page }) => {
@@ -92,3 +95,18 @@ async function monthOfLabel(id: string) {
   const labels = JSON.parse(await readFile("eval/fixtures/synthetic/labels.json", "utf8")) as { id: string; dateTime: string }[];
   return labels.find((l) => l.id === id)!.dateTime.slice(0, 7);
 }
+
+test("demo account opens without a password and cannot be wiped", async ({ page }) => {
+  await page.goto("/login");
+  const demo = page.getByRole("button", { name: /บัญชีเดโม/ });
+  test.skip(!(await demo.isVisible()), "DEMO_EMAIL not configured");
+  await demo.click();
+  await expect(page).toHaveURL(/\/app$/);
+  await expect(page.getByText("บัญชีเดโม: ข้อมูลทั้งหมดเป็นข้อมูลสมมติ")).toBeVisible();
+  await page.goto("/app/settings");
+  await page.getByLabel("ยืนยันการลบข้อมูล").fill("ลบ");
+  await page.getByRole("button", { name: "ลบข้อมูลทั้งหมด" }).click();
+  await expect(page).toHaveURL(/demo=1/);
+  await page.goto("/app?month=2026-10");
+  await expect(page.getByTestId("month-total")).not.toHaveText("฿0");
+});

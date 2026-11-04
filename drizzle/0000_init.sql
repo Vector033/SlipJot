@@ -1,4 +1,6 @@
-CREATE TABLE "ai_usage" (
+CREATE SCHEMA IF NOT EXISTS "slipjot";
+--> statement-breakpoint
+CREATE TABLE "slipjot"."ai_usage" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" uuid NOT NULL,
 	"kind" text NOT NULL,
@@ -9,8 +11,8 @@ CREATE TABLE "ai_usage" (
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-ALTER TABLE "ai_usage" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
-CREATE TABLE "categories" (
+ALTER TABLE "slipjot"."ai_usage" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+CREATE TABLE "slipjot"."categories" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" uuid NOT NULL,
 	"slug" text,
@@ -23,8 +25,8 @@ CREATE TABLE "categories" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-ALTER TABLE "categories" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
-CREATE TABLE "expenses" (
+ALTER TABLE "slipjot"."categories" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+CREATE TABLE "slipjot"."expenses" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" uuid NOT NULL,
 	"amount" numeric(12, 2) NOT NULL,
@@ -52,8 +54,8 @@ CREATE TABLE "expenses" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-ALTER TABLE "expenses" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
-CREATE TABLE "payee_rules" (
+ALTER TABLE "slipjot"."expenses" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+CREATE TABLE "slipjot"."payee_rules" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" uuid NOT NULL,
 	"payee_key" text NOT NULL,
@@ -64,16 +66,16 @@ CREATE TABLE "payee_rules" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-ALTER TABLE "payee_rules" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
-CREATE TABLE "settings" (
+ALTER TABLE "slipjot"."payee_rules" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+CREATE TABLE "slipjot"."settings" (
 	"user_id" uuid PRIMARY KEY NOT NULL,
 	"keep_images" boolean DEFAULT false NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-ALTER TABLE "settings" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
-CREATE TABLE "slip_images" (
+ALTER TABLE "slipjot"."settings" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+CREATE TABLE "slipjot"."slip_images" (
 	"expense_id" uuid PRIMARY KEY NOT NULL,
 	"user_id" uuid NOT NULL,
 	"mime_type" text NOT NULL,
@@ -82,22 +84,22 @@ CREATE TABLE "slip_images" (
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-ALTER TABLE "slip_images" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
-ALTER TABLE "ai_usage" ADD CONSTRAINT "ai_usage_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "categories" ADD CONSTRAINT "categories_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "expenses" ADD CONSTRAINT "expenses_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "expenses" ADD CONSTRAINT "expenses_category_id_categories_id_fk" FOREIGN KEY ("category_id") REFERENCES "public"."categories"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "payee_rules" ADD CONSTRAINT "payee_rules_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "payee_rules" ADD CONSTRAINT "payee_rules_category_id_categories_id_fk" FOREIGN KEY ("category_id") REFERENCES "public"."categories"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "settings" ADD CONSTRAINT "settings_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "slip_images" ADD CONSTRAINT "slip_images_expense_id_expenses_id_fk" FOREIGN KEY ("expense_id") REFERENCES "public"."expenses"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "slip_images" ADD CONSTRAINT "slip_images_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-CREATE INDEX "ai_usage_user_idx" ON "ai_usage" USING btree ("user_id","created_at");--> statement-breakpoint
-CREATE UNIQUE INDEX "categories_user_name_idx" ON "categories" USING btree ("user_id","name");--> statement-breakpoint
-CREATE INDEX "categories_user_idx" ON "categories" USING btree ("user_id");--> statement-breakpoint
-CREATE INDEX "expenses_user_time_idx" ON "expenses" USING btree ("user_id","occurred_at");--> statement-breakpoint
-CREATE INDEX "expenses_user_sha_idx" ON "expenses" USING btree ("user_id","image_sha256");--> statement-breakpoint
-CREATE INDEX "expenses_user_ref_idx" ON "expenses" USING btree ("user_id","reference");--> statement-breakpoint
-CREATE INDEX "expenses_user_amount_idx" ON "expenses" USING btree ("user_id","amount");--> statement-breakpoint
-CREATE UNIQUE INDEX "payee_rules_user_key_idx" ON "payee_rules" USING btree ("user_id","payee_key");--> statement-breakpoint
-CREATE INDEX "slip_images_expiry_idx" ON "slip_images" USING btree ("expires_at");
+ALTER TABLE "slipjot"."slip_images" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+ALTER TABLE "slipjot"."ai_usage" ADD CONSTRAINT "ai_usage_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "slipjot"."categories" ADD CONSTRAINT "categories_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "slipjot"."expenses" ADD CONSTRAINT "expenses_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "slipjot"."expenses" ADD CONSTRAINT "expenses_category_id_categories_id_fk" FOREIGN KEY ("category_id") REFERENCES "slipjot"."categories"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "slipjot"."payee_rules" ADD CONSTRAINT "payee_rules_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "slipjot"."payee_rules" ADD CONSTRAINT "payee_rules_category_id_categories_id_fk" FOREIGN KEY ("category_id") REFERENCES "slipjot"."categories"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "slipjot"."settings" ADD CONSTRAINT "settings_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "slipjot"."slip_images" ADD CONSTRAINT "slip_images_expense_id_expenses_id_fk" FOREIGN KEY ("expense_id") REFERENCES "slipjot"."expenses"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "slipjot"."slip_images" ADD CONSTRAINT "slip_images_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+CREATE INDEX "ai_usage_user_idx" ON "slipjot"."ai_usage" USING btree ("user_id","created_at");--> statement-breakpoint
+CREATE UNIQUE INDEX "categories_user_name_idx" ON "slipjot"."categories" USING btree ("user_id","name");--> statement-breakpoint
+CREATE INDEX "categories_user_idx" ON "slipjot"."categories" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX "expenses_user_time_idx" ON "slipjot"."expenses" USING btree ("user_id","occurred_at");--> statement-breakpoint
+CREATE INDEX "expenses_user_sha_idx" ON "slipjot"."expenses" USING btree ("user_id","image_sha256");--> statement-breakpoint
+CREATE INDEX "expenses_user_ref_idx" ON "slipjot"."expenses" USING btree ("user_id","reference");--> statement-breakpoint
+CREATE INDEX "expenses_user_amount_idx" ON "slipjot"."expenses" USING btree ("user_id","amount");--> statement-breakpoint
+CREATE UNIQUE INDEX "payee_rules_user_key_idx" ON "slipjot"."payee_rules" USING btree ("user_id","payee_key");--> statement-breakpoint
+CREATE INDEX "slip_images_expiry_idx" ON "slipjot"."slip_images" USING btree ("expires_at");

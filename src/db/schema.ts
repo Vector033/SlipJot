@@ -6,7 +6,7 @@ import {
   integer,
   jsonb,
   numeric,
-  pgTable,
+  pgSchema,
   real,
   text,
   timestamp,
@@ -14,6 +14,10 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 import { authUsers } from "drizzle-orm/supabase";
+
+// SlipJot's tables live in their own Postgres schema, so the app can share a hosted
+// Supabase project (and its auth.users) with HarnKan without touching HarnKan's tables.
+export const slipjot = pgSchema("slipjot");
 
 // Every table hangs off auth.users with ON DELETE CASCADE, so deleting the account
 // deletes all of the user's data. RLS is on with no policies: the app reads through the
@@ -38,14 +42,14 @@ const money = (name: string) => numeric(name, { precision: 12, scale: 2, mode: "
 
 const bytea = customType<{ data: Buffer; driverData: Buffer }>({ dataType: () => "bytea" });
 
-export const settings = pgTable("settings", {
+export const settings = slipjot.table("settings", {
   userId: owner().primaryKey(),
   /** Off by default (PDPA): slip images are deleted as soon as the expense is confirmed. */
   keepImages: boolean("keep_images").notNull().default(false),
   ...timestamps,
 }).enableRLS();
 
-export const categories = pgTable(
+export const categories = slipjot.table(
   "categories",
   {
     id: uuid("id").primaryKey().defaultRandom(),
@@ -66,7 +70,7 @@ export type CategorySource = "rule" | "keyword" | "llm" | "user" | "none";
 export type ExpenseStatus = "review" | "confirmed";
 export type ReadSource = "gemini" | "ocr" | "fake" | "manual";
 
-export const expenses = pgTable(
+export const expenses = slipjot.table(
   "expenses",
   {
     id: uuid("id").primaryKey().defaultRandom(),
@@ -106,7 +110,7 @@ export const expenses = pgTable(
 ).enableRLS();
 
 /** Slip images kept for review (expire after 7 days) or because the user opted in. */
-export const slipImages = pgTable(
+export const slipImages = slipjot.table(
   "slip_images",
   {
     expenseId: uuid("expense_id")
@@ -123,7 +127,7 @@ export const slipImages = pgTable(
 ).enableRLS();
 
 /** Learned "this payee goes in that category" rules, from user edits or a previous LLM answer. */
-export const payeeRules = pgTable(
+export const payeeRules = slipjot.table(
   "payee_rules",
   {
     id: uuid("id").primaryKey().defaultRandom(),
@@ -140,7 +144,7 @@ export const payeeRules = pgTable(
 ).enableRLS();
 
 /** One row per paid model call, for the cost-per-slip numbers. */
-export const aiUsage = pgTable(
+export const aiUsage = slipjot.table(
   "ai_usage",
   {
     id: uuid("id").primaryKey().defaultRandom(),

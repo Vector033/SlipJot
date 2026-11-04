@@ -1,6 +1,6 @@
 # SlipJot: ถ่ายสลิป แล้ว AI บันทึกรายจ่ายและจัดหมวดให้
 
-> สถานะ (2026-11-04): MVP ครบ 6 ข้อ รันในเครื่องได้ (milestone 1–4 เสร็จ, 5 ทำ eval สังเคราะห์แล้ว) · ยังไม่ deploy · วัด Gemini Flash-Lite แล้ว (สลิปสังเคราะห์ 100%, ≈$0.0012/สลิปเป็นเพดาน) · ยังไม่ได้ทดสอบกับสลิปจริง ดูรายละเอียดใน README หัวข้อ Roadmap
+> สถานะ (2026-11-04): MVP ครบ 6 ข้อ **deploy แล้ว** ที่ https://slipjot.vercel.app (มีปุ่มบัญชีเดโม) · ใช้ Supabase project เดียวกับ HarnKan (ref ddyjypurrrzasbtfwncs) แยก schema `slipjot` เพราะ free plan เต็ม 2 project · ค่า production อยู่ใน `.env.vercel-production` (gitignored) · วัด Gemini Flash-Lite แล้ว · ยังไม่ได้ทดสอบกับสลิปจริง
 > ส่วนอ่านสลิปอยู่ที่ `packages/slip-reader` และ HarnKan copy ไปใช้แล้วในชื่อ `@harnkan/slip-reader` · local Supabase ใช้ port 546xx · dev server ใช้ port 3015 · บัญชี demo: `npm run seed:demo`
 
 ## เจ้าของโปรเจกต์
