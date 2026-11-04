@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+/* Paper-and-ink palette: a notebook you jot slips into. One accent (teal) for actions,
+   marker yellow only to highlight what needs attention. */
+@theme inline {
+  --font-sans: var(--font-thai), var(--font-latin), system-ui, sans-serif;
+  --color-paper: #f6f4ee;
+  --color-card: #ffffff;
+  --color-ink: #1d2026;
+  --color-ink-2: #4b5160;
+  --color-ink-3: #7a8091;
+  --color-line: #e3e0d6;
+  --color-accent: #0f766e;
+  --color-accent-strong: #0b5e57;
+  --color-accent-soft: #e6f3f1;
+  --color-marker: #fde68a;
+  --color-warn: #b45309;
+  --color-danger: #b42318;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+@layer components {
+  .label {
+    @apply mb-1 block text-sm font-medium text-ink-2;
+  }
+  .input {
+    @apply w-full rounded-lg border border-line bg-white px-3 py-2.5 text-base outline-none focus:border-accent focus:ring-2 focus:ring-accent/20;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-white hover:bg-accent-strong disabled:opacity-50;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-line bg-white px-3 py-2 text-sm font-medium text-ink hover:bg-paper disabled:opacity-50;
+  }
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-danger hover:bg-red-50 disabled:opacity-50;
+  }
+  .card {
+    @apply rounded-2xl border border-line bg-card;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full border border-line bg-white px-3 py-1 text-sm text-ink-2;
+  }
+  .chip-on {
+    @apply border-accent bg-accent-soft text-accent-strong;
+  }
+}

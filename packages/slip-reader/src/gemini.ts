@@ -93,7 +93,7 @@ export function fromGemini(g: GeminiSlip, now = new Date()): RawSlip {
 
 /** USD per 1M tokens. Override with GEMINI_PRICE_IN / GEMINI_PRICE_OUT when the price list changes. */
 function prices() {
-  const env = typeof process !== "undefined" ? process.env : {};
+  const env: Record<string, string | undefined> = typeof process !== "undefined" ? process.env : {};
   return {
     input: Number(env.GEMINI_PRICE_IN ?? 0.3),
     output: Number(env.GEMINI_PRICE_OUT ?? 2.5),
