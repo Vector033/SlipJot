@@ -14,7 +14,7 @@ export { BANK_NAMES_TH, detectBank } from "./banks.ts";
 export { accountLast4, normalizeThaiName, parseAmount, parseThaiDateTime } from "./normalize.ts";
 export { parseSlipQr } from "./qr-payload.ts";
 export { parseSlipText, type OcrLine } from "./parse.ts";
-export { DEFAULT_GEMINI_MODEL, SlipReaderError, fromGemini } from "./gemini.ts";
+export { DEFAULT_GEMINI_MODEL, SlipReaderError, fetchWithRetry, fromGemini } from "./gemini.ts";
 export { REVIEW_THRESHOLD, finalize } from "./validate.ts";
 
 function envKey(): string | undefined {
@@ -41,15 +41,26 @@ export async function readSlip(
   const provider = opts.provider ?? "auto";
   const useGemini = provider === "gemini" || (provider === "auto" && !!apiKey);
 
+  const readWithOcr = async () => {
+    const { ocrLines } = await import("./node/ocr.ts");
+    const qrPayload = opts.decodeQr === false ? null : await tryDecodeQr(image);
+    return parseSlipText(await ocrLines(image), { now, qrPayload });
+  };
+
   let raw: RawSlip;
   if (useGemini) {
     if (!apiKey) throw new SlipReaderError("GEMINI_API_KEY is not set");
     const qrPayload = opts.decodeQr ? await tryDecodeQr(image) : null;
-    raw = await readWithGemini(image, mimeType, { apiKey, model: opts.model, now, qrPayload });
+    try {
+      raw = await readWithGemini(image, mimeType, { apiKey, model: opts.model, now, qrPayload });
+    } catch (err) {
+      // "auto" never leaves the user without a result: if Gemini is down or over quota
+      // after retries, read locally instead. An explicit "gemini" (evals) surfaces the error.
+      if (provider !== "auto") throw err;
+      raw = await readWithOcr();
+    }
   } else {
-    const { ocrLines } = await import("./node/ocr.ts");
-    const qrPayload = opts.decodeQr === false ? null : await tryDecodeQr(image);
-    raw = parseSlipText(await ocrLines(image), { now, qrPayload });
+    raw = await readWithOcr();
   }
   return { ...finalize(raw, now), elapsedMs: Date.now() - started };
 }

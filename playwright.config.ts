@@ -21,5 +21,8 @@ export default defineConfig({
         url: baseURL,
         timeout: 180_000,
         reuseExistingServer: !process.env.CI,
+        // Pin slip reading to local OCR so results don't depend on an external API
+        // (the review-queue test needs a slip OCR is unsure about). Next won't override it from .env.local.
+        env: { GEMINI_API_KEY: "" },
       },
 });

@@ -7,9 +7,50 @@ import { parseSlipQr } from "./qr-payload.ts";
 import { BANK_CODES, type BankCode, type Field, type Party, type RawSlip } from "./types.ts";
 import { empty } from "./validate.ts";
 
-export class SlipReaderError extends Error {}
+export class SlipReaderError extends Error {
+  readonly status?: number;
+  constructor(message: string, status?: number) {
+    super(message);
+    this.status = status;
+  }
+}
 
-export const DEFAULT_GEMINI_MODEL = "gemini-flash-latest";
+const RETRYABLE = new Set([429, 500, 502, 503, 504]);
+
+/** Seconds Google asks us to wait (RetryInfo.retryDelay), and whether a per-day quota ran out. */
+async function quotaHint(res: Response): Promise<{ waitS: number | null; daily: boolean }> {
+  try {
+    const body = (await res.clone().json()) as {
+      error?: { details?: { retryDelay?: string; violations?: { quotaId?: string }[] }[] };
+    };
+    const details = body.error?.details ?? [];
+    const delay = details.find((d) => d.retryDelay)?.retryDelay;
+    const daily = details.some((d) => d.violations?.some((v) => /PerDay/i.test(v.quotaId ?? "")));
+    return { waitS: delay ? parseFloat(delay) : null, daily };
+  } catch {
+    return { waitS: null, daily: false };
+  }
+}
+
+/**
+ * Gemini returns 503 "high demand" and per-minute 429s routinely; back off and retry.
+ * A per-day quota is not retried: waiting minutes inside a request helps nobody.
+ */
+export async function fetchWithRetry(url: string, init: RequestInit, attempts = 4): Promise<Response> {
+  for (let i = 0; ; i++) {
+    const res = await fetch(url, { ...init, signal: AbortSignal.timeout(60_000) });
+    if (res.ok || !RETRYABLE.has(res.status) || i === attempts - 1) return res;
+    const hint = res.status === 429 ? await quotaHint(res) : { waitS: null, daily: false };
+    if (hint.daily) return res;
+    const retryAfter = Number(res.headers.get("retry-after")) || hint.waitS;
+    const delay = retryAfter ? retryAfter * 1000 + 500 : 1000 * 2 ** i + Math.random() * 500;
+    await new Promise((r) => setTimeout(r, Math.min(delay, 65_000)));
+  }
+}
+
+// Flash-Lite reads synthetic slips as well as Flash (eval/results), costs less, and its free tier
+// is not capped at 5 requests/minute like Flash, which matters for batch uploads.
+export const DEFAULT_GEMINI_MODEL = "gemini-flash-lite-latest";
 
 const conf = z.number().min(0).max(1).describe("How sure you are this value is exactly what is printed, 0 to 1");
 const party = z.object({
@@ -106,7 +147,7 @@ export async function readWithGemini(
   opts: { apiKey: string; model?: string; now?: Date; qrPayload?: string | null },
 ): Promise<RawSlip> {
   const model = opts.model || DEFAULT_GEMINI_MODEL;
-  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+  const res = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
     method: "POST",
     headers: { "content-type": "application/json", "x-goog-api-key": opts.apiKey },
     body: JSON.stringify({
@@ -126,9 +167,8 @@ export async function readWithGemini(
         responseJsonSchema: z.toJSONSchema(geminiSlipSchema, { target: "draft-7" }),
       },
     }),
-    signal: AbortSignal.timeout(60_000),
   });
-  if (!res.ok) throw new SlipReaderError(`Gemini ${res.status}: ${(await res.text()).slice(0, 300)}`);
+  if (!res.ok) throw new SlipReaderError(`Gemini ${res.status}: ${(await res.text()).slice(0, 300)}`, res.status);
   const body = (await res.json()) as {
     candidates?: { content?: { parts?: { text?: string }[] } }[];
     usageMetadata?: { promptTokenCount?: number; candidatesTokenCount?: number; thoughtsTokenCount?: number };

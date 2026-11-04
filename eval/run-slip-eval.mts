@@ -26,6 +26,9 @@ const fixtureDir = fileURLToPath(new URL(`./fixtures/${set}/`, import.meta.url))
 const dir = opt("dir") ?? fixtureDir;
 const isFixture = dir === fixtureDir;
 const limit = Number(opt("limit") ?? Infinity);
+// Free-tier Gemini allows only a few requests per minute; --rpm spaces the calls out.
+const rpm = Number(opt("rpm") ?? 0);
+const model = opt("model") ?? process.env.GEMINI_MODEL ?? undefined;
 // Synthetic slips are dated in the ~60 days before this; real slips use today.
 const now = isFixture ? new Date("2026-11-04T12:00:00+07:00") : new Date();
 
@@ -84,12 +87,18 @@ function score(label: Label, r: SlipReadResult): Record<FieldName, boolean> {
 type Row = { file: string; bank: string; scores: Record<FieldName, boolean>; needsReview: boolean; ms: number; costUsd: number };
 const rows: Row[] = [];
 
+let lastCall = 0;
 for (const label of labels) {
+  if (rpm > 0) {
+    const wait = lastCall + 60_000 / rpm - Date.now();
+    if (wait > 0) await new Promise((r) => setTimeout(r, wait));
+    lastCall = Date.now();
+  }
   const image = await readFile(join(dir, label.file));
   const mime = extname(label.file).toLowerCase() === ".png" ? "image/png" : "image/jpeg";
   let result: SlipReadResult;
   try {
-    result = await readSlip(new Uint8Array(image), mime, { provider, now, decodeQr: true });
+    result = await readSlip(new Uint8Array(image), mime, { provider, model, now, decodeQr: true });
   } catch (err) {
     console.error(`✗ ${label.file}: ${(err as Error).message}`);
     continue;
@@ -158,11 +167,13 @@ console.log(table);
 const outDir = fileURLToPath(new URL("./results/", import.meta.url));
 await mkdir(outDir, { recursive: true });
 const tag = isFixture ? set : "private";
+const resultName = provider === "gemini" ? `gemini-${model ?? "default"}` : provider;
 await writeFile(
-  join(outDir, `${tag}-${provider}.json`),
+  join(outDir, `${tag}-${resultName}.json`),
   JSON.stringify(
     {
       provider,
+      model: provider === "gemini" ? (model ?? "default") : undefined,
       set: tag,
       ranAt: new Date().toISOString(),
       slips: rows.length,
@@ -175,4 +186,4 @@ await writeFile(
     2,
   ) + "\n",
 );
-await writeFile(join(outDir, `${tag}-${provider}.md`), `provider: ${provider}, slips: ${rows.length}, avg ${Math.round(avgMs)} ms/slip\n\n${table}\n`);
+await writeFile(join(outDir, `${tag}-${resultName}.md`), `provider: ${resultName}, slips: ${rows.length}, avg ${Math.round(avgMs)} ms/slip\n\n${table}\n`);

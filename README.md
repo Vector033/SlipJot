@@ -7,7 +7,7 @@ tracks where the money went. Expense apps that need every payment typed in get a
 slip images (Gemini vision, or local Thai OCR with no API key), learns which payee belongs in which category, and shows
 the month at a glance on a phone.
 
-> Status: MVP working locally (all six brief items). Not deployed yet. Accuracy numbers below come from **fictional
+> Status: MVP working locally (all six brief items), Gemini measured. Not deployed yet. Accuracy numbers below come from **fictional
 > synthetic slips**, not real ones. See [Evaluation](#evaluation).
 
 | Dashboard | Review queue | Expenses |
@@ -54,34 +54,44 @@ The synthetic slips are rendered by `scripts/generate-synthetic-slips.mts`: made
 with each bank's field order and date format but no real logos. JPEG quality and scale vary. The parser was tuned on the
 dev set. The held-out set uses another seed and was not looked at while tuning.
 
-| set | slips | amount | date+time | payee (exact) | payee (≥85% similar) | payee last4 | reference | all key fields | sent to review | silent errors |
-|---|---|---|---|---|---|---|---|---|---|---|
-| dev (5 layouts × 12) | 60 | 100% | 95% | 73% | 100% | 100% | 100% | 95% | 22% | **0%** |
-| held-out (5 × 8) | 40 | 95% | 95% | 85% | 100% | 98% | 100% | 93% | 15% | **0%** |
+| reader | set | slips | amount | date+time | payee (exact) | payee (≥85% similar) | payee last4 | reference | all key fields | sent to review | silent errors |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| local OCR | dev (5 layouts × 12) | 60 | 100% | 95% | 73% | 100% | 100% | 100% | 95% | 22% | **0%** |
+| local OCR | held-out (5 × 8) | 40 | 95% | 95% | 85% | 100% | 98% | 100% | 93% | 15% | **0%** |
+| Gemini Flash-Lite | dev | 60 | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 0% | **0%** |
+| Gemini Flash-Lite | held-out | 40 | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 0% | **0%** |
 
-Per-bank tables are in [`eval/results/`](eval/results). Average read time is ~0.75 s per slip on a laptop, and the cost
-is $0. "Payee exact" is low because tesseract drops Thai vowel and tone marks (ภานุวัฒน์ → ภานวัฒน์). Payee keys
-therefore use the consonant skeleton, so learned rules still match.
+Per-bank tables are in [`eval/results/`](eval/results).
 
-**Not measured yet:** Gemini accuracy and cost per slip (`npm run eval:slips -- --provider gemini`, needs a key), and
-accuracy on real slips (`--dir <folder outside the repo>`, which writes only aggregate scores).
+- **Local OCR** takes ~0.75 s per slip on a laptop and costs $0. "Payee exact" is low because tesseract drops Thai vowel
+  and tone marks (ภานุวัฒน์ → ภานวัฒน์), so payee keys use the consonant skeleton to keep learned rules matching.
+- **Gemini** (`gemini-flash-lite-latest`, measured 2026-11-04) uses ~1,200 input + ~330 output tokens per slip, which
+  is ≈ $0.0012 per slip at Gemini 2.5 *Flash* prices ($0.30 / $2.50 per 1M). That is an upper bound: Flash-Lite is
+  cheaper, and the prices are configurable in `.env`. It takes ~3.4 s per slip. During demand spikes the API returns
+  503s and the retries push that to ~16 s. On the free tier, `gemini-flash-latest` is capped at 5 requests/minute and
+  was overloaded during testing, so Flash-Lite is the default. If Gemini still fails after retries, the app falls back
+  to local OCR.
+- Synthetic slips are clean renders, so Gemini's 100% will not survive real phone screenshots. The OCR → Gemini gap
+  is the meaningful part. **Not measured yet:** real slips (`--dir <folder outside the repo>`, which writes only
+  aggregate scores).
 
 ### Categorisation
 
 `npm run eval:categorize` replays a fictional 90-day stream (381 slips, 31 payees, with OCR-style name noise). Whenever
 the result is wrong, a simulated user corrects it once, just like editing a category in the app.
 
-| | |
-|---|---|
-| categorised by a learned payee rule | 49.9% |
-| categorised by memo/payee keywords | 46.7% |
-| reached the LLM | 3.4% (13 of 381) |
-| LLM share, first week → last month | 23.3% → 0.8% |
-| user corrections needed | 13 (3.4%) |
+| | no LLM | Gemini Flash-Lite |
+|---|---|---|
+| categorised by a learned payee rule | 49.9% | 49.9% |
+| categorised by memo/payee keywords | 46.7% | 46.7% |
+| reached the LLM | 3.4% (13 of 381) | 3.4% (13 calls), 11 of 13 right (85%) |
+| LLM share, first week → last month | 23.3% → 0.8% | 23.3% → 0.8% |
+| user corrections needed in 90 days | 13 (3.4%) | 2 (0.5%) |
 
 Caveat: the keyword list and the simulated payees were written by the same person, so keyword hit rate and accuracy here
-are optimistic. The learning curve (LLM share falling to near zero) is the part that should hold on real data. Without
-a key, the "LLM" step answers nothing and the user corrects it; with `GEMINI_API_KEY` set, the eval calls Gemini for real.
+are optimistic. The learning curve (LLM share falling to near zero) is the part that should hold on real data. Without a
+key, the "LLM" step gives no answer and the user corrects the slip; with `GEMINI_API_KEY` set, the eval calls Gemini
+for real (`-- --model <name>` to pick one).
 
 ## Stack
 
@@ -133,6 +143,6 @@ npm run lint && npm run typecheck
 - [x] Upload, dedup, review queue, image auto-delete
 - [x] Hybrid categorisation with learned payee rules, categorisation eval
 - [x] Dashboard, budgets, CSV export, PWA share target, e2e tests, CI
-- [ ] Measure Gemini accuracy and cost per slip with a real key
+- [x] Measure Gemini accuracy and cost per slip (synthetic set), retries + OCR fallback
 - [ ] Use it daily for 2–4 weeks; evaluate on a private set of real slips kept outside the repo
 - [ ] Deploy (Vercel + hosted Supabase), then add the live link here

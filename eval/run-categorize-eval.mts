@@ -84,11 +84,20 @@ for (let day = 0; day < 90; day++) {
 }
 
 const useGemini = !!process.env.GEMINI_API_KEY;
+const argModel = process.argv.includes("--model") ? process.argv[process.argv.indexOf("--model") + 1] : undefined;
+let llmErrors = 0;
 let gemini: ((i: { payeeName: string; memo?: string | null }) => Promise<CategorySlug | null>) | null = null;
 if (useGemini) {
-  // Same prompt and model as the app.
+  // Same prompt as the app. Like the app, a failed call counts as "no answer".
   const { categorizeWithGemini } = await import("../src/lib/llm/categorize-llm.ts");
-  gemini = async (i) => (await categorizeWithGemini(i)).slug;
+  gemini = async (i) => {
+    try {
+      return (await categorizeWithGemini(i, argModel)).slug;
+    } catch {
+      llmErrors++;
+      return null;
+    }
+  };
 }
 
 const rules = new Map<string, CategorySlug>();
@@ -136,7 +145,8 @@ const n = stream.length;
 const pct = (a: number, b: number) => (b ? `${((100 * a) / b).toFixed(1)}%` : "–");
 const summary = {
   slips: n,
-  llmMode: useGemini ? "gemini" : "none (counts would-be calls)",
+  llmMode: useGemini ? `gemini ${argModel ?? process.env.GEMINI_MODEL ?? "default"}` : "none (counts would-be calls)",
+  llmErrors,
   bySource: counts,
   accuracyBySource: Object.fromEntries(Object.entries(counts).map(([k, v]) => [k, v ? correct[k as keyof typeof correct] / v : null])),
   llmCalls,

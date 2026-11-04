@@ -1,3 +1,4 @@
+import { fetchWithRetry } from "@slipjot/slip-reader";
 import { z } from "zod";
 import { CATEGORY_SLUGS, DEFAULT_CATEGORIES, type CategorySlug } from "../core/categories.ts";
 import type { CategorizeInput } from "../core/categorize.ts";
@@ -28,9 +29,11 @@ export function llmEnabled() {
   return !!process.env.GEMINI_API_KEY;
 }
 
-export async function categorizeWithGemini(input: CategorizeInput): Promise<{ slug: CategorySlug | null; usage: LlmUsage }> {
-  const model = process.env.GEMINI_MODEL || "gemini-flash-latest";
-  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+export async function categorizeWithGemini(
+  input: CategorizeInput,
+  model = process.env.GEMINI_MODEL || "gemini-flash-lite-latest",
+): Promise<{ slug: CategorySlug | null; usage: LlmUsage }> {
+  const res = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
     method: "POST",
     headers: { "content-type": "application/json", "x-goog-api-key": process.env.GEMINI_API_KEY! },
     body: JSON.stringify({
@@ -47,7 +50,6 @@ export async function categorizeWithGemini(input: CategorizeInput): Promise<{ sl
         responseJsonSchema: z.toJSONSchema(schema, { target: "draft-7" }),
       },
     }),
-    signal: AbortSignal.timeout(20_000),
   });
   if (!res.ok) throw new Error(`Gemini ${res.status}: ${(await res.text()).slice(0, 200)}`);
   const body = (await res.json()) as {
