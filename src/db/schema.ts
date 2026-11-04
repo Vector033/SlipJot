@@ -7,6 +7,7 @@ import {
   jsonb,
   numeric,
   pgSchema,
+  primaryKey,
   real,
   text,
   timestamp,
@@ -157,4 +158,18 @@ export const aiUsage = slipjot.table(
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index("ai_usage_user_idx").on(t.userId, t.createdAt)],
+).enableRLS();
+
+/**
+ * Fixed-window counters for rate limiting, shared by every serverless instance.
+ * Keys never hold raw IPs or emails: they are HMAC-hashed first (src/lib/rate-limit.ts).
+ */
+export const rateLimits = slipjot.table(
+  "rate_limits",
+  {
+    key: text("key").notNull(),
+    windowStart: timestamp("window_start", { withTimezone: true }).notNull(),
+    count: integer("count").notNull().default(0),
+  },
+  (t) => [primaryKey({ columns: [t.key, t.windowStart] }), index("rate_limits_window_idx").on(t.windowStart)],
 ).enableRLS();

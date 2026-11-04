@@ -29,9 +29,25 @@ const nextConfig: NextConfig = {
       ],
     ]),
   ),
+  poweredByHeader: false,
   async headers() {
-    // The service worker must never be served stale, or share-target fixes never reach phones.
-    return [{ source: "/sw.js", headers: [{ key: "cache-control", value: "no-cache" }] }];
+    return [
+      // Baseline hardening on every response. The per-request CSP (with its nonce) is set in src/proxy.ts.
+      {
+        source: "/:path*",
+        headers: [
+          { key: "strict-transport-security", value: "max-age=63072000; includeSubDomains; preload" },
+          { key: "x-content-type-options", value: "nosniff" },
+          { key: "x-frame-options", value: "DENY" },
+          { key: "referrer-policy", value: "strict-origin-when-cross-origin" },
+          { key: "permissions-policy", value: "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()" },
+          { key: "cross-origin-opener-policy", value: "same-origin" },
+          { key: "x-dns-prefetch-control", value: "off" },
+        ],
+      },
+      // The service worker must never be served stale, or share-target fixes never reach phones.
+      { source: "/sw.js", headers: [{ key: "cache-control", value: "no-cache" }] },
+    ];
   },
 };
 

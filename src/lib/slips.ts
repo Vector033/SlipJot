@@ -7,14 +7,14 @@ import { aiUsage, categories, expenses, payeeRules, settings, slipImages } from 
 import type { CategorySlug } from "./core/categories";
 import { categorize, payeeKey } from "./core/categorize";
 import { DUPLICATE_REASON_TH, findDuplicate, type DuplicateVerdict } from "./core/dedup";
+import { sanitizeImage } from "./image-safety";
 import { categorizeWithGemini, llmEnabled } from "./llm/categorize-llm";
 
-// Upload pipeline for one slip: hash → exact-duplicate check → read → dedup →
-// categorise → save. The image itself is only stored when the result needs review
+// Upload pipeline for one slip: hash → exact-duplicate check → sanitise (re-encode,
+// strip metadata) → read → dedup → categorise → save. The image itself is only stored when the result needs review
 // (deleted on confirm, or after 7 days) or when the user opted in to keeping images.
 
-export const MAX_SLIP_BYTES = 10 * 1024 * 1024;
-export const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"];
+
 
 export type IngestResult =
   | { status: "duplicate"; of: string; reason: string }
@@ -37,11 +37,17 @@ async function exactByHash(userId: string, sha: string) {
   return row?.id ?? null;
 }
 
-export async function ingestSlip(userId: string, bytes: Uint8Array, mimeType: string): Promise<IngestResult> {
-  const sha = sha256(bytes);
+/** `upload` is the file exactly as received; its type is decided from its bytes, never its name. */
+export async function ingestSlip(userId: string, upload: Uint8Array): Promise<IngestResult> {
+  const sha = sha256(upload);
   // Cheapest check first: the very same file never costs an OCR pass or a model call.
   const sameFile = await exactByHash(userId, sha);
   if (sameFile) return { status: "duplicate", of: sameFile, reason: DUPLICATE_REASON_TH["same-image"] };
+
+  // From here on only the re-encoded copy exists: no EXIF/GPS reaches the model, the DB or the review page.
+  const safe = await sanitizeImage(upload);
+  const bytes = safe.bytes;
+  const mimeType = safe.mimeType;
 
   const [read, dhash] = await Promise.all([
     readSlip(bytes, mimeType, { decodeQr: true }),

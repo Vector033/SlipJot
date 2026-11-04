@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { headers } from "next/headers";
 import { IBM_Plex_Sans_Thai, Inter } from "next/font/google";
 import { ServiceWorker } from "@/components/service-worker";
 import "./globals.css";
@@ -23,7 +24,10 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  // Reading the request makes every page render per request, which is what lets Next.js stamp
+  // the CSP nonce from src/proxy.ts onto its scripts. A prerendered page would carry none.
+  await headers();
   return (
     <html lang="th" className={`${thai.variable} ${latin.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
