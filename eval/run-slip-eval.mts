@@ -1,6 +1,7 @@
 // Measures slip-reading accuracy per bank.
 //   npm run eval:slips                         # local OCR on the synthetic set
 //   npm run eval:slips -- --provider gemini    # needs GEMINI_API_KEY
+//   npm run eval:slips -- --set holdout        # held-out synthetic set (not used for tuning)
 //   npm run eval:slips -- --dir D:/private-slips   # your own labelled slips, kept outside the repo
 //
 // A labelled folder holds images plus labels.json in the shape scripts/synthetic-slips.mts writes.
@@ -20,11 +21,13 @@ const opt = (name: string) => {
   return i >= 0 ? args[i + 1] : undefined;
 };
 const provider = (opt("provider") ?? "ocr") as "ocr" | "gemini" | "auto";
-const defaultDir = fileURLToPath(new URL("./fixtures/synthetic/", import.meta.url));
-const dir = opt("dir") ?? defaultDir;
+const set = opt("set") ?? "synthetic";
+const fixtureDir = fileURLToPath(new URL(`./fixtures/${set}/`, import.meta.url));
+const dir = opt("dir") ?? fixtureDir;
+const isFixture = dir === fixtureDir;
 const limit = Number(opt("limit") ?? Infinity);
 // Synthetic slips are dated in the ~60 days before this; real slips use today.
-const now = dir === defaultDir ? new Date("2026-11-04T12:00:00+07:00") : new Date();
+const now = isFixture ? new Date("2026-11-04T12:00:00+07:00") : new Date();
 
 type Label = SyntheticSlip & { file: string };
 const labels: Label[] = JSON.parse(await readFile(join(dir, "labels.json"), "utf8")).slice(0, limit);
@@ -154,7 +157,7 @@ console.log(table);
 
 const outDir = fileURLToPath(new URL("./results/", import.meta.url));
 await mkdir(outDir, { recursive: true });
-const tag = dir === defaultDir ? "synthetic" : "private";
+const tag = isFixture ? set : "private";
 await writeFile(
   join(outDir, `${tag}-${provider}.json`),
   JSON.stringify(
@@ -166,7 +169,7 @@ await writeFile(
       avgMs: Math.round(avgMs),
       costUsdPerSlip: cost / Math.max(rows.length, 1),
       summary,
-      perSlip: tag === "synthetic" ? rows.map(({ file, scores, needsReview }) => ({ file, scores, needsReview })) : undefined,
+      perSlip: isFixture ? rows.map(({ file, scores, needsReview }) => ({ file, scores, needsReview })) : undefined,
     },
     null,
     2,

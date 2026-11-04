@@ -40,3 +40,10 @@ npm test                                   # unit tests (root)
 npm run eval:slips                         # accuracy per bank on the synthetic set, local OCR
 npm run eval:slips -- --provider gemini    # same with Gemini
 ```
+
+## Using it from another repo
+
+Internal imports use explicit `.ts` extensions so plain `node file.mts` can run them. Consumers need:
+
+- `tsconfig.json`: `"allowImportingTsExtensions": true` and `"target": "ES2020"` or later (`node/image.ts` uses BigInt literals)
+- `next.config.ts`: `transpilePackages: ["<package name>"]` and, for the OCR path, `serverExternalPackages: ["tesseract.js", "sharp"]`

@@ -1,8 +1,8 @@
-import "server-only";
 import { z } from "zod";
-import { CATEGORY_SLUGS, DEFAULT_CATEGORIES, type CategorySlug } from "@/lib/core/categories";
-import type { CategorizeInput } from "@/lib/core/categorize";
+import { CATEGORY_SLUGS, DEFAULT_CATEGORIES, type CategorySlug } from "../core/categories.ts";
+import type { CategorizeInput } from "../core/categorize.ts";
 
+// Server code only (reads GEMINI_API_KEY); also imported by eval/run-categorize-eval.mts.
 // Text-only Gemini call that picks one built-in category for a payee. Only reached when
 // learned rules and keywords both miss; the answer is stored as a payee rule afterwards.
 

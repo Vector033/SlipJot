@@ -1,13 +1,19 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { MonthNav } from "@/components/month-nav";
-import { formatBaht, formatDateTime } from "@/lib/core/format";
+import { formatBaht, formatDayLabel, formatTime, toLocalInput } from "@/lib/core/format";
 import { isMonthKey, monthKeyOf } from "@/lib/core/month";
 import { getCategories, listExpenses } from "@/lib/data";
 
 export const metadata: Metadata = { title: "รายการ" };
 
-const SOURCE_TH: Record<string, string> = { rule: "จำจากครั้งก่อน", keyword: "จากชื่อร้าน", llm: "AI", user: "คุณเลือก", none: "" };
+const SOURCE_TH: Record<string, string> = {
+  rule: "จำจากครั้งก่อน",
+  keyword: "จากชื่อร้าน",
+  llm: "AI",
+  user: "คุณเลือก",
+  none: "",
+};
 
 export default async function ExpensesPage({ searchParams }: PageProps<"/app/expenses">) {
   const sp = await searchParams;
@@ -16,12 +22,17 @@ export default async function ExpensesPage({ searchParams }: PageProps<"/app/exp
   const q = typeof sp.q === "string" ? sp.q.trim().slice(0, 60) : "";
   const [cats, rows] = await Promise.all([
     getCategories(),
-    listExpenses({ month, categoryId: cat === "none" || (cat && /^[0-9a-f-]{36}$/.test(cat)) ? cat : undefined, q: q || undefined }),
+    listExpenses({
+      month,
+      categoryId: cat === "none" || (cat && /^[0-9a-f-]{36}$/.test(cat)) ? cat : undefined,
+      q: q || undefined,
+    }),
   ]);
   const byId = new Map(cats.map((c) => [c.id, c]));
   const total = rows.reduce((a, r) => a + r.amount, 0);
   const base = { ...(cat ? { cat } : {}), ...(q ? { q } : {}) };
-  const chipHref = (c?: string) => `/app/expenses?${new URLSearchParams({ month, ...(c ? { cat: c } : {}), ...(q ? { q } : {}) })}`;
+  const chipHref = (c?: string) =>
+    `/app/expenses?${new URLSearchParams({ month, ...(c ? { cat: c } : {}), ...(q ? { q } : {}) })}`;
 
   return (
     <div className="space-y-4">
@@ -36,13 +47,21 @@ export default async function ExpensesPage({ searchParams }: PageProps<"/app/exp
       </header>
 
       {typeof sp.added === "string" && (
-        <p className="rounded-xl bg-accent-soft px-4 py-3 text-sm text-accent-strong">บันทึกสลิปที่แชร์มา {sp.added} รายการ</p>
+        <p className="rounded-xl bg-accent-soft px-4 py-3 text-sm text-accent-strong">
+          บันทึกสลิปที่แชร์มา {sp.added} รายการ
+        </p>
       )}
 
       <form className="flex gap-2" action="/app/expenses">
         <input type="hidden" name="month" value={month} />
         {cat && <input type="hidden" name="cat" value={cat} />}
-        <input name="q" defaultValue={q} placeholder="ค้นหาผู้รับหรือบันทึกช่วยจำ" className="input" aria-label="ค้นหา" />
+        <input
+          name="q"
+          defaultValue={q}
+          placeholder="ค้นหาผู้รับหรือบันทึกช่วยจำ"
+          className="input"
+          aria-label="ค้นหา"
+        />
         <button className="btn">ค้นหา</button>
       </form>
 
@@ -72,37 +91,70 @@ export default async function ExpensesPage({ searchParams }: PageProps<"/app/exp
           </Link>
         </div>
       ) : (
-        <ul className="card divide-y divide-line">
-          {rows.map((r) => {
-            const c = r.categoryId ? byId.get(r.categoryId) : null;
-            return (
-              <li key={r.id}>
-                <Link href={`/app/expenses/${r.id}`} className="flex items-center gap-3 px-4 py-3 hover:bg-paper" data-testid="expense-row">
-                  <span
-                    className="flex size-10 shrink-0 items-center justify-center rounded-full text-lg"
-                    style={{ background: `${c?.color ?? "#adb5bd"}22` }}
-                    aria-hidden
-                  >
-                    {c?.icon ?? "❔"}
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate font-medium">{r.payeeName || "ไม่ทราบผู้รับ"}</span>
-                    <span className="block truncate text-sm text-ink-3">
-                      {formatDateTime(r.occurredAt)} · {c?.name ?? "ยังไม่จัดหมวด"}
-                      {r.categorySource !== "none" && SOURCE_TH[r.categorySource] ? ` (${SOURCE_TH[r.categorySource]})` : ""}
-                      {r.memo ? ` · ${r.memo}` : ""}
-                    </span>
-                  </span>
-                  <span className="text-right">
-                    <span className="num block font-semibold">{formatBaht(r.amount, true)}</span>
-                    {r.status === "review" && <span className="rounded bg-marker px-1.5 text-xs font-semibold">รอตรวจ</span>}
-                  </span>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+        <div className="space-y-4">
+          {groupByDay(rows).map((g) => (
+            <section key={g.key} aria-label={g.label}>
+              <h2 className="mb-1.5 flex justify-between px-1 text-sm text-ink-3">
+                <span>{g.label}</span>
+                <span className="num">{formatBaht(g.total, true)}</span>
+              </h2>
+              <ul className="card divide-y divide-line">
+                {g.rows.map((r) => {
+                  const c = r.categoryId ? byId.get(r.categoryId) : null;
+                  return (
+                    <li key={r.id}>
+                      <Link
+                        href={`/app/expenses/${r.id}`}
+                        className="flex items-center gap-3 px-4 py-3 hover:bg-paper"
+                        data-testid="expense-row"
+                      >
+                        <span
+                          className="flex size-10 shrink-0 items-center justify-center rounded-full text-lg"
+                          style={{ background: `${c?.color ?? "#adb5bd"}22` }}
+                          aria-hidden
+                        >
+                          {c?.icon ?? "❔"}
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block truncate font-medium">{r.payeeName || "ไม่ทราบผู้รับ"}</span>
+                          <span className="block truncate text-sm text-ink-3">
+                            {formatTime(r.occurredAt)} · {c?.name ?? "ยังไม่จัดหมวด"}
+                            {r.categorySource !== "none" && SOURCE_TH[r.categorySource]
+                              ? ` (${SOURCE_TH[r.categorySource]})`
+                              : ""}
+                            {r.memo ? ` · ${r.memo}` : ""}
+                          </span>
+                        </span>
+                        <span className="text-right">
+                          <span className="num block font-semibold">{formatBaht(r.amount, true)}</span>
+                          {r.status === "review" && (
+                            <span className="rounded bg-marker px-1.5 text-xs font-semibold">รอตรวจ</span>
+                          )}
+                        </span>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          ))}
+        </div>
       )}
     </div>
   );
+}
+
+function groupByDay<T extends { occurredAt: Date; amount: number }>(rows: T[]) {
+  const groups: { key: string; label: string; total: number; rows: T[] }[] = [];
+  for (const r of rows) {
+    const key = toLocalInput(r.occurredAt).slice(0, 10);
+    let g = groups.at(-1);
+    if (!g || g.key !== key) {
+      g = { key, label: formatDayLabel(r.occurredAt), total: 0, rows: [] };
+      groups.push(g);
+    }
+    g.rows.push(r);
+    g.total += r.amount;
+  }
+  return groups;
 }

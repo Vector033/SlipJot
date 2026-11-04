@@ -46,7 +46,7 @@ export function ExpenseForm({
       {values.id && <input type="hidden" name="id" value={values.id} />}
       {confirm && <input type="hidden" name="intent" value="confirm" />}
       {redirectTo && <input type="hidden" name="redirectTo" value={redirectTo} />}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid gap-3 sm:grid-cols-2">
         <label className="block">
           <span className="label">ยอด (บาท)</span>
           <input
@@ -75,7 +75,7 @@ export function ExpenseForm({
         <span className="label">ผู้รับ / ร้าน</span>
         <input name="payeeName" defaultValue={values.payeeName} maxLength={200} className={`input ${mark("payeeName")}`} />
       </label>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid gap-3 sm:grid-cols-2">
         <label className="block">
           <span className="label">หมวด</span>
           <select name="categoryId" defaultValue={values.categoryId ?? ""} className="input">

@@ -31,3 +31,15 @@ export function toLocalInput(d: Date): string {
 export function fromLocalInput(s: string): Date {
   return new Date(`${s}:00+07:00`);
 }
+
+const time = new Intl.DateTimeFormat("th-TH", { timeZone: "Asia/Bangkok", hour: "2-digit", minute: "2-digit" });
+const dayLabel = new Intl.DateTimeFormat("th-TH", { timeZone: "Asia/Bangkok", weekday: "short", day: "numeric", month: "short" });
+
+export function formatTime(d: Date | string): string {
+  return time.format(typeof d === "string" ? new Date(d) : d);
+}
+
+/** "ศ. 31 ต.ค." */
+export function formatDayLabel(d: Date | string): string {
+  return dayLabel.format(typeof d === "string" ? new Date(d) : d);
+}

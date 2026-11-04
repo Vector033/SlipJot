@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // Playwright and the preview pane load the dev server via 127.0.0.1.
   allowedDevOrigins: ["127.0.0.1"],
+  devIndicators: false,
   turbopack: {
     rules: {
       "*.css": {

@@ -1,6 +1,8 @@
 // Renders the fictional slips in synthetic-slips.mts to JPEGs for the eval and tests.
 // Run: npm run slips:generate  (needs `npx playwright install chromium` once)
 // Output: eval/fixtures/synthetic/<id>.jpg + labels.json. Seeded, so reruns are stable.
+// Held-out set (never used while tuning the parser):
+//   node scripts/generate-synthetic-slips.mts 8 --seed 777 --out holdout
 
 import { mkdir, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
@@ -8,12 +10,16 @@ import { chromium } from "@playwright/test";
 import QRCode from "qrcode";
 import { makeSlip, rng, slipHtml, type LayoutCode, type SyntheticSlip } from "./synthetic-slips.mts";
 
-const PER_LAYOUT = Number(process.argv[2] ?? 12);
+const args = process.argv.slice(2);
+const flag = (name: string) => (args.includes(`--${name}`) ? args[args.indexOf(`--${name}`) + 1] : undefined);
+const PER_LAYOUT = Number(args[0] && !args[0].startsWith("--") ? args[0] : 12);
+const SEED = Number(flag("seed") ?? 20261104);
+const SET = flag("out") ?? "synthetic";
 const LAYOUTS: LayoutCode[] = ["KBANK", "SCB", "BBL", "KTB", "BAY"];
-const outDir = fileURLToPath(new URL("../eval/fixtures/synthetic/", import.meta.url));
+const outDir = fileURLToPath(new URL(`../eval/fixtures/${SET}/`, import.meta.url));
 
 await mkdir(outDir, { recursive: true });
-const r = rng(20261104);
+const r = rng(SEED);
 const browser = await chromium.launch();
 const labels: (SyntheticSlip & { file: string })[] = [];
 
