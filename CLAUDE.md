@@ -1,7 +1,7 @@
 # SlipJot: ถ่ายสลิป แล้ว AI บันทึกรายจ่ายและจัดหมวดให้
 
 > สถานะ (2026-11-07): MVP ครบ 6 ข้อ **deploy แล้ว** ที่ https://slipjot.vercel.app (มีปุ่มบัญชีเดโม) · ดีไซน์ใหม่ธีม "รถแดงเชียงใหม่" (ดู DESIGN.md) · เพิ่มระบบความปลอดภัย (CSP nonce, httpOnly cookie, rate limit, ล้าง EXIF รูป, กัน CSRF) · ใช้ Supabase project เดียวกับ HarnKan (ref ddyjypurrrzasbtfwncs) แยก schema `slipjot` · ค่า production อยู่ใน `.env.vercel-production` (gitignored) · Gemini ใช้ `gemini-3.5-flash-lite` (pin เวอร์ชัน) · ยังไม่ได้ทดสอบกับสลิปจริง
-> รอบ 2026-11-07 (บ่าย): ทำตาม CLAUDE_DESIGN_GUIDE.md (ป้ายพลิก split-flap บนหน้าแรก, แถบสแกนสีป้ายทะเบียนตอนอ่านสลิป, tooltip แบบป้ายทะเบียน) + แก้ตามผลตรวจ UI/a11y + ต่อ FreeLLMAPI (`SLIP_LLM_PROVIDER=freellmapi`, `npm run eval:compare`) ใช้กับสลิปจำลองเท่านั้น · **ยังไม่ได้ deploy รอบนี้**
+> รอบ 2026-11-07 (บ่าย): ทำตาม CLAUDE_DESIGN_GUIDE.md (ป้ายพลิก split-flap บนหน้าแรก, แถบสแกนสีป้ายทะเบียนตอนอ่านสลิป, tooltip แบบป้ายทะเบียน) + แก้ตามผลตรวจ UI/a11y + ต่อ FreeLLMAPI (`SLIP_LLM_PROVIDER=freellmapi`, `npm run eval:compare`) ใช้กับสลิปจำลองเท่านั้น · deploy แล้ว (commit 174fff9)
 > ส่วนอ่านสลิปอยู่ที่ `packages/slip-reader` และ HarnKan copy ไปใช้แล้วในชื่อ `@harnkan/slip-reader` · local Supabase ใช้ port 546xx · dev server ใช้ port 3015 · บัญชี demo: `npm run seed:demo`
 
 ## เจ้าของโปรเจกต์
