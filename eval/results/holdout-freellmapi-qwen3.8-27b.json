@@ -1,0 +1,150 @@
+{
+  "provider": "freellmapi",
+  "model": "qwen3.8-27b",
+  "routedModels": {
+    "local:qwen/qwen3.8-27b": 5
+  },
+  "failed": 15,
+  "set": "holdout",
+  "ranAt": "2026-11-07T13:53:09.787Z",
+  "slips": 5,
+  "avgMs": 17870,
+  "costUsdPerSlip": 0,
+  "summary": {
+    "KBANK": {
+      "n": 3,
+      "amount": 1,
+      "dateTime": 1,
+      "receiverName": 0.3333333333333333,
+      "receiverNameClose": 0.6666666666666666,
+      "receiverBank": 0,
+      "receiverLast4": 1,
+      "senderName": 1,
+      "senderLast4": 1,
+      "reference": 1,
+      "memo": 0.6666666666666666,
+      "keyFields": 0.6666666666666666,
+      "needsReview": 0,
+      "silentErrors": 0.3333333333333333
+    },
+    "SCB": {
+      "n": 2,
+      "amount": 1,
+      "dateTime": 1,
+      "receiverName": 0.5,
+      "receiverNameClose": 1,
+      "receiverBank": 0,
+      "receiverLast4": 1,
+      "senderName": 0.5,
+      "senderLast4": 1,
+      "reference": 1,
+      "memo": 1,
+      "keyFields": 1,
+      "needsReview": 0,
+      "silentErrors": 0
+    },
+    "ALL": {
+      "n": 5,
+      "amount": 1,
+      "dateTime": 1,
+      "receiverName": 0.4,
+      "receiverNameClose": 0.8,
+      "receiverBank": 0,
+      "receiverLast4": 1,
+      "senderName": 0.8,
+      "senderLast4": 1,
+      "reference": 1,
+      "memo": 0.8,
+      "keyFields": 0.8,
+      "needsReview": 0,
+      "silentErrors": 0.2
+    }
+  },
+  "perSlip": [
+    {
+      "file": "kbank-03.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": false,
+        "receiverNameClose": false,
+        "receiverBank": false,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": false
+      },
+      "needsReview": false
+    },
+    {
+      "file": "kbank-07.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": false,
+        "receiverNameClose": true,
+        "receiverBank": false,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "kbank-08.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": false,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": false,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "scb-06.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": false,
+        "receiverNameClose": true,
+        "receiverBank": false,
+        "receiverLast4": true,
+        "senderName": false,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "scb-07.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": false,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    }
+  ]
+}

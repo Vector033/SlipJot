@@ -1,0 +1,29 @@
+{
+  "provider": "freellmapi",
+  "model": "gemini-3.5-flash-lite",
+  "failed": 20,
+  "set": "holdout",
+  "ranAt": "2026-11-07T13:21:06.895Z",
+  "slips": 0,
+  "avgMs": 0,
+  "costUsdPerSlip": 0,
+  "summary": {
+    "ALL": {
+      "n": 0,
+      "amount": null,
+      "dateTime": null,
+      "receiverName": null,
+      "receiverNameClose": null,
+      "receiverBank": null,
+      "receiverLast4": null,
+      "senderName": null,
+      "senderLast4": null,
+      "reference": null,
+      "memo": null,
+      "keyFields": null,
+      "needsReview": null,
+      "silentErrors": null
+    }
+  },
+  "perSlip": []
+}

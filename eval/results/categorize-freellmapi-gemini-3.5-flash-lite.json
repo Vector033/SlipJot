@@ -1,0 +1,23 @@
+{
+  "slips": 381,
+  "llmMode": "freellmapi gemini-3.5-flash-lite",
+  "llmErrors": 13,
+  "bySource": {
+    "rule": 190,
+    "keyword": 178,
+    "llm": 0,
+    "none": 13
+  },
+  "accuracyBySource": {
+    "rule": 1,
+    "keyword": 1,
+    "llm": null,
+    "none": 0
+  },
+  "llmCalls": 13,
+  "llmCallsAvoided": 0.9658792650918635,
+  "firstWeekLlmShare": 0.23333333333333334,
+  "lastMonthLlmShare": 0.007874015748031496,
+  "userCorrections": 13,
+  "learnedRules": 13
+}

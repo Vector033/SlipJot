@@ -1,0 +1,353 @@
+{
+  "provider": "freellmapi",
+  "model": "gemma-4-26b-it",
+  "routedModels": {
+    "local:gemma-4-26b-a4b-it": 16
+  },
+  "failed": 4,
+  "set": "holdout",
+  "ranAt": "2026-11-07T13:43:11.528Z",
+  "slips": 16,
+  "avgMs": 27222,
+  "costUsdPerSlip": 0,
+  "summary": {
+    "KBANK": {
+      "n": 7,
+      "amount": 1,
+      "dateTime": 1,
+      "receiverName": 1,
+      "receiverNameClose": 1,
+      "receiverBank": 1,
+      "receiverLast4": 1,
+      "senderName": 1,
+      "senderLast4": 1,
+      "reference": 1,
+      "memo": 1,
+      "keyFields": 1,
+      "needsReview": 0,
+      "silentErrors": 0
+    },
+    "SCB": {
+      "n": 5,
+      "amount": 1,
+      "dateTime": 1,
+      "receiverName": 1,
+      "receiverNameClose": 1,
+      "receiverBank": 0.8,
+      "receiverLast4": 1,
+      "senderName": 0.8,
+      "senderLast4": 1,
+      "reference": 1,
+      "memo": 0.8,
+      "keyFields": 1,
+      "needsReview": 0,
+      "silentErrors": 0
+    },
+    "BBL": {
+      "n": 4,
+      "amount": 1,
+      "dateTime": 1,
+      "receiverName": 0.75,
+      "receiverNameClose": 1,
+      "receiverBank": 1,
+      "receiverLast4": 1,
+      "senderName": 1,
+      "senderLast4": 1,
+      "reference": 1,
+      "memo": 1,
+      "keyFields": 1,
+      "needsReview": 0,
+      "silentErrors": 0
+    },
+    "ALL": {
+      "n": 16,
+      "amount": 1,
+      "dateTime": 1,
+      "receiverName": 0.9375,
+      "receiverNameClose": 1,
+      "receiverBank": 0.9375,
+      "receiverLast4": 1,
+      "senderName": 0.9375,
+      "senderLast4": 1,
+      "reference": 1,
+      "memo": 0.9375,
+      "keyFields": 1,
+      "needsReview": 0,
+      "silentErrors": 0
+    }
+  },
+  "perSlip": [
+    {
+      "file": "kbank-01.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "kbank-02.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "kbank-03.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "kbank-04.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "kbank-05.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "kbank-06.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "kbank-07.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "scb-01.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": false,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "scb-03.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "scb-04.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "scb-06.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": false,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "scb-08.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": false,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "bbl-01.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "bbl-02.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "bbl-03.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": true,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    },
+    {
+      "file": "bbl-04.jpg",
+      "scores": {
+        "amount": true,
+        "dateTime": true,
+        "receiverName": false,
+        "receiverNameClose": true,
+        "receiverBank": true,
+        "receiverLast4": true,
+        "senderName": true,
+        "senderLast4": true,
+        "reference": true,
+        "memo": true,
+        "keyFields": true
+      },
+      "needsReview": false
+    }
+  ]
+}
