@@ -107,7 +107,7 @@ export const geminiSlipSchema = z.object({
 });
 export type GeminiSlip = z.infer<typeof geminiSlipSchema>;
 
-const SYSTEM = `You read Thai bank and e-wallet transfer slips (K PLUS, SCB EASY, Bangkok Bank, Krungthai NEXT, KMA, ttb, MyMo, TrueMoney, PromptPay).
+export const SLIP_SYSTEM_PROMPT = `You read Thai bank and e-wallet transfer slips (K PLUS, SCB EASY, Bangkok Bank, Krungthai NEXT, KMA, ttb, MyMo, TrueMoney, PromptPay).
 Copy values exactly as printed. Never guess a value that is not visible: use null and confidence 0.
 "sender" is the payer (จาก / From / ผู้โอน), "receiver" is the payee (ไปยัง / To / ผู้รับ).
 Amount is the transfer amount, not the fee (ค่าธรรมเนียม) and not the balance.`;
@@ -174,7 +174,7 @@ export async function readWithGemini(
     method: "POST",
     headers: { "content-type": "application/json", "x-goog-api-key": opts.apiKey },
     body: JSON.stringify({
-      systemInstruction: { parts: [{ text: SYSTEM }] },
+      systemInstruction: { parts: [{ text: SLIP_SYSTEM_PROMPT }] },
       contents: [
         {
           role: "user",

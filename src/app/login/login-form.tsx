@@ -9,13 +9,12 @@ export function LoginForm({ initialMode = "signin" }: { initialMode?: "signin" |
 
   return (
     <form action={action} className="space-y-4">
-      <div className="grid grid-cols-2 rounded-xl bg-steel-2 p-1 text-sm" role="tablist" aria-label="เลือกการเข้าใช้">
+      <div className="grid grid-cols-2 rounded-xl bg-steel-2 p-1 text-sm" role="group" aria-label="เลือกการเข้าใช้">
         {(["signin", "signup"] as const).map((m) => (
           <button
             key={m}
             type="button"
-            role="tab"
-            aria-selected={mode === m}
+            aria-pressed={mode === m}
             onClick={() => setMode(m)}
             className={`min-h-10 rounded-lg font-semibold transition-colors ${mode === m ? "bg-white text-ink shadow-sm" : "text-ink-2 hover:text-ink"}`}
           >
@@ -50,7 +49,7 @@ export function LoginForm({ initialMode = "signin" }: { initialMode?: "signin" |
           {state.error}
         </p>
       )}
-      {state.message && <p className="notice bg-steel-2">{state.message}</p>}
+      {state.message && <p className="notice bg-steel-2" role="status">{state.message}</p>}
       <button disabled={pending} className="btn-primary w-full py-3">
         {pending ? "รอสักครู่…" : mode === "signin" ? "เข้าสู่ระบบ" : "สร้างบัญชี"}
       </button>

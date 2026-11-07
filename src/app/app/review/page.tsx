@@ -1,11 +1,12 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { CircleCheckBig, Trash2 } from "lucide-react";
+import { CircleCheckBig } from "lucide-react";
 import { BANK_NAMES_TH, type BankCode } from "@slipjot/slip-reader";
 import { ExpenseForm } from "@/components/expense-form";
 import { formatBaht, toLocalInput } from "@/lib/core/format";
 import { getCategories, getReviewQueue } from "@/lib/data";
 import { deleteExpenseAction, saveExpenseAction } from "../actions";
+import { ConfirmDelete } from "@/components/confirm-delete";
 
 export const metadata: Metadata = { title: "รอตรวจ" };
 
@@ -47,8 +48,10 @@ export default async function ReviewPage() {
         {queue.map(({ expense: e, hasImage }) => (
           <li key={e.id} className="board overflow-hidden" data-testid="review-item">
             <div className="board-head">
-              <h2>{e.payeeName || "ไม่ทราบผู้รับ"}</h2>
-              <span className="font-plate num text-lg font-semibold text-plate">
+              <h2 className="min-w-0 line-clamp-2 [overflow-wrap:anywhere]" title={e.payeeName || undefined}>
+                {e.payeeName || "ไม่ทราบผู้รับ"}
+              </h2>
+              <span className="font-plate num shrink-0 text-lg font-semibold whitespace-nowrap text-plate">
                 {e.amount > 0 ? formatBaht(e.amount, true) : "฿ –"}
               </span>
             </div>
@@ -63,7 +66,7 @@ export default async function ReviewPage() {
                   {/* eslint-disable-next-line @next/next/no-img-element -- private per-user image route */}
                   <img
                     src={`/api/slips/${e.id}/image`}
-                    alt="รูปสลิป"
+                    alt="เปิดรูปสลิปขนาดเต็ม"
                     className="mx-auto max-h-72 w-full object-contain object-top sm:max-h-none"
                   />
                 </a>
@@ -79,7 +82,7 @@ export default async function ReviewPage() {
                   </ul>
                 )}
                 <p className="text-sm text-ink-3">
-                  {e.readSource === "gemini" ? "อ่านด้วย Gemini" : e.readSource === "ocr" ? "อ่านด้วย OCR" : "เพิ่มเอง"}
+                  {e.readSource === "gemini" ? "อ่านด้วย Gemini" : e.readSource === "ocr" ? "อ่านด้วย OCR" : e.readSource === "local-llm" ? "อ่านด้วย LLM ในเครื่อง" : "เพิ่มเอง"}
                   {e.confidence !== null && ` · มั่นใจ ${Math.round(e.confidence * 100)}%`}
                   {e.payeeBank && ` · ${BANK_NAMES_TH[e.payeeBank as BankCode] ?? e.payeeBank}`}
                   {e.payeeLast4 && ` ••${e.payeeLast4}`}
@@ -96,12 +99,16 @@ export default async function ReviewPage() {
                     memo: e.memo,
                   }}
                   categories={options}
-                  submitLabel="ยืนยัน"
+                  submitLabel="ยืนยันและบันทึก"
                   lowFields={lowFieldsFrom(e.issues)}
                 >
-                  <button formAction={deleteExpenseAction} formNoValidate className="btn-danger ml-auto">
-                    <Trash2 className="size-4" aria-hidden /> ลบ
-                  </button>
+                  <ConfirmDelete
+                    action={deleteExpenseAction}
+                    label="ลบ"
+                    confirmLabel="ลบรายการนี้ถาวร"
+                    note="ลบรายการและรูปสลิปนี้ ย้อนกลับไม่ได้"
+                    className="ml-auto"
+                  />
                 </ExpenseForm>
               </div>
             </div>

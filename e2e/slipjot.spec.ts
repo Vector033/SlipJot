@@ -21,7 +21,7 @@ test.describe.configure({ mode: "serial" });
 
 test("sign up lands on an empty dashboard", async ({ page }) => {
   await page.goto("/login");
-  await page.getByRole("tab", { name: "สมัครใช้งาน" }).click();
+  await page.getByRole("button", { name: "สมัครใช้งาน", exact: true }).click();
   await page.getByLabel("อีเมล").fill(email);
   await page.getByLabel("รหัสผ่าน").fill(password);
   await page.getByRole("button", { name: "สร้างบัญชี" }).click();
@@ -34,14 +34,14 @@ test.describe("signed in", () => {
     await page.goto("/login");
     await page.getByLabel("อีเมล").fill(email);
     await page.getByLabel("รหัสผ่าน").fill(password);
-    await page.getByRole("button", { name: "เข้าสู่ระบบ" }).click();
+    await page.getByRole("button", { name: "เข้าสู่ระบบ", exact: true }).last().click();
     await expect(page).toHaveURL(/\/app$/);
   });
 
   test("reads slips, skips the duplicate, and categorises by shop name", async ({ page }) => {
     await upload(page, "bbl-03", "bbl-01");
     await expect(page.getByText("ร้านตัดผมสไตล์ช่างเอ")).toBeVisible();
-    await expect(page.locator(`[aria-label="208.69"]`)).toBeVisible();
+    await expect(page.locator(".sr-only", { hasText: /^208\.69$/ })).toBeVisible();
     await expect(page.getByText("สุขภาพ").first()).toBeVisible(); // "ตัดผม" keyword
 
     await upload(page, "bbl-03");
@@ -68,15 +68,15 @@ test.describe("signed in", () => {
     await page.goto("/app/review");
     const item = page.getByTestId("review-item").first();
     await expect(item).toBeVisible();
-    await expect(item.getByRole("img", { name: "รูปสลิป" })).toBeVisible();
+    await expect(item.getByRole("img", { name: "เปิดรูปสลิปขนาดเต็ม" })).toBeVisible();
     await item.getByLabel("ผู้รับ / ร้าน").fill("ร้านข้าวมันไก่ป้าแดง");
-    await item.getByRole("button", { name: "ยืนยัน" }).click();
+    await item.getByRole("button", { name: "ยืนยันและบันทึก" }).click();
     await expect(page.getByText("ไม่มีรายการค้างตรวจ")).toBeVisible();
   });
 
   test("dashboard, CSV export and wipe", async ({ page }) => {
     await page.goto(`/app?month=${await monthOfLabel("bbl-03")}`);
-    await expect(page.getByTestId("month-total").locator("[aria-label]")).not.toHaveAttribute("aria-label", "0.00");
+    await expect(page.getByTestId("month-total").locator(".sr-only")).not.toHaveText("0.00");
 
     const download = page.waitForEvent("download");
     await page.goto("/app/settings");
@@ -85,7 +85,7 @@ test.describe("signed in", () => {
     expect(csv.charCodeAt(0)).toBe(0xfeff);
     expect(csv).toContain("ร้านตัดผมสไตล์ช่างเอ");
 
-    await page.getByLabel("ยืนยันการลบข้อมูล").fill("ลบ");
+    await page.getByLabel('พิมพ์ "ลบ" เพื่อยืนยัน', { exact: true }).fill("ลบ");
     await page.getByRole("button", { name: "ลบข้อมูลทั้งหมด" }).click();
     await expect(page.getByText("ลบข้อมูลทั้งหมดแล้ว")).toBeVisible();
   });
@@ -104,9 +104,9 @@ test("demo account opens without a password and cannot be wiped", async ({ page 
   await expect(page).toHaveURL(/\/app$/);
   await expect(page.getByText("บัญชีเดโม: ข้อมูลทั้งหมดเป็นข้อมูลสมมติ")).toBeVisible();
   await page.goto("/app/settings");
-  await page.getByLabel("ยืนยันการลบข้อมูล").fill("ลบ");
+  await page.getByLabel('พิมพ์ "ลบ" เพื่อยืนยัน', { exact: true }).fill("ลบ");
   await page.getByRole("button", { name: "ลบข้อมูลทั้งหมด" }).click();
   await expect(page).toHaveURL(/demo=1/);
   await page.goto("/app?month=2026-10");
-  await expect(page.getByTestId("month-total").locator("[aria-label]")).not.toHaveAttribute("aria-label", "0.00");
+  await expect(page.getByTestId("month-total").locator(".sr-only")).not.toHaveText("0.00");
 });

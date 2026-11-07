@@ -13,7 +13,7 @@ test("live: demo dashboard loads and a slip is read and saved", async ({ page })
   await expect(page).toHaveURL(/\/app$/);
 
   await page.goto("/app?month=2026-10");
-  await expect(page.getByTestId("month-total").locator("[aria-label]")).not.toHaveAttribute("aria-label", "0.00");
+  await expect(page.getByTestId("month-total").locator(".sr-only")).not.toHaveText("0.00");
 
   await page.goto("/app/upload");
   await page.getByTestId("slip-input").setInputFiles("eval/fixtures/holdout/scb-01.jpg");
@@ -26,7 +26,8 @@ test("live: demo dashboard loads and a slip is read and saved", async ({ page })
   const amount = slip.amount.toLocaleString("en-US", { minimumFractionDigits: 2 });
   await page.goto("/app/expenses?month=" + slip.dateTime.slice(0, 7));
   await page.getByTestId("expense-row").filter({ hasText: `฿${amount}` }).first().click();
-  await page.getByRole("button", { name: "ลบรายการ" }).click();
+  await page.getByText("ลบรายการ", { exact: true }).click(); // opens the confirm row
+  await page.getByRole("button", { name: "ลบรายการนี้ถาวร" }).click();
   await expect(page).toHaveURL(/\/app\/expenses\?month=/);
 });
 

@@ -34,7 +34,8 @@ export interface Party {
   accountLast4: Field<string>;
 }
 
-export type SlipSource = "gemini" | "ocr" | "fake";
+/** "local-llm": an OpenAI-compatible router on this machine (dev/evals only, synthetic slips only). */
+export type SlipSource = "gemini" | "ocr" | "fake" | "local-llm";
 
 export interface SlipUsage {
   inputTokens: number;
@@ -65,13 +66,15 @@ export interface SlipReadResult {
   elapsedMs?: number;
 }
 
-export type ProviderChoice = "auto" | "gemini" | "ocr";
+export type ProviderChoice = "auto" | "gemini" | "ocr" | "local-llm";
 
 export interface ReadSlipOptions {
   /** "auto" uses Gemini when an API key is available, otherwise local OCR. */
   provider?: ProviderChoice;
   apiKey?: string;
   model?: string;
+  /** Base URL for provider "local-llm" (OpenAI-compatible, loopback only). */
+  baseUrl?: string;
   /** Decode the slip's QR code (Node only). Default true on the OCR path, false on the Gemini path. */
   decodeQr?: boolean;
   /** Clock for date sanity checks; tests pass a fixed date. */

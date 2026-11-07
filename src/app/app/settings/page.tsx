@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getOptionalUser } from "@/lib/auth";
 import { getCategories, getInsights, getSettings } from "@/lib/data";
-import { llmEnabled } from "@/lib/llm/categorize-llm";
+import { llmLabel } from "@/lib/llm/categorize-llm";
 import { isDemoUser } from "@/lib/supabase/admin";
 import {
   deleteAccountAction,
@@ -10,14 +10,17 @@ import {
   setKeepImagesAction,
   signOutAction,
 } from "../actions";
-import { Download, LogOut, Trash2 } from "lucide-react";
+import { Download, LogOut } from "lucide-react";
+import { DEFAULT_CATEGORIES } from "@/lib/core/categories";
 import { CategoryRow } from "./category-row";
+import { ConfirmDelete } from "@/components/confirm-delete";
 
 export const metadata: Metadata = { title: "ตั้งค่า" };
 
 const pct = (n: number, d: number) => (d ? `${Math.round((100 * n) / d)}%` : "–");
 
-export default async function SettingsPage() {
+export default async function SettingsPage({ searchParams }: PageProps<"/app/settings">) {
+  const sp = (await searchParams) as { confirm?: string };
   const [user, cats, settings, insights] = await Promise.all([
     getOptionalUser(),
     getCategories(),
@@ -49,17 +52,16 @@ export default async function SettingsPage() {
           <div className="rows">
             {cats.map((c) => (
               <CategoryRow key={c.id} c={c}>
-                <button
-                  formAction={deleteCategoryAction}
-                  formNoValidate
-                  className="btn-danger px-2.5"
-                  aria-label={`ลบหมวด ${c.name}`}
-                >
-                  <Trash2 className="size-4" aria-hidden />
-                </button>
+                <ConfirmDelete
+                  action={deleteCategoryAction}
+                  label={`ลบหมวด ${c.name}`}
+                  confirmLabel={`ลบหมวด ${c.name}`}
+                  note="รายการในหมวดนี้ไม่ถูกลบ จะกลายเป็นยังไม่จัดหมวด"
+                  iconOnly
+                />
               </CategoryRow>
             ))}
-            <CategoryRow c={{ name: "", icon: "other", color: "#7a5230", monthlyBudget: null }} />
+            <CategoryRow c={{ name: "", icon: "other", color: nextRouteColour(cats.map((c) => c.color)), monthlyBudget: null }} />
           </div>
         </div>
       </section>
@@ -104,14 +106,16 @@ export default async function SettingsPage() {
             />
           </dl>
           <p className="mt-3 text-xs text-ink-3">
-            {llmEnabled()
-              ? "อ่านสลิปด้วย Gemini และใช้ AI จัดหมวดเฉพาะเมื่อกฎจากประวัติและชื่อร้านไม่รู้จักผู้รับ"
-              : "ยังไม่ได้ตั้งค่า Gemini: อ่านสลิปด้วย OCR ในเซิร์ฟเวอร์ และจัดหมวดด้วยกฎอย่างเดียว"}
+            {llmLabel() === "local"
+              ? "โหมดพัฒนา: อ่านสลิปและจัดหมวดด้วย LLM ฟรีในเครื่อง (FreeLLMAPI) ใช้กับสลิปจำลองเท่านั้น"
+              : llmLabel() === "gemini"
+                ? "อ่านสลิปด้วย Gemini และใช้ AI จัดหมวดเฉพาะเมื่อกฎจากประวัติและชื่อร้านไม่รู้จักผู้รับ"
+                : "ยังไม่ได้ตั้งค่า Gemini: อ่านสลิปด้วย OCR ในเซิร์ฟเวอร์ และจัดหมวดด้วยกฎอย่างเดียว"}
           </p>
         </div>
       </section>
 
-      <section className="board overflow-hidden">
+      <section id="danger" className="board overflow-hidden">
         <div className="board-head">
           <h2>ข้อมูลของคุณ</h2>
         </div>
@@ -130,26 +134,32 @@ export default async function SettingsPage() {
 
           <form action={deleteAllDataAction} className="mt-6 space-y-2 border-t-2 border-line pt-5">
             <p className="text-sm font-medium">ลบรายการ หมวด และกฎที่ระบบเรียนรู้ทั้งหมด (บัญชียังอยู่)</p>
+            <label htmlFor="confirm-wipe" className="label">
+              พิมพ์ &quot;ลบ&quot; เพื่อยืนยัน
+            </label>
+            {sp.confirm === "wipe" && (
+              <p role="alert" className="text-sm text-red-deep">
+                พิมพ์คำว่า &quot;ลบ&quot; ให้ตรงก่อนกดลบข้อมูลทั้งหมด
+              </p>
+            )}
             <div className="flex flex-wrap gap-2">
-              <input
-                name="confirm"
-                placeholder='พิมพ์ "ลบ" เพื่อยืนยัน'
-                className="input max-w-56"
-                aria-label="ยืนยันการลบข้อมูล"
-              />
+              <input id="confirm-wipe" name="confirm" autoComplete="off" className="input max-w-56" />
               <button className="btn-danger border-2 border-red/30">ลบข้อมูลทั้งหมด</button>
             </div>
           </form>
 
           <form action={deleteAccountAction} className="mt-4 space-y-2">
             <p className="text-sm font-medium">ลบบัญชีและข้อมูลทั้งหมดถาวร</p>
+            <label htmlFor="confirm-account" className="label">
+              พิมพ์ &quot;ลบบัญชี&quot; เพื่อยืนยัน
+            </label>
+            {sp.confirm === "account" && (
+              <p role="alert" className="text-sm text-red-deep">
+                พิมพ์คำว่า &quot;ลบบัญชี&quot; ให้ตรงก่อนกดลบบัญชี
+              </p>
+            )}
             <div className="flex flex-wrap gap-2">
-              <input
-                name="confirm"
-                placeholder='พิมพ์ "ลบบัญชี" เพื่อยืนยัน'
-                className="input max-w-56"
-                aria-label="ยืนยันการลบบัญชี"
-              />
+              <input id="confirm-account" name="confirm" autoComplete="off" className="input max-w-56" />
               <button className="btn-danger border-2 border-red/30">ลบบัญชี</button>
             </div>
           </form>
@@ -166,4 +176,11 @@ function Stat({ label, value }: { label: string; value: string }) {
       <dd className="num mt-1 text-xl font-bold">{value}</dd>
     </div>
   );
+}
+
+/** A new category starts on the first songthaew route colour no category uses yet. */
+function nextRouteColour(used: string[]) {
+  const taken = new Set(used.map((c) => c.toLowerCase()));
+  const route = DEFAULT_CATEGORIES.map((c) => c.color);
+  return route.find((c) => !taken.has(c.toLowerCase())) ?? route[used.length % route.length];
 }

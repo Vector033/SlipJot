@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Check, CircleAlert, ImagePlus, Loader2 } from "lucide-react";
+import { Check, CircleAlert, ImagePlus, RotateCcw, ScanLine } from "lucide-react";
 import { RollingNumber } from "@/components/rolling-number";
 import type { IngestResult } from "@/lib/slips";
 import { formatDateTime } from "@/lib/core/format";
@@ -56,10 +56,10 @@ export function Uploader({ shared }: { shared: boolean }) {
       try {
         const res = await fetch("/api/slips", { method: "POST", body });
         const json = await res.json().catch(() => ({ error: "เซิร์ฟเวอร์ไม่ตอบ" }));
-        if (!res.ok) update(item.key, { state: "error", error: json.error ?? "อัปโหลดไม่สำเร็จ" });
+        if (!res.ok) update(item.key, { state: "error", error: json.error ?? "ส่งสลิปนี้ไม่สำเร็จ" });
         else update(item.key, { state: "done", result: json as IngestResult });
       } catch {
-        update(item.key, { state: "error", error: "เชื่อมต่อไม่ได้ ลองใหม่อีกครั้ง" });
+        update(item.key, { state: "error", error: "เชื่อมต่อเซิร์ฟเวอร์ไม่ได้" });
       }
     },
     [update],
@@ -91,6 +91,15 @@ export function Uploader({ shared }: { shared: boolean }) {
       pump();
     },
     [pump],
+  );
+
+  const retry = useCallback(
+    (item: Item) => {
+      update(item.key, { state: "waiting", error: undefined });
+      queue.current.push(item);
+      pump();
+    },
+    [pump, update],
   );
 
   useEffect(() => {
@@ -143,7 +152,13 @@ export function Uploader({ shared }: { shared: boolean }) {
       </div>
 
       {items.length > 0 && (
-        <section aria-live="polite">
+        <section>
+          {/* One short summary for screen readers instead of re-reading every row. */}
+          <p className="sr-only" role="status">
+            {busy ? `กำลังอ่าน ${done.length} จาก ${items.length} สลิป` : `อ่านครบ ${items.length} สลิป`} · บันทึกแล้ว {saved} · รอตรวจ{" "}
+            {review} · ซ้ำ {dupes}
+            {items.some((i) => i.state === "error") ? ` · ไม่สำเร็จ ${items.filter((i) => i.state === "error").length}` : ""}
+          </p>
           <div className="mb-3 flex flex-wrap items-center gap-2 text-sm">
             <span className="chip">
               บันทึกแล้ว <span className="num font-bold text-ink">{saved}</span>
@@ -168,10 +183,20 @@ export function Uploader({ shared }: { shared: boolean }) {
           <ul className="space-y-2">
             {items.map((it) => (
               <li key={it.key} className="board flex items-center gap-3 p-3" data-testid="upload-row">
-                {/* eslint-disable-next-line @next/next/no-img-element -- local blob preview */}
-                <img src={it.preview} alt="" className="h-16 w-12 shrink-0 rounded-lg border border-line object-cover object-top" />
+                <div className="relative h-20 w-14 shrink-0 overflow-hidden rounded-lg border border-line bg-steel">
+                  {/* eslint-disable-next-line @next/next/no-img-element -- local blob preview */}
+                  <img src={it.preview} alt="" className="size-full object-cover object-top" />
+                  {it.state === "reading" && (
+                    // The reader passing over the slip: a flat plate band, no glow. Hidden for reduced motion.
+                    <span
+                      aria-hidden
+                      className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,transparent_38%,rgb(245_196_0/0.7)_50%,transparent_62%)] motion-reduce:hidden"
+                      style={{ animation: "scan-loop 1.6s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate" }}
+                    />
+                  )}
+                </div>
                 <div className="min-w-0 flex-1 text-sm">
-                  <Row item={it} />
+                  <Row item={it} onRetry={() => retry(it)} />
                 </div>
               </li>
             ))}
@@ -182,19 +207,27 @@ export function Uploader({ shared }: { shared: boolean }) {
   );
 }
 
-function Row({ item }: { item: Item }) {
+function Row({ item, onRetry }: { item: Item; onRetry: () => void }) {
   if (item.state === "waiting") return <p className="text-ink-3">รอคิว…</p>;
   if (item.state === "reading")
     return (
-      <p className="flex items-center gap-2 text-ink-2">
-        <Loader2 className="size-4 animate-spin text-red" aria-hidden /> กำลังอ่านสลิป…
-      </p>
+      <div className="space-y-1.5">
+        <p className="flex items-center gap-2 text-ink-2">
+          <ScanLine className="size-4 text-red" aria-hidden /> กำลังอ่านสลิป…
+        </p>
+        <p className="text-xs text-ink-3">อ่านยอด เวลา และผู้รับ แล้วจัดหมวดให้</p>
+      </div>
     );
   if (item.state === "error")
     return (
-      <p className="flex items-start gap-2 text-red-deep">
-        <CircleAlert className="mt-0.5 size-4 shrink-0" aria-hidden /> {item.error}
-      </p>
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+        <p className="flex min-w-0 flex-1 items-start gap-2 text-red-deep">
+          <CircleAlert className="mt-0.5 size-4 shrink-0" aria-hidden /> {item.error}
+        </p>
+        <button type="button" onClick={onRetry} className="btn min-h-9 px-3">
+          <RotateCcw className="size-4" aria-hidden /> ลองอีกครั้ง
+        </button>
+      </div>
     );
   const r = item.result!;
   if (r.status === "duplicate")
@@ -208,7 +241,7 @@ function Row({ item }: { item: Item }) {
     <>
       <p className="flex items-baseline justify-between gap-2">
         <span className="truncate font-medium">{r.payeeName || "ไม่ทราบผู้รับ"}</span>
-        <span className="plate-sm shrink-0 text-base">
+        <span className="plate-sm shrink-0 text-base" style={{ animation: "pop-chip 0.32s cubic-bezier(0.34, 1.4, 0.64, 1) both" }}>
           {r.amount !== null ? <>฿<RollingNumber text={r.amount.toLocaleString("en-US", { minimumFractionDigits: 2 })} /></> : "–"}
         </span>
       </p>
@@ -216,11 +249,18 @@ function Row({ item }: { item: Item }) {
         {r.occurredAt && <span>{formatDateTime(r.occurredAt)}</span>}
         <span>· {r.category ?? "ยังไม่จัดหมวด"}</span>
         {r.status === "review" ? (
-          <Link href="/app/review" className="ml-auto inline-flex items-center gap-1 text-xs font-semibold text-red underline">
-            รอตรวจ
+          <Link
+            href="/app/review"
+            className="ml-auto inline-flex min-h-6 items-center gap-1 rounded-full bg-plate-soft px-2 text-xs font-semibold text-warn underline"
+            style={{ animation: "pop-chip 0.32s cubic-bezier(0.34, 1.4, 0.64, 1) 90ms both" }}
+          >
+            <CircleAlert className="size-3.5" aria-hidden /> รอตรวจ
           </Link>
         ) : (
-          <span className="ml-auto inline-flex items-center gap-1 text-xs font-semibold text-ok">
+          <span
+            className="ml-auto inline-flex min-h-6 items-center gap-1 rounded-full bg-ok/10 px-2 text-xs font-semibold text-ok"
+            style={{ animation: "pop-chip 0.32s cubic-bezier(0.34, 1.4, 0.64, 1) 90ms both" }}
+          >
             <Check className="size-3.5" aria-hidden /> บันทึกแล้ว
           </span>
         )}

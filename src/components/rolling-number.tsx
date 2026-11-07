@@ -18,7 +18,8 @@ export function RollingNumber({ text, className = "", delayMs = 0 }: { text: str
   const digitCount = chars.filter((c) => /\d/.test(c)).length;
   let seen = 0;
   return (
-    <span className={`num inline-flex ${className}`} aria-label={text} role="text">
+    <span className={`num inline-flex ${className}`}>
+      <span className="sr-only">{text}</span>
       {chars.map((ch, i) => {
         if (!/\d/.test(ch)) {
           return (

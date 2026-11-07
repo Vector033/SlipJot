@@ -16,7 +16,7 @@ const json = (body: unknown, status = 200, headers: Record<string, string> = {})
 export async function POST(req: Request) {
   if (!isSameOrigin(req)) return json({ error: "คำขอไม่ได้มาจาก SlipJot" }, 403);
   const user = await getOptionalUser();
-  if (!user) return json({ error: "กรุณาเข้าสู่ระบบ" }, 401);
+  if (!user) return json({ error: "หมดเวลาเข้าสู่ระบบ เข้าสู่ระบบใหม่แล้วส่งสลิปอีกครั้ง" }, 401);
 
   // Refuse oversized bodies before reading them into memory.
   const declared = Number(req.headers.get("content-length") ?? 0);

@@ -26,7 +26,7 @@ test("the page runs with no CSP violations", async ({ page }) => {
   });
   await page.goto("/");
   await page.goto("/login");
-  await page.getByRole("tab", { name: "สมัครใช้งาน" }).click(); // proves hydration ran under the CSP
+  await page.getByRole("button", { name: "สมัครใช้งาน", exact: true }).click(); // proves hydration ran under the CSP
   await expect(page.getByRole("button", { name: "สร้างบัญชี" })).toBeVisible();
   expect(violations).toEqual([]);
 });

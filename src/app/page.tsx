@@ -36,13 +36,13 @@ export default async function Home({ searchParams }: PageProps<"/">) {
         </header>
 
         {sp.deleted && (
-          <p className="mx-auto mb-2 max-w-6xl px-4 text-sm text-plate sm:px-6 lg:px-8">ลบบัญชีและข้อมูลทั้งหมดแล้ว</p>
+          <p className="mx-auto mb-2 max-w-6xl px-4 text-sm font-semibold text-white sm:px-6 lg:px-8" role="status">ลบบัญชีและข้อมูลทั้งหมดแล้ว</p>
         )}
 
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 pt-6 pb-14 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:gap-12 lg:px-8 lg:pt-10 lg:pb-20">
           <div>
             {/* Thai has no spaces: line breaks are placed by hand between whole words. */}
-            <h1 className="sign text-[2.5rem] sm:text-[3.4rem] lg:text-[3.75rem]">
+            <h1 className="sign text-[2rem] min-[360px]:text-[2.5rem] sm:text-[3.4rem] lg:text-[3.75rem]">
               <span className="whitespace-nowrap">สลิปในอัลบั้ม</span>
               <br />
               <span className="text-plate">
@@ -52,7 +52,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
               </span>
             </h1>
             <p className="mt-5 max-w-[36ch] text-lg leading-relaxed text-on-red-2">
-              ส่งรูปสลิปโอนเงินจากแอปธนาคารไหนก็ได้ SlipJot อ่านยอด เวลา ผู้รับ แล้วพาไปลงหมวดให้
+              ส่งรูปสลิปโอนเงินจากแอปธนาคาร SlipJot อ่านยอด เวลา ผู้รับ แล้วพาไปลงหมวดให้
               ใบไหนไม่แน่ใจจะถามคุณก่อนบันทึก
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -81,10 +81,10 @@ export default async function Home({ searchParams }: PageProps<"/">) {
       </div>
 
       <RouteStops>
-        <Stop name="อ่านได้ทุกธนาคาร" id="read">
-          <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
+        <Stop name="อ่านสลิปธนาคารหลัก" id="read">
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
             <div>
-              <h2 className="sign text-3xl sm:text-4xl">อ่านได้ทุกธนาคาร</h2>
+              <h2 className="sign text-3xl sm:text-4xl">อ่านสลิปธนาคารหลัก</h2>
               <p className="mt-4 max-w-[52ch] text-lg text-ink-2">
                 ยอด วันเวลา (แปลง พ.ศ. ให้) ชื่อผู้รับ ธนาคาร เลขบัญชี 4 ตัวท้าย และบันทึกช่วยจำ อ่านด้วย Gemini
                 และถ้าระบบ AI ล่มจะอ่านด้วย OCR ภาษาไทยในเซิร์ฟเวอร์แทน
@@ -129,7 +129,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
         </Stop>
 
         <Stop name="ไม่แน่ใจ ถามก่อน" id="review">
-          <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
+          <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
             <div className="board order-2 p-5 lg:order-1">
               <p className="flex items-center gap-2 text-sm font-semibold">
                 <MessageCircleQuestion className="size-4 text-red" aria-hidden /> รอคุณตรวจ 1 รายการ
@@ -163,7 +163,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
         </Stop>
 
         <Stop name="ร้านเดิม หมวดเดิม" id="learn">
-          <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
             <div>
               <h2 className="sign text-3xl sm:text-4xl">ร้านเดิม หมวดเดิม</h2>
               <p className="mt-4 max-w-[50ch] text-lg text-ink-2">
@@ -228,9 +228,10 @@ export default async function Home({ searchParams }: PageProps<"/">) {
                   mark: <span className="rounded-full border-2 border-white/40 px-2.5 py-0.5 text-sm">CSV</span>,
                 },
               ].map(({ t, d, mark }) => (
-                <div key={t}>
-                  <div className="trim opacity-60" />
-                  <div className="grid gap-x-8 gap-y-1 px-6 py-5 sm:grid-cols-[16rem_1fr_auto] sm:items-center sm:px-10">
+                <div
+                  key={t}
+                  className="trim-top grid gap-x-8 gap-y-1 px-6 pt-6 pb-5 sm:grid-cols-[16rem_1fr_auto] sm:items-center sm:px-10"
+                >
                     <dt className="sign text-xl text-plate">
                       {t.split("|").map((w, i) => (
                         <span key={i}>
@@ -241,7 +242,6 @@ export default async function Home({ searchParams }: PageProps<"/">) {
                     </dt>
                     <dd className="text-[0.95rem] leading-relaxed text-white/80">{d}</dd>
                     <dd className="mt-2 sm:mt-0">{mark}</dd>
-                  </div>
                 </div>
               ))}
             </dl>

@@ -8,7 +8,8 @@ import type { CategorySlug } from "./core/categories";
 import { categorize, payeeKey } from "./core/categorize";
 import { DUPLICATE_REASON_TH, findDuplicate, type DuplicateVerdict } from "./core/dedup";
 import { sanitizeImage } from "./image-safety";
-import { categorizeWithGemini, llmEnabled } from "./llm/categorize-llm";
+import { categorizeWithLlm, llmEnabled } from "./llm/categorize-llm";
+import { localLlmConfig } from "./llm/local-llm";
 
 // Upload pipeline for one slip: hash → exact-duplicate check → sanitise (re-encode,
 // strip metadata) → read → dedup → categorise → save. The image itself is only stored when the result needs review
@@ -27,6 +28,18 @@ export type IngestResult =
       category: string | null;
       issues: string[];
     };
+
+/** Gemini (or OCR) as usual; in local dev with SLIP_LLM_PROVIDER=freellmapi, the local router, then OCR if it fails. */
+async function readSlipWithProvider(bytes: Uint8Array, mimeType: string): Promise<SlipReadResult> {
+  const local = localLlmConfig();
+  if (!local) return readSlip(bytes, mimeType, { decodeQr: true });
+  try {
+    return await readSlip(bytes, mimeType, { provider: "local-llm", decodeQr: true, ...local });
+  } catch (err) {
+    console.warn(`local LLM read failed, falling back to OCR: ${(err as Error).message}`);
+    return readSlip(bytes, mimeType, { provider: "ocr", decodeQr: true });
+  }
+}
 
 async function exactByHash(userId: string, sha: string) {
   const [row] = await db
@@ -50,7 +63,7 @@ export async function ingestSlip(userId: string, upload: Uint8Array): Promise<In
   const mimeType = safe.mimeType;
 
   const [read, dhash] = await Promise.all([
-    readSlip(bytes, mimeType, { decodeQr: true }),
+    readSlipWithProvider(bytes, mimeType),
     dHash(bytes).catch(() => null),
   ]);
   if (read.usage) {
@@ -78,7 +91,7 @@ export async function ingestSlip(userId: string, upload: Uint8Array): Promise<In
       },
       llm: llmEnabled()
         ? async (input) => {
-            const { slug, usage } = await categorizeWithGemini(input).catch(() => ({ slug: null, usage: null }));
+            const { slug, usage } = await categorizeWithLlm(input).catch(() => ({ slug: null, usage: null }));
             if (usage) await db.insert(aiUsage).values({ userId, kind: "categorize", ...usage });
             return slug;
           }

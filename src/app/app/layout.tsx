@@ -23,9 +23,9 @@ export default async function AppLayout({ children }: LayoutProps<"/app">) {
         <div className="trim" />
       </header>
       {isDemoUser(user.email) && (
-        <p className="bg-plate px-4 py-1.5 text-center text-[0.8rem] font-medium text-ink">
+        <aside aria-label="บัญชีเดโม" className="bg-plate px-4 py-1.5 text-center text-[0.8rem] font-medium text-ink">
           บัญชีเดโม: ข้อมูลทั้งหมดเป็นข้อมูลสมมติ และคนอื่นก็เห็นสิ่งที่คุณเพิ่ม
-        </p>
+        </aside>
       )}
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 pt-6 pb-32 sm:px-6 sm:pb-14">{children}</main>
       <MobileNav reviewCount={pending} />

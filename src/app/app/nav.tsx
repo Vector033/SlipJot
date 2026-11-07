@@ -21,9 +21,9 @@ function Count({ n, onRed = false }: { n: number; onRed?: boolean }) {
   return (
     <span
       className={`plate-sm min-w-6 justify-center text-[0.8rem] ${onRed ? "" : "ring-2 ring-white"}`}
-      aria-label={`${n} รายการ`}
     >
-      {n > 99 ? "99+" : n}
+      <span aria-hidden>{n > 99 ? "99+" : n}</span>
+      <span className="sr-only"> รอ {n} รายการ</span>
     </span>
   );
 }

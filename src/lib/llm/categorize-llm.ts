@@ -1,7 +1,8 @@
-import { DEFAULT_GEMINI_MODEL, fetchWithRetry } from "@slipjot/slip-reader";
+import { chatJson, DEFAULT_GEMINI_MODEL, fetchWithRetry } from "@slipjot/slip-reader";
 import { z } from "zod";
 import { CATEGORY_SLUGS, DEFAULT_CATEGORIES, type CategorySlug } from "../core/categories.ts";
 import type { CategorizeInput } from "../core/categorize.ts";
+import { localLlmConfig, type LocalLlmConfig } from "./local-llm.ts";
 
 // Server code only (reads GEMINI_API_KEY); also imported by eval/run-categorize-eval.mts.
 // Text-only Gemini call that picks one built-in category for a payee. Only reached when
@@ -26,7 +27,35 @@ export interface LlmUsage {
 }
 
 export function llmEnabled() {
-  return !!process.env.GEMINI_API_KEY;
+  return !!process.env.GEMINI_API_KEY || !!localLlmConfig();
+}
+
+/** Which model family answers: shown in the UI so dev runs on the local router are obvious. */
+export function llmLabel(): "gemini" | "local" | null {
+  if (localLlmConfig()) return "local";
+  return process.env.GEMINI_API_KEY ? "gemini" : null;
+}
+
+/** Same prompt and schema as Gemini, through the local OpenAI-compatible router (dev/evals only). */
+export async function categorizeWithLocalLlm(
+  input: CategorizeInput,
+  cfg: LocalLlmConfig,
+): Promise<{ slug: CategorySlug | null; usage: LlmUsage }> {
+  const out = await chatJson(
+    schema,
+    SYSTEM,
+    JSON.stringify({ payee: input.payeeName, memo: input.memo ?? null, amount_thb: input.amount ?? null }),
+    { ...cfg, timeoutMs: 25_000, budgetMs: 30_000 },
+  );
+  const usage: LlmUsage = { model: `local:${out.model}`, inputTokens: out.inputTokens, outputTokens: out.outputTokens, costUsd: 0 };
+  if (out.data.category === "other" && out.data.confidence < 0.5) return { slug: null, usage };
+  return { slug: out.data.category, usage };
+}
+
+/** The app's entry point: the local router when SLIP_LLM_PROVIDER=freellmapi (dev only), else Gemini. */
+export function categorizeWithLlm(input: CategorizeInput) {
+  const local = localLlmConfig();
+  return local ? categorizeWithLocalLlm(input, local) : categorizeWithGemini(input);
 }
 
 export async function categorizeWithGemini(

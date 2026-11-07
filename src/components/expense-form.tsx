@@ -57,6 +57,9 @@ export function ExpenseForm({
   const [when, setWhen] = useState(values.occurredAt);
   const idBase = useId();
   const mark = (f: (typeof lowFields)[number]) => (lowFields.includes(f) ? "border-plate-deep bg-plate-soft" : "");
+  // Colour alone is not enough: unsure fields also say so in their label (read out with the field name).
+  const unsure = (f: (typeof lowFields)[number]) =>
+    lowFields.includes(f) ? <span className="font-semibold text-warn"> · ไม่แน่ใจ ตรวจอีกครั้ง</span> : null;
 
   return (
     <form action={formAction} className="space-y-3">
@@ -65,7 +68,7 @@ export function ExpenseForm({
       {redirectTo && <input type="hidden" name="redirectTo" value={redirectTo} />}
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="block">
-          <span className="label">ยอด (บาท)</span>
+          <span className="label">ยอด (บาท){unsure("amount")}</span>
           <input
             name="amount"
             type="number"
@@ -78,7 +81,7 @@ export function ExpenseForm({
           />
         </label>
         <label className="block">
-          <span className="label">วันเวลา</span>
+          <span className="label">วันเวลา{unsure("occurredAt")}</span>
           <input
             name="occurredAt"
             type="datetime-local"
@@ -95,7 +98,7 @@ export function ExpenseForm({
         </label>
       </div>
       <label className="block">
-        <span className="label">ผู้รับ / ร้าน</span>
+        <span className="label">ผู้รับ / ร้าน{unsure("payeeName")}</span>
         <input name="payeeName" defaultValue={values.payeeName} maxLength={200} className={`input ${mark("payeeName")}`} />
       </label>
       <div className="grid gap-3 sm:grid-cols-2">

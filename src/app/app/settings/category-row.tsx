@@ -85,7 +85,7 @@ export function CategoryRow({ c, children }: { c: CategoryRowValues; children?: 
           </div>
         </fieldset>
       )}
-      {state.error && <p className="mt-2 text-sm text-red-deep">{state.error}</p>}
+      {state.error && <p role="alert" className="mt-2 text-sm text-red-deep">{state.error}</p>}
       {state.ok && (
         <p role="status" className="mt-2 text-xs font-medium text-ok">
           บันทึกแล้ว

@@ -83,11 +83,29 @@ for (let day = 0; day < 90; day++) {
   }
 }
 
-const useGemini = !!process.env.GEMINI_API_KEY;
-const argModel = process.argv.includes("--model") ? process.argv[process.argv.indexOf("--model") + 1] : undefined;
+// --provider freellmapi: the local router (dev only). The stream is fictional, so it is safe to send.
+const argOf = (name: string) => (process.argv.includes(`--${name}`) ? process.argv[process.argv.indexOf(`--${name}`) + 1] : undefined);
+const useLocal = argOf("provider") === "freellmapi";
+const useGemini = !useLocal && !!process.env.GEMINI_API_KEY;
+const argModel = argOf("model");
 let llmErrors = 0;
 let gemini: ((i: { payeeName: string; memo?: string | null }) => Promise<CategorySlug | null>) | null = null;
-if (useGemini) {
+if (useLocal) {
+  const { categorizeWithLocalLlm } = await import("../src/lib/llm/categorize-llm.ts");
+  const cfg = {
+    baseUrl: process.env.FREELLMAPI_URL || "http://127.0.0.1:31415/v1",
+    apiKey: process.env.FREELLMAPI_KEY,
+    model: argModel ?? process.env.FREELLMAPI_MODEL ?? "gemini-3.5-flash-lite",
+  };
+  gemini = async (i) => {
+    try {
+      return (await categorizeWithLocalLlm(i, cfg)).slug;
+    } catch {
+      llmErrors++;
+      return null;
+    }
+  };
+} else if (useGemini) {
   // Same prompt as the app. Like the app, a failed call counts as "no answer".
   const { categorizeWithGemini } = await import("../src/lib/llm/categorize-llm.ts");
   gemini = async (i) => {
@@ -145,7 +163,11 @@ const n = stream.length;
 const pct = (a: number, b: number) => (b ? `${((100 * a) / b).toFixed(1)}%` : "–");
 const summary = {
   slips: n,
-  llmMode: useGemini ? `gemini ${argModel ?? process.env.GEMINI_MODEL ?? "default"}` : "none (counts would-be calls)",
+  llmMode: useLocal
+    ? `freellmapi ${argModel ?? process.env.FREELLMAPI_MODEL ?? "gemini-3.5-flash-lite"}`
+    : useGemini
+      ? `gemini ${argModel ?? process.env.GEMINI_MODEL ?? "default"}`
+      : "none (counts would-be calls)",
   llmErrors,
   bySource: counts,
   accuracyBySource: Object.fromEntries(Object.entries(counts).map(([k, v]) => [k, v ? correct[k as keyof typeof correct] / v : null])),
@@ -171,6 +193,10 @@ console.log(table);
 
 const outDir = fileURLToPath(new URL("./results/", import.meta.url));
 await mkdir(outDir, { recursive: true });
-const tag = useGemini ? "gemini" : "nollm";
+const tag = useLocal
+  ? `freellmapi-${(argModel ?? process.env.FREELLMAPI_MODEL ?? "gemini-3.5-flash-lite").replace(/[^a-z0-9.-]+/gi, "_")}`
+  : useGemini
+    ? "gemini"
+    : "nollm";
 await writeFile(`${outDir}categorize-${tag}.json`, JSON.stringify(summary, null, 2) + "\n");
 await writeFile(`${outDir}categorize-${tag}.md`, `LLM: ${summary.llmMode}\n\n${table}\n`);

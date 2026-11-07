@@ -19,7 +19,8 @@
     "seed:demo": "node --env-file=.env.local scripts/seed-demo.mts",
     "slips:generate": "node scripts/generate-synthetic-slips.mts",
     "eval:slips": "node --env-file-if-exists=.env.local eval/run-slip-eval.mts",
-    "eval:categorize": "node --env-file-if-exists=.env.local eval/run-categorize-eval.mts"
+    "eval:categorize": "node --env-file-if-exists=.env.local eval/run-categorize-eval.mts",
+    "eval:compare": "node --env-file-if-exists=.env.local eval/compare-models.mts"
   },
   "dependencies": {
     "@slipjot/slip-reader": "*",

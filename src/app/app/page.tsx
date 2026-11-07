@@ -4,7 +4,7 @@ import { AlertTriangle, ArrowRight, ClipboardCheck, TrendingDown, TrendingUp } f
 import { CategoryIcon } from "@/components/category-icon";
 import { MonthNav } from "@/components/month-nav";
 import { RollingNumber } from "@/components/rolling-number";
-import { formatBaht } from "@/lib/core/format";
+import { formatMoney } from "@/lib/core/format";
 import { bangkokDay, isMonthKey, monthKeyOf, monthLabel, type MonthKey } from "@/lib/core/month";
 import { getMonthSummary } from "@/lib/data";
 import { CategoryDonut, DailyBars } from "./charts";
@@ -55,10 +55,10 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
             <span>
               <span className="font-semibold">{c.name}</span>:{" "}
               {over
-                ? `เกินงบแล้ว ${formatBaht(c.total - c.budget!.budget)}`
+                ? `เกินงบแล้ว ${formatMoney(c.total - c.budget!.budget)}`
                 : c.budget!.ratio >= 0.8
                   ? `ใช้ไป ${Math.round(c.budget!.ratio * 100)}% ของงบ`
-                  : `ถ้าใช้เท่านี้ต่อไป สิ้นเดือนจะเกินงบ (คาดว่า ${formatBaht(c.budget!.projected)})`}
+                  : `ถ้าใช้เท่านี้ต่อไป สิ้นเดือนจะเกินงบ (คาดว่า ${formatMoney(c.budget!.projected)})`}
             </span>
           </p>
         );
@@ -72,7 +72,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
         <div className="flex flex-wrap items-end justify-between gap-4 p-5 pb-3">
           <div>
             <p data-testid="month-total">
-              <span className="plate text-[2.4rem] sm:text-5xl">
+              <span className="plate text-[clamp(1.75rem,9vw,2.4rem)] sm:text-5xl">
                 ฿<RollingNumber text={bahtText(s.total)} />
               </span>
             </p>
@@ -88,7 +88,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
                 ) : (
                   <TrendingDown className="size-4" aria-hidden />
                 )}
-                {diff > 0 ? "มากกว่า" : "น้อยกว่า"}เดือนก่อน {formatBaht(Math.abs(diff), !Number.isInteger(diff))}
+                {diff > 0 ? "มากกว่า" : "น้อยกว่า"}เดือนก่อน {formatMoney(Math.abs(diff))}
               </p>
             )}
           </div>
@@ -100,7 +100,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
         )}
       </section>
 
-      {s.total === 0 ? (
+      {s.count === 0 ? (
         <section className="board flex flex-col items-center px-6 py-12 text-center">
           <p className="sign text-2xl">ยังไม่มีรายจ่ายเดือนนี้</p>
           <p className="mt-2 max-w-[36ch] text-ink-2">ส่งสลิปจากอัลบั้มเข้ามา ระบบจะอ่านและจัดหมวดให้</p>
@@ -117,7 +117,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
             </div>
             <div className="flex flex-col items-center gap-6 p-5 sm:flex-row sm:items-start">
               <CategoryDonut data={s.byCategory} />
-              <ul className="rows w-full">
+              <ul className="rows w-full min-w-0 sm:flex-1">
                 {s.byCategory
                   .filter((c) => c.total > 0 || c.budget)
                   .map((c) => (
@@ -130,7 +130,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
                         <span className="min-w-0 flex-1">
                           <span className="flex items-baseline gap-2">
                             <span className="min-w-0 flex-1 truncate">{c.name}</span>
-                            <span className="font-plate num text-[1.05rem] font-semibold">{formatBaht(c.total)}</span>
+                            <span className="font-plate num shrink-0 text-[1.05rem] font-semibold">{formatMoney(c.total)}</span>
                             <span className="num w-10 text-right text-sm text-ink-3">
                               {s.total ? Math.round((c.total / s.total) * 100) : 0}%
                             </span>
@@ -161,7 +161,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
                     <span className="block truncate font-medium">{p.name}</span>
                     <span className="text-sm text-ink-3">{p.count} ครั้ง</span>
                   </span>
-                  <span className="plate-sm text-[1.05rem]">{formatBaht(p.total)}</span>
+                  <span className="plate-sm shrink-0 text-[1.05rem]">{formatMoney(p.total)}</span>
                 </li>
               ))}
             </ol>
@@ -196,7 +196,7 @@ function BudgetBar({ ratio, level, budget }: { ratio: number; level: "ok" | "nea
       >
         <span className={`block h-full rounded-full ${color}`} style={{ width: `${Math.min(ratio, 1) * 100}%` }} />
       </span>
-      <span className="font-plate num text-xs text-ink-3">งบ {formatBaht(budget)}</span>
+      <span className="font-plate num text-xs text-ink-3">งบ {formatMoney(budget)}</span>
     </span>
   );
 }

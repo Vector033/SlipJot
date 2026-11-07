@@ -3,6 +3,10 @@
 //   npm run eval:slips -- --provider gemini    # needs GEMINI_API_KEY
 //   npm run eval:slips -- --set holdout        # held-out synthetic set (not used for tuning)
 //   npm run eval:slips -- --dir D:/private-slips   # your own labelled slips, kept outside the repo
+//   npm run eval:slips -- --provider freellmapi --model gemma-4-31b --set holdout
+//       # local FreeLLMAPI router (FREELLMAPI_KEY in .env.local). Synthetic fixture sets ONLY:
+//       # free tiers may keep what they receive, so --dir is refused for this provider.
+//   npm run eval:compare -- --set holdout --models gemini-3.5-flash-lite,gemma-4-31b   # several at once
 //
 // A labelled folder holds images plus labels.json in the shape scripts/synthetic-slips.mts writes.
 // Only aggregate scores and per-slip pass/fail flags are saved. Extracted values are printed to the
@@ -20,7 +24,7 @@ const opt = (name: string) => {
   const i = args.indexOf(`--${name}`);
   return i >= 0 ? args[i + 1] : undefined;
 };
-const provider = (opt("provider") ?? "ocr") as "ocr" | "gemini" | "auto";
+const provider = (opt("provider") ?? "ocr") as "ocr" | "gemini" | "auto" | "freellmapi";
 const set = opt("set") ?? "synthetic";
 const fixtureDir = fileURLToPath(new URL(`./fixtures/${set}/`, import.meta.url));
 const dir = opt("dir") ?? fixtureDir;
@@ -28,7 +32,19 @@ const isFixture = dir === fixtureDir;
 const limit = Number(opt("limit") ?? Infinity);
 // Free-tier Gemini allows only a few requests per minute; --rpm spaces the calls out.
 const rpm = Number(opt("rpm") ?? 0);
-const model = opt("model") ?? process.env.GEMINI_MODEL ?? undefined;
+const local = provider === "freellmapi";
+const model = local
+  ? (opt("model") ?? process.env.FREELLMAPI_MODEL ?? "gemini-3.5-flash-lite")
+  : (opt("model") ?? process.env.GEMINI_MODEL ?? undefined);
+if (local && !isFixture) {
+  console.error("Refusing: --provider freellmapi only runs on the synthetic fixture sets (--set), never on --dir.");
+  console.error("Free LLM tiers may keep or train on what they receive; real slips stay on Gemini or OCR.");
+  process.exit(1);
+}
+const readOpts = local
+  ? { provider: "local-llm" as const, baseUrl: process.env.FREELLMAPI_URL, apiKey: process.env.FREELLMAPI_KEY, model }
+  : { provider, model };
+const routedModels = new Map<string, number>();
 // Synthetic slips are dated in the ~60 days before this; real slips use today.
 const now = isFixture ? new Date("2026-11-04T12:00:00+07:00") : new Date();
 
@@ -98,7 +114,8 @@ for (const label of labels) {
   const mime = extname(label.file).toLowerCase() === ".png" ? "image/png" : "image/jpeg";
   let result: SlipReadResult;
   try {
-    result = await readSlip(new Uint8Array(image), mime, { provider, model, now, decodeQr: true });
+    result = await readSlip(new Uint8Array(image), mime, { ...readOpts, now, decodeQr: true });
+    if (result.model) routedModels.set(result.model, (routedModels.get(result.model) ?? 0) + 1);
   } catch (err) {
     console.error(`✗ ${label.file}: ${(err as Error).message}`);
     continue;
@@ -167,13 +184,17 @@ console.log(table);
 const outDir = fileURLToPath(new URL("./results/", import.meta.url));
 await mkdir(outDir, { recursive: true });
 const tag = isFixture ? set : "private";
-const resultName = provider === "gemini" ? `gemini-${model ?? "default"}` : provider;
+const resultName =
+  provider === "gemini" || local ? `${provider}-${(model ?? "default").replace(/[^a-z0-9.-]+/gi, "_")}` : provider;
 await writeFile(
   join(outDir, `${tag}-${resultName}.json`),
   JSON.stringify(
     {
       provider,
-      model: provider === "gemini" ? (model ?? "default") : undefined,
+      model: provider === "gemini" || local ? (model ?? "default") : undefined,
+      // What actually answered (a router may fail over to another model).
+      routedModels: routedModels.size ? Object.fromEntries(routedModels) : undefined,
+      failed: labels.length - rows.length,
       set: tag,
       ranAt: new Date().toISOString(),
       slips: rows.length,

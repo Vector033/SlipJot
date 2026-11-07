@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { llmEnabled } from "@/lib/llm/categorize-llm";
+import { llmLabel } from "@/lib/llm/categorize-llm";
 import { Uploader } from "./uploader";
 
 export const metadata: Metadata = { title: "ส่งสลิป" };
@@ -14,10 +14,20 @@ export default async function UploadPage({ searchParams }: PageProps<"/app/uploa
           ระบบอ่านยอด เวลา ผู้รับ แล้วจัดหมวดให้ รายการที่ไม่แน่ใจจะไปรอให้คุณตรวจก่อน
         </p>
       </header>
+      {llmLabel() === "local" && (
+        <p className="notice bg-red-soft text-red-deep" role="note">
+          <strong>โหมดพัฒนา:</strong> สลิปจะถูกส่งไป LLM ฟรีผ่าน FreeLLMAPI ซึ่งอาจเก็บข้อมูลไว้ ใช้กับสลิปจำลองเท่านั้น
+          ห้ามใช้สลิปจริง
+        </p>
+      )}
       {sp.shared === "error" && <p className="text-sm text-danger">รับรูปที่แชร์มาไม่สำเร็จ ลองเลือกจากอัลบั้มแทน</p>}
       <Uploader shared={sp.shared === "1"} />
       <p className="text-xs text-ink-3">
-        {llmEnabled() ? "อ่านด้วย Gemini" : "อ่านด้วย OCR ในเซิร์ฟเวอร์ (ยังไม่ได้ตั้งค่า Gemini)"} · รูปที่บันทึกได้เลยจะไม่ถูกเก็บ
+        {llmLabel() === "local"
+          ? "อ่านด้วย LLM ฟรีในเครื่อง (โหมดพัฒนา)"
+          : llmLabel() === "gemini"
+            ? "อ่านด้วย Gemini"
+            : "อ่านด้วย OCR ในเซิร์ฟเวอร์ (ยังไม่ได้ตั้งค่า Gemini)"} · รูปที่บันทึกได้เลยจะไม่ถูกเก็บ
         รูปที่รอตรวจจะถูกลบเมื่อคุณยืนยัน หรือภายใน 7 วัน
       </p>
     </div>

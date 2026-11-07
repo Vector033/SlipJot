@@ -200,7 +200,7 @@ Light theme only. There is no dark mode yet; every token here is a light-theme v
 - Route boards: white panels with an ink title strip; no nested cards.
 - Category colours are Chiang Mai's songthaew route colours.
 - Thai never clips: headings at line-height 1.25 or more, body at 1.6.
-- Motion is the route board's own: payee writes on, plate digits roll, the stop lights. Everything is visible by default.
+- Motion is the route board's own: payee writes on, plate digits roll, the stop lights, rows flip over like a split-flap sign. Everything is visible by default.
 
 ## Colors
 
@@ -211,7 +211,7 @@ A transit palette: one saturated body red, one plate yellow, warm ink, and cool 
 - **On-Red White and Rose** (on-red, on-red-2): text on red. Secondary text on red is rose tinted from the body, never grey.
 
 ### Secondary
-- **Plate Yellow** (plate): every headline amount, the plate button, the lit chip, the selected stop, the review-count badge, the demo-account bar, focus outlines and text selection. **Plate Shadow** (plate-deep) is its hover and the border of an unsure field; **Plate Wash** (plate-soft) backs unsure fields and neutral notices.
+- **Plate Yellow** (plate): every headline amount, the plate button, the lit chip, the selected stop, the review-count badge, the demo-account bar, focus outlines on red and ink grounds, and text selection. **Plate Shadow** (plate-deep) is its hover and the border of an unsure field; **Plate Wash** (plate-soft) backs unsure fields and neutral notices.
 
 ### Tertiary
 - **Route Colours** (route-food through route-other): the default category colours, taken from Chiang Mai's songthaew routes (red city line, orange, blue, green, yellow, and more). Users may recolour categories; these are the starting set. They appear as category dots, icon tiles and chart segments, never as UI chrome.
@@ -274,7 +274,7 @@ Depth is mostly material, not shadow: red regions, white boards on steel, ink st
 
 ## Shapes
 
-Friendly, pressed-metal corners. Controls and inputs use 12px; boards and notices 16px; the landing's privacy band 24px; chips and the category badge are full pills. Plates use a radius proportional to their size (0.4em) and a double border: a 2px ink stroke, a plate-yellow gap, then an inner ink ring (inset 2px plate, inset 3.5px ink), the way a real plate is framed. Strokes are 2px everywhere on light grounds (inputs, secondary buttons, chips), and focus is a 3px plate-yellow outline at 2px offset.
+Friendly, pressed-metal corners. Controls and inputs use 12px; boards and notices 16px; the landing's privacy band 24px; chips and the category badge are full pills. Plates use a radius proportional to their size (0.4em) and a double border: a 2px ink stroke, a plate-yellow gap, then an inner ink ring (inset 2px plate, inset 3.5px ink), the way a real plate is framed. Strokes are 2px everywhere on light grounds (inputs, secondary buttons, chips), and focus is a 3px outline at 2px offset: warm ink on the light cabin (plate yellow is only ~1.5:1 on white and steel), plate yellow on red and ink grounds.
 
 ## Components
 
@@ -301,7 +301,7 @@ Tactile and solid; press moves the button down 1px.
 
 ### Inputs / Fields
 - **Style:** white, 2px line border, 12px radius, 10px by 14px padding, ink text, ink-3 placeholder, red caret.
-- **Focus:** border turns ink, plus the global plate focus outline for keyboard.
+- **Focus:** border turns ink, plus the global ink focus outline for keyboard.
 - **Unsure:** a field the reader was not sure about gets a plate-wash fill with a plate-deep border, and a warn-coloured note below.
 
 ### Navigation
@@ -318,11 +318,21 @@ A 4px strip: 2px chrome over a 1px chrome-dark hairline. It closes every red ban
 16px-radius, 12px by 16px, 0.875rem. Plate wash for neutral confirmations, blush red with pressed-red text for over-budget and errors, steel-2 for system messages.
 
 ### Motion
-Three moves, all from the route board: the payee line writes on left to right (clip-path), plate digits roll (700ms plus 90ms per digit, cubic-bezier(0.16, 1, 0.3, 1)), and the destination stop lights plate yellow. Boards may rise 14px into place. Upload rows go from reading to plate. Nothing else moves; reduced motion collapses all of it to an instant state, and every element is visible without animation.
+All moves come from the route board and the slip reader:
+- **Write-on:** the payee line writes on left to right (clip-path).
+- **Roll:** plate digits roll (700ms plus 90ms per digit, cubic-bezier(0.16, 1, 0.3, 1)).
+- **Stop lights:** the destination stop fills plate yellow.
+- **Split-flap (landing demo only):** "สลิปถัดไป" turns each board row over from its top edge (rotateX, 380ms, 70ms stagger) onto the next sample, then the read plays. Only on tap; the board never cycles by itself.
+- **Scan band:** while a slip is read, a flat plate-yellow band passes over it (the landing demo once, upload thumbnails back and forth until the read ends). No glow: it is a band of paint, not a laser. Hidden under reduced motion.
+- **Settle:** when a read lands, the amount plate and the saved/review badge settle in (scale from 0.82, slight overshoot, 320ms).
+Boards may rise 14px into place. Nothing else moves; reduced motion collapses all of it to an instant state, and every element is visible without animation. No scroll-jacking: lists and pages scroll natively.
+
+Chart tooltips are small plates: the label in ink-2 over the amount on a plate.
 
 ### Imagery and Rasters
 SlipJot ships no photography. Its rasters and their provenance:
 - `public/demo/slip-sample.jpg`: a synthetic, fictional transfer slip (made-up names, accounts and reference) rendered by `scripts/generate-synthetic-slips.mts` with Playwright from the HTML in `scripts/synthetic-slips.mts`. It carries an embedded origin note and is always captioned as sample data (ข้อมูลสมมติ) where shown.
+- `public/demo/slip-transport.jpg`, `slip-shopping.jpg`, `slip-housing.jpg`: the landing board's other samples, fictional, rendered by `scripts/generate-demo-slips.mts` from the same HTML, each with an embedded origin note.
 - `public/icon-*.png`, `public/apple-touch-icon.png`, `public/favicon.png`: the authored vector mark (red body, plate with one jotted line, chrome trim) rendered by `scripts/generate-icons.mts` with sharp. Each carries an embedded origin note.
 - Real slips are never shipped or committed. Any new raster must be authored or synthetic and carry its origin.
 

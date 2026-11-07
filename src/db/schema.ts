@@ -69,7 +69,7 @@ export const categories = slipjot.table(
 
 export type CategorySource = "rule" | "keyword" | "llm" | "user" | "none";
 export type ExpenseStatus = "review" | "confirmed";
-export type ReadSource = "gemini" | "ocr" | "fake" | "manual";
+export type ReadSource = "gemini" | "ocr" | "fake" | "local-llm" | "manual";
 
 export const expenses = slipjot.table(
   "expenses",

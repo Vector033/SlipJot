@@ -5,6 +5,11 @@ export function formatBaht(n: number, fixed = false): string {
   return `฿${(fixed ? bahtFixed : baht).format(n)}`;
 }
 
+/** Whole baht stay whole; anything with satang always shows two decimals (฿1,234.50, not ฿1,234.5). */
+export function formatMoney(n: number): string {
+  return formatBaht(n, !Number.isInteger(n));
+}
+
 const dateTime = new Intl.DateTimeFormat("th-TH", {
   timeZone: "Asia/Bangkok",
   day: "numeric",

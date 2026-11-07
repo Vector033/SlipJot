@@ -62,12 +62,16 @@ p {
   background: var(--color-plate);
   color: var(--color-ink);
 }
+/* Focus: ink on the light cabin (plate yellow is only ~1.5:1 on white/steel), plate on red and ink. */
 :focus-visible {
-  outline: 3px solid var(--color-plate);
+  outline: 3px solid var(--color-ink);
   outline-offset: 2px;
   border-radius: 6px;
 }
-.on-red :focus-visible {
+.on-red :focus-visible,
+.bg-red :focus-visible,
+.bg-red-night :focus-visible,
+.bg-ink :focus-visible {
   outline-color: var(--color-plate);
 }
 input,
@@ -120,6 +124,16 @@ html {
     background: linear-gradient(var(--color-chrome) 0 2px, var(--color-chrome-dark) 2px 3px, transparent 3px);
   }
 
+  /* The same trim drawn on top of a row (keeps <dl> rows as dt/dd only), dimmed for dark grounds. */
+  .trim-top {
+    background: linear-gradient(
+        rgb(200 205 211 / 0.6) 0 2px,
+        rgb(143 150 158 / 0.6) 2px 3px,
+        transparent 3px
+      )
+      top / 100% 4px no-repeat;
+  }
+
   /* Route-board panel in the app cabin. */
   .board {
     @apply rounded-2xl bg-panel;
@@ -161,16 +175,16 @@ html {
     box-shadow: 0 6px 14px -8px rgb(27 23 21 / 0.45);
   }
   .btn {
-    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border-2 border-line bg-white px-4 py-2 text-sm font-semibold text-ink transition-colors hover:border-ink disabled:opacity-60;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border-2 border-line bg-white px-4 py-2 text-sm font-semibold text-ink transition-[background-color,border-color,color] hover:border-ink disabled:opacity-60;
   }
   .btn-ghost-red {
-    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border-2 border-on-red-2/60 px-5 py-3 text-base font-semibold text-white transition-colors hover:border-white hover:bg-red-deep;
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border-2 border-on-red-2/60 px-5 py-3 text-base font-semibold text-white transition-[background-color,border-color,color] hover:border-white hover:bg-red-deep;
   }
   .btn-danger {
     @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-danger hover:bg-red-soft disabled:opacity-60;
   }
   .chip {
-    @apply inline-flex min-h-9 items-center gap-1.5 rounded-full border-2 border-line bg-white px-3 text-sm font-medium whitespace-nowrap text-ink-2 transition-colors hover:border-ink-3;
+    @apply inline-flex min-h-9 items-center gap-1.5 rounded-full border-2 border-line bg-white px-3 text-sm font-medium whitespace-nowrap text-ink-2 transition-[background-color,border-color,color] hover:border-ink-3;
   }
   /* The lit stop: plate yellow, like the stop the route board is announcing. */
   .chip-on {
@@ -215,12 +229,39 @@ html {
   }
 }
 
+/* The upload reader passing over a slip; alternates so it reads as one band moving back and forth. */
+@keyframes scan-loop {
+  from {
+    transform: translateY(-55%);
+  }
+  to {
+    transform: translateY(55%);
+  }
+}
+/* Split-flap: a board row turns over from the top edge onto its new face. */
+@keyframes flip-tick {
+  from {
+    transform: rotateX(-88deg);
+    opacity: 0.2;
+  }
+}
+/* A read value lands: a small settle, starting visible-ish so nothing depends on it. */
+@keyframes pop-chip {
+  from {
+    transform: scale(0.82);
+    opacity: 0.3;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     animation-duration: 1ms !important;
     animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 1ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
   }
 }

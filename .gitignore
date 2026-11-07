@@ -53,3 +53,6 @@ next-env.d.ts
 # impeccable runtime artefacts (screenshots, caches); design.json and surfaces/ are committed
 .impeccable/review/
 .impeccable/hook.cache.json
+
+# Local handoff notes between sessions
+NEXT_SESSION.md

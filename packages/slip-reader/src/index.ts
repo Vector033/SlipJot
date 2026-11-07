@@ -5,6 +5,7 @@
 // imported lazily, so bundling this for an edge route only fails if you ask for OCR or QR.
 
 import { readWithGemini, SlipReaderError } from "./gemini.ts";
+import { readWithLocalLlm } from "./openai-compat.ts";
 import { parseSlipText } from "./parse.ts";
 import type { ReadSlipOptions, RawSlip, SlipReadResult } from "./types.ts";
 import { finalize } from "./validate.ts";
@@ -14,7 +15,8 @@ export { BANK_NAMES_TH, detectBank } from "./banks.ts";
 export { accountLast4, normalizeThaiName, parseAmount, parseThaiDateTime } from "./normalize.ts";
 export { parseSlipQr } from "./qr-payload.ts";
 export { parseSlipText, type OcrLine } from "./parse.ts";
-export { DEFAULT_GEMINI_MODEL, SlipReaderError, fetchWithRetry, fromGemini } from "./gemini.ts";
+export { DEFAULT_GEMINI_MODEL, SLIP_SYSTEM_PROMPT, SlipReaderError, fetchWithRetry, fromGemini } from "./gemini.ts";
+export { DEFAULT_LOCAL_LLM_URL, assertLocalOnly, chatJson, extractJson, readWithLocalLlm } from "./openai-compat.ts";
 export { REVIEW_THRESHOLD, finalize } from "./validate.ts";
 
 const OCR_TIMEOUT_MS = 20_000;
@@ -55,7 +57,11 @@ export async function readSlip(
   };
 
   let raw: RawSlip;
-  if (useGemini) {
+  if (provider === "local-llm") {
+    // Explicit only, never chosen by "auto". Errors surface so evals see them.
+    const qrPayload = opts.decodeQr ? await tryDecodeQr(image) : null;
+    raw = await readWithLocalLlm(image, mimeType, { baseUrl: opts.baseUrl, apiKey: opts.apiKey, model: opts.model, now, qrPayload });
+  } else if (useGemini) {
     if (!apiKey) throw new SlipReaderError("GEMINI_API_KEY is not set");
     const qrPayload = opts.decodeQr ? await tryDecodeQr(image) : null;
     try {

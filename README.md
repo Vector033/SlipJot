@@ -129,6 +129,20 @@ are optimistic. The learning curve (LLM share falling to near zero) is the part 
 key, the "LLM" step gives no answer and the user corrects the slip; with `GEMINI_API_KEY` set, the eval calls Gemini
 for real (`-- --model <name>` to pick one).
 
+### Comparing free models locally (FreeLLMAPI)
+
+For development and evals only, the slip reader and categoriser can also talk to
+[FreeLLMAPI](https://freellmapi.co), a router over free LLM tiers that runs on this machine at `127.0.0.1:31415`
+(OpenAI-compatible). `npm run eval:compare` runs the same evals once per model and writes one table to
+`eval/results/compare-*.md`. Free tiers may keep what they receive, so this path is fenced off:
+
+- it only runs on the **synthetic fixture sets**; `--dir` (real slips) is refused;
+- the base URL must be a loopback address, and it refuses to run in production;
+- in the app it is opt-in (`SLIP_LLM_PROVIDER=freellmapi`), with a red "synthetic slips only" notice on the upload page.
+
+Production on Vercel still uses Gemini directly. See [`eval/results/compare-slips-holdout.md`](eval/results) for the
+latest run; free tiers rate-limit hard, so `--rpm` paces the calls and failed slips are counted, not scored.
+
 ## Stack
 
 Next.js 16 (App Router, Server Actions, route handlers) · TypeScript · Tailwind CSS 4 · Supabase Auth + Postgres ·
@@ -166,10 +180,11 @@ Set `GEMINI_API_KEY` in `.env.local` to read slips with Gemini and to let the LL
 slips are read with local Thai OCR (language data downloads once, ~2 MB) and categories come from rules only.
 
 ```bash
-npm test                 # 70 unit tests
+npm test                 # 83 unit tests
 npm run test:e2e         # Playwright, mobile viewport, against the local stack
 npm run eval:slips       # add -- --set holdout, -- --provider gemini, or -- --dir <path>
 npm run eval:categorize
+npm run eval:compare     # several free models via local FreeLLMAPI (synthetic slips only)
 npm run lint && npm run typecheck
 ```
 

@@ -81,7 +81,8 @@ const categorySchema = z.object({
   monthlyBudget: z
     .string()
     .trim()
-    .transform((s) => (s ? Number(s.replace(/,/g, "")) : null))
+    // 0 means "no budget", same as empty: store null so the UI never shows a budget that does nothing.
+    .transform((s) => (s ? Number(s.replace(/,/g, "")) || null : null))
     .pipe(z.number().nonnegative().max(10_000_000).nullable()),
 });
 
@@ -116,7 +117,7 @@ async function blockDemo() {
 }
 
 export async function deleteAllDataAction(fd: FormData) {
-  if (form(fd).confirm !== "ลบ") return;
+  if (form(fd).confirm?.trim() !== "ลบ") redirect("/app/settings?confirm=wipe#danger");
   await blockDemo();
   await data.deleteAllData();
   revalidateAll();
@@ -130,7 +131,7 @@ export async function signOutAction() {
 }
 
 export async function deleteAccountAction(fd: FormData) {
-  if (form(fd).confirm !== "ลบบัญชี") return;
+  if (form(fd).confirm?.trim() !== "ลบบัญชี") redirect("/app/settings?confirm=account#danger");
   const user = await blockDemo();
   // Deleting the auth user cascades to every SlipJot table.
   const { error } = await createAdminClient().auth.admin.deleteUser(user.id);

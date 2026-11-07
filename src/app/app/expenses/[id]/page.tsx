@@ -8,6 +8,7 @@ import { toLocalInput } from "@/lib/core/format";
 import { monthKeyOf } from "@/lib/core/month";
 import { getCategories, getExpense } from "@/lib/data";
 import { deleteExpenseAction, saveExpenseAction } from "../../actions";
+import { ConfirmDelete } from "@/components/confirm-delete";
 
 export const metadata: Metadata = { title: "แก้ไขรายการ" };
 
@@ -41,11 +42,15 @@ export default async function ExpensePage({ params }: PageProps<"/app/expenses/[
             memo: e.memo,
           }}
           categories={cats.map((c) => ({ id: c.id, name: c.name, icon: c.icon }))}
-          submitLabel={e.status === "review" ? "ยืนยัน" : "บันทึก"}
+          submitLabel={e.status === "review" ? "ยืนยันและบันทึก" : "บันทึก"}
         >
-          <button formAction={deleteExpenseAction} formNoValidate className="btn-danger ml-auto">
-            ลบรายการ
-          </button>
+          <ConfirmDelete
+            action={deleteExpenseAction}
+            label="ลบรายการ"
+            confirmLabel="ลบรายการนี้ถาวร"
+            note="ย้อนกลับไม่ได้"
+            className="ml-auto"
+          />
         </ExpenseForm>
         <p className="mt-3 text-xs text-ink-3">เปลี่ยนหมวดแล้ว ครั้งหน้าที่จ่ายให้ผู้รับนี้ ระบบจะใช้หมวดที่คุณเลือก</p>
       </div>
@@ -59,7 +64,7 @@ export default async function ExpensePage({ params }: PageProps<"/app/expenses/[
         <dd className="num break-all">{e.reference ?? "–"}</dd>
         <dt className="text-ink-3">อ่านโดย</dt>
         <dd>
-          {e.readSource === "gemini" ? "Gemini" : e.readSource === "ocr" ? "OCR" : "เพิ่มเอง"}
+          {e.readSource === "gemini" ? "Gemini" : e.readSource === "ocr" ? "OCR" : e.readSource === "local-llm" ? "LLM ในเครื่อง" : "เพิ่มเอง"}
           {e.confidence !== null && ` · มั่นใจ ${Math.round(e.confidence * 100)}%`}
         </dd>
         <dt className="text-ink-3">รูปสลิป</dt>

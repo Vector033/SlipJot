@@ -67,7 +67,7 @@ export default async function ExpensesPage({ searchParams }: PageProps<"/app/exp
         />
       </form>
 
-      <nav className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1" aria-label="กรองตามหมวด">
+      <nav className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0" aria-label="กรองตามหมวด">
         <Link href={chipHref()} aria-current={!cat ? "page" : undefined} className={`chip ${!cat ? "chip-on" : ""}`}>
           ทั้งหมด
         </Link>
@@ -98,11 +98,19 @@ export default async function ExpensesPage({ searchParams }: PageProps<"/app/exp
 
       {rows.length === 0 ? (
         <div className="board px-6 py-12 text-center">
-          <p className="sign text-xl">ไม่มีรายการ</p>
-          <p className="mt-2 text-ink-2">{q || cat ? "ลองเปลี่ยนคำค้นหรือหมวด" : "เดือนนี้ยังไม่มีรายจ่าย"}</p>
-          <Link href="/app/upload" className="btn-primary mt-5">
-            ส่งสลิป
-          </Link>
+          <p className="sign text-xl">{q || cat ? "ไม่พบรายการ" : "ยังไม่มีรายการ"}</p>
+          <p className="mt-2 text-ink-2">
+            {q || cat ? "ไม่มีรายการที่ตรงกับคำค้นหรือหมวดนี้ในเดือนนี้" : "เดือนนี้ยังไม่มีรายจ่าย"}
+          </p>
+          {q || cat ? (
+            <Link href={`/app/expenses?${new URLSearchParams({ month })}`} className="btn mt-5">
+              ล้างตัวกรอง
+            </Link>
+          ) : (
+            <Link href="/app/upload" className="btn-primary mt-5">
+              ส่งสลิป
+            </Link>
+          )}
         </div>
       ) : (
         <div className="space-y-5">
@@ -133,8 +141,8 @@ export default async function ExpensesPage({ searchParams }: PageProps<"/app/exp
                             {r.memo ? ` · ${r.memo}` : ""}
                           </span>
                         </span>
-                        <span className="flex flex-col items-end gap-1">
-                          <span className="plate-sm text-[1.05rem]">{formatBaht(r.amount, true)}</span>
+                        <span className="flex shrink-0 flex-col items-end gap-1">
+                          <span className="plate-sm text-[1.05rem]">{r.amount > 0 ? formatBaht(r.amount, true) : "฿ –"}</span>
                           {r.status === "review" && <span className="text-xs font-semibold text-red">รอตรวจ</span>}
                         </span>
                       </Link>
