@@ -3,8 +3,10 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Check, CircleAlert, ImagePlus, Loader2 } from "lucide-react";
+import { RollingNumber } from "@/components/rolling-number";
 import type { IngestResult } from "@/lib/slips";
-import { formatBaht, formatDateTime } from "@/lib/core/format";
+import { formatDateTime } from "@/lib/core/format";
 
 type Item = {
   key: string;
@@ -115,14 +117,14 @@ export function Uploader({ shared }: { shared: boolean }) {
           setDragging(false);
           add([...e.dataTransfer.files]);
         }}
-        className={`card flex flex-col items-center gap-3 border-2 border-dashed px-6 py-10 text-center transition-colors ${dragging ? "border-accent bg-accent-soft" : ""}`}
+        className={`flex flex-col items-center gap-3 rounded-3xl border-[3px] border-dashed px-6 py-12 text-center transition-colors ${dragging ? "border-red bg-red-soft" : "border-chrome-dark bg-white"}`}
       >
-        <svg aria-hidden viewBox="0 0 24 24" className="size-10 text-accent" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 4v12M7 9l5-5 5 5" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-        <p className="font-semibold">เลือกรูปสลิปจากอัลบั้ม</p>
-        <p className="text-sm text-ink-3">เลือกได้หลายรูปพร้อมกัน หรือลากไฟล์มาวางตรงนี้</p>
-        <button type="button" onClick={() => inputRef.current?.click()} className="btn-primary mt-1 px-6 py-3">
+        <span className="flex size-16 items-center justify-center rounded-2xl bg-red text-white">
+          <ImagePlus className="size-8" aria-hidden />
+        </span>
+        <p className="mt-1 text-lg font-bold">เลือกรูปสลิปจากอัลบั้ม</p>
+        <p className="max-w-[34ch] text-sm text-ink-2">เลือกได้หลายรูปพร้อมกัน หรือลากไฟล์มาวางตรงนี้ · JPG, PNG, WebP ไม่เกิน 10 MB</p>
+        <button type="button" onClick={() => inputRef.current?.click()} className="btn-plate mt-2">
           เลือกรูป
         </button>
         <input
@@ -143,9 +145,15 @@ export function Uploader({ shared }: { shared: boolean }) {
       {items.length > 0 && (
         <section aria-live="polite">
           <div className="mb-3 flex flex-wrap items-center gap-2 text-sm">
-            <span className="chip">บันทึกแล้ว {saved}</span>
-            <span className={`chip ${review ? "border-marker bg-marker/40 text-ink" : ""}`}>รอตรวจ {review}</span>
-            <span className="chip">ซ้ำ {dupes}</span>
+            <span className="chip">
+              บันทึกแล้ว <span className="num font-bold text-ink">{saved}</span>
+            </span>
+            <span className={`chip ${review ? "border-ink bg-plate text-ink" : ""}`}>
+              รอตรวจ <span className="num font-bold">{review}</span>
+            </span>
+            <span className="chip">
+              ซ้ำ <span className="num font-bold text-ink">{dupes}</span>
+            </span>
             {!busy && review > 0 && (
               <Link href="/app/review" className="btn-primary ml-auto">
                 ตรวจ {review} รายการ
@@ -159,9 +167,9 @@ export function Uploader({ shared }: { shared: boolean }) {
           </div>
           <ul className="space-y-2">
             {items.map((it) => (
-              <li key={it.key} className="card flex items-center gap-3 p-3" data-testid="upload-row">
+              <li key={it.key} className="board flex items-center gap-3 p-3" data-testid="upload-row">
                 {/* eslint-disable-next-line @next/next/no-img-element -- local blob preview */}
-                <img src={it.preview} alt="" className="h-14 w-10 shrink-0 rounded-md border border-line object-cover object-top" />
+                <img src={it.preview} alt="" className="h-16 w-12 shrink-0 rounded-lg border border-line object-cover object-top" />
                 <div className="min-w-0 flex-1 text-sm">
                   <Row item={it} />
                 </div>
@@ -179,10 +187,15 @@ function Row({ item }: { item: Item }) {
   if (item.state === "reading")
     return (
       <p className="flex items-center gap-2 text-ink-2">
-        <span className="size-3 animate-spin rounded-full border-2 border-accent border-t-transparent" /> กำลังอ่านสลิป…
+        <Loader2 className="size-4 animate-spin text-red" aria-hidden /> กำลังอ่านสลิป…
       </p>
     );
-  if (item.state === "error") return <p className="text-danger">{item.error}</p>;
+  if (item.state === "error")
+    return (
+      <p className="flex items-start gap-2 text-red-deep">
+        <CircleAlert className="mt-0.5 size-4 shrink-0" aria-hidden /> {item.error}
+      </p>
+    );
   const r = item.result!;
   if (r.status === "duplicate")
     return (
@@ -195,17 +208,21 @@ function Row({ item }: { item: Item }) {
     <>
       <p className="flex items-baseline justify-between gap-2">
         <span className="truncate font-medium">{r.payeeName || "ไม่ทราบผู้รับ"}</span>
-        <span className="num shrink-0 font-semibold">{r.amount !== null ? formatBaht(r.amount, true) : "–"}</span>
+        <span className="plate-sm shrink-0 text-base">
+          {r.amount !== null ? <>฿<RollingNumber text={r.amount.toLocaleString("en-US", { minimumFractionDigits: 2 })} /></> : "–"}
+        </span>
       </p>
       <p className="flex flex-wrap items-center gap-x-2 text-ink-3">
         {r.occurredAt && <span>{formatDateTime(r.occurredAt)}</span>}
         <span>· {r.category ?? "ยังไม่จัดหมวด"}</span>
         {r.status === "review" ? (
-          <Link href="/app/review" className="ml-auto rounded bg-marker px-1.5 text-xs font-semibold text-ink">
+          <Link href="/app/review" className="ml-auto inline-flex items-center gap-1 text-xs font-semibold text-red underline">
             รอตรวจ
           </Link>
         ) : (
-          <span className="ml-auto text-xs font-semibold text-accent">บันทึกแล้ว ✓</span>
+          <span className="ml-auto inline-flex items-center gap-1 text-xs font-semibold text-ok">
+            <Check className="size-3.5" aria-hidden /> บันทึกแล้ว
+          </span>
         )}
       </p>
     </>

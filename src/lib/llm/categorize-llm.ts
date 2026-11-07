@@ -1,4 +1,4 @@
-import { fetchWithRetry } from "@slipjot/slip-reader";
+import { DEFAULT_GEMINI_MODEL, fetchWithRetry } from "@slipjot/slip-reader";
 import { z } from "zod";
 import { CATEGORY_SLUGS, DEFAULT_CATEGORIES, type CategorySlug } from "../core/categories.ts";
 import type { CategorizeInput } from "../core/categorize.ts";
@@ -31,26 +31,39 @@ export function llmEnabled() {
 
 export async function categorizeWithGemini(
   input: CategorizeInput,
-  model = process.env.GEMINI_MODEL || "gemini-flash-lite-latest",
+  model = process.env.GEMINI_MODEL || DEFAULT_GEMINI_MODEL,
 ): Promise<{ slug: CategorySlug | null; usage: LlmUsage }> {
-  const res = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
-    method: "POST",
-    headers: { "content-type": "application/json", "x-goog-api-key": process.env.GEMINI_API_KEY! },
-    body: JSON.stringify({
-      systemInstruction: { parts: [{ text: SYSTEM }] },
-      contents: [
-        {
-          role: "user",
-          parts: [{ text: JSON.stringify({ payee: input.payeeName, memo: input.memo ?? null, amount_thb: input.amount ?? null }) }],
+  const res = await fetchWithRetry(
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+    {
+      method: "POST",
+      headers: { "content-type": "application/json", "x-goog-api-key": process.env.GEMINI_API_KEY! },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: SYSTEM }] },
+        contents: [
+          {
+            role: "user",
+            parts: [
+              {
+                text: JSON.stringify({
+                  payee: input.payeeName,
+                  memo: input.memo ?? null,
+                  amount_thb: input.amount ?? null,
+                }),
+              },
+            ],
+          },
+        ],
+        generationConfig: {
+          temperature: 0,
+          responseMimeType: "application/json",
+          responseJsonSchema: z.toJSONSchema(schema, { target: "draft-7" }),
         },
-      ],
-      generationConfig: {
-        temperature: 0,
-        responseMimeType: "application/json",
-        responseJsonSchema: z.toJSONSchema(schema, { target: "draft-7" }),
-      },
-    }),
-  });
+      }),
+    },
+    // A category is a nice-to-have; the upload must not wait long for it.
+    { attempts: 2, attemptTimeoutMs: 8_000, budgetMs: 10_000 },
+  );
   if (!res.ok) throw new Error(`Gemini ${res.status}: ${(await res.text()).slice(0, 200)}`);
   const body = (await res.json()) as {
     candidates?: { content?: { parts?: { text?: string }[] } }[];
@@ -62,11 +75,23 @@ export async function categorizeWithGemini(
     model,
     inputTokens,
     outputTokens,
-    costUsd: (inputTokens * Number(process.env.GEMINI_PRICE_IN ?? 0.3) + outputTokens * Number(process.env.GEMINI_PRICE_OUT ?? 2.5)) / 1e6,
+    costUsd:
+      (inputTokens * Number(process.env.GEMINI_PRICE_IN ?? 0.3) +
+        outputTokens * Number(process.env.GEMINI_PRICE_OUT ?? 2.5)) /
+      1e6,
   };
   const text = body.candidates?.[0]?.content?.parts?.map((p) => p.text ?? "").join("") ?? "";
-  const parsed = schema.safeParse((() => { try { return JSON.parse(text); } catch { return null; } })());
+  const parsed = schema.safeParse(
+    (() => {
+      try {
+        return JSON.parse(text);
+      } catch {
+        return null;
+      }
+    })(),
+  );
   // A low-confidence "other" teaches nothing, so don't learn a rule from it.
-  if (!parsed.success || (parsed.data.category === "other" && parsed.data.confidence < 0.5)) return { slug: null, usage };
+  if (!parsed.success || (parsed.data.category === "other" && parsed.data.confidence < 0.5))
+    return { slug: null, usage };
   return { slug: parsed.data.category, usage };
 }

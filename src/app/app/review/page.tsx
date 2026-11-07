@@ -1,10 +1,10 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ExpenseForm } from "@/components/expense-form";
-import { formatBaht } from "@/lib/core/format";
-import { toLocalInput } from "@/lib/core/format";
-import { getCategories, getReviewQueue } from "@/lib/data";
+import { CircleCheckBig, Trash2 } from "lucide-react";
 import { BANK_NAMES_TH, type BankCode } from "@slipjot/slip-reader";
+import { ExpenseForm } from "@/components/expense-form";
+import { formatBaht, toLocalInput } from "@/lib/core/format";
+import { getCategories, getReviewQueue } from "@/lib/data";
 import { deleteExpenseAction, saveExpenseAction } from "../actions";
 
 export const metadata: Metadata = { title: "รอตรวจ" };
@@ -28,32 +28,37 @@ export default async function ReviewPage() {
         <h1 className="text-2xl font-bold">รอตรวจ</h1>
         <p className="mt-1 text-ink-2">
           {queue.length
-            ? `${queue.length} รายการที่ระบบไม่แน่ใจ ตรวจแล้วกดยืนยัน รูปสลิปจะถูกลบทันที`
+            ? `${queue.length} รายการที่ระบบไม่แน่ใจ ช่องสีเหลืองคือที่ควรดู ตรวจแล้วกดยืนยัน รูปสลิปจะถูกลบทันที`
             : "ไม่มีรายการค้างตรวจ"}
         </p>
       </header>
 
       {queue.length === 0 && (
-        <div className="card p-8 text-center">
-          <p className="text-4xl" aria-hidden>
-            ✓
-          </p>
-          <p className="mt-2 font-medium">เรียบร้อยหมดแล้ว</p>
-          <Link href="/app/upload" className="btn mt-4">
+        <div className="board flex flex-col items-center px-6 py-12 text-center">
+          <CircleCheckBig className="size-10 text-ok" aria-hidden />
+          <p className="sign mt-3 text-xl">เรียบร้อยหมดแล้ว</p>
+          <Link href="/app/upload" className="btn mt-5">
             ส่งสลิปเพิ่ม
           </Link>
         </div>
       )}
 
-      <ul className="space-y-4">
+      <ul className="space-y-5">
         {queue.map(({ expense: e, hasImage }) => (
-          <li key={e.id} className="card overflow-hidden" data-testid="review-item">
+          <li key={e.id} className="board overflow-hidden" data-testid="review-item">
+            <div className="board-head">
+              <h2>{e.payeeName || "ไม่ทราบผู้รับ"}</h2>
+              <span className="font-plate num text-lg font-semibold text-plate">
+                {e.amount > 0 ? formatBaht(e.amount, true) : "฿ –"}
+              </span>
+            </div>
             <div className="flex flex-col sm:flex-row">
               {hasImage && (
                 <a
                   href={`/api/slips/${e.id}/image`}
                   target="_blank"
-                  className="block shrink-0 border-b border-line bg-paper sm:w-52 sm:border-r sm:border-b-0"
+                  rel="noopener"
+                  className="block shrink-0 border-b border-line bg-steel sm:w-56 sm:border-r sm:border-b-0"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element -- private per-user image route */}
                   <img
@@ -63,22 +68,21 @@ export default async function ReviewPage() {
                   />
                 </a>
               )}
-              <div className="flex-1 space-y-3 p-4">
+              <div className="flex-1 space-y-3 p-5">
                 {e.issues.length > 0 && (
-                  <ul className="flex flex-wrap gap-1.5">
+                  <ul className="flex flex-wrap gap-1.5" aria-label="สิ่งที่ระบบไม่แน่ใจ">
                     {e.issues.map((issue) => (
-                      <li key={issue} className="rounded-md bg-marker/60 px-2 py-0.5 text-xs font-medium text-ink">
+                      <li key={issue} className="plate-sm text-[0.8rem] font-medium">
                         {issue}
                       </li>
                     ))}
                   </ul>
                 )}
-                <p className="text-xs text-ink-3">
+                <p className="text-sm text-ink-3">
                   {e.readSource === "gemini" ? "อ่านด้วย Gemini" : e.readSource === "ocr" ? "อ่านด้วย OCR" : "เพิ่มเอง"}
                   {e.confidence !== null && ` · มั่นใจ ${Math.round(e.confidence * 100)}%`}
                   {e.payeeBank && ` · ${BANK_NAMES_TH[e.payeeBank as BankCode] ?? e.payeeBank}`}
                   {e.payeeLast4 && ` ••${e.payeeLast4}`}
-                  {e.amount > 0 && ` · ${formatBaht(e.amount, true)}`}
                 </p>
                 <ExpenseForm
                   action={saveExpenseAction}
@@ -96,7 +100,7 @@ export default async function ReviewPage() {
                   lowFields={lowFieldsFrom(e.issues)}
                 >
                   <button formAction={deleteExpenseAction} formNoValidate className="btn-danger ml-auto">
-                    ลบ
+                    <Trash2 className="size-4" aria-hidden /> ลบ
                   </button>
                 </ExpenseForm>
               </div>

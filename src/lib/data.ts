@@ -225,6 +225,7 @@ export async function purgeExpiredImages() {
 
 export interface CategoryTotal {
   categoryId: string | null;
+  slug: string | null;
   name: string;
   icon: string;
   color: string;
@@ -293,6 +294,7 @@ export async function getMonthSummary(month: MonthKey, now = new Date()): Promis
     const t = totals.get(c.id) ?? { total: 0, count: 0 };
     return {
       categoryId: c.id,
+      slug: c.slug,
       name: c.name,
       icon: c.icon,
       color: c.color,
@@ -302,7 +304,7 @@ export async function getMonthSummary(month: MonthKey, now = new Date()): Promis
   });
   const uncategorised = totals.get(null);
   if (uncategorised) {
-    byCategory.push({ categoryId: null, name: "ยังไม่จัดหมวด", icon: "❔", color: "#adb5bd", ...uncategorised, budget: null });
+    byCategory.push({ categoryId: null, slug: null, name: "ยังไม่จัดหมวด", icon: "", color: "#8f969e", ...uncategorised, budget: null });
   }
 
   const dayMap = new Map(dayRows.map((r) => [r.day, Number(r.total)]));

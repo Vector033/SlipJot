@@ -26,7 +26,7 @@ test("sign up lands on an empty dashboard", async ({ page }) => {
   await page.getByLabel("รหัสผ่าน").fill(password);
   await page.getByRole("button", { name: "สร้างบัญชี" }).click();
   await expect(page).toHaveURL(/\/app$/);
-  await expect(page.getByText("ยังไม่มีรายจ่ายในเดือนนี้")).toBeVisible();
+  await expect(page.getByText("ยังไม่มีรายจ่ายเดือนนี้")).toBeVisible();
 });
 
 test.describe("signed in", () => {
@@ -41,7 +41,7 @@ test.describe("signed in", () => {
   test("reads slips, skips the duplicate, and categorises by shop name", async ({ page }) => {
     await upload(page, "bbl-03", "bbl-01");
     await expect(page.getByText("ร้านตัดผมสไตล์ช่างเอ")).toBeVisible();
-    await expect(page.getByText("฿208.69")).toBeVisible();
+    await expect(page.locator(`[aria-label="208.69"]`)).toBeVisible();
     await expect(page.getByText("สุขภาพ").first()).toBeVisible(); // "ตัดผม" keyword
 
     await upload(page, "bbl-03");
@@ -53,7 +53,7 @@ test.describe("signed in", () => {
     const row = page.getByTestId("expense-row").filter({ hasText: "ร้านตัดผม" });
     await row.click();
     await page.waitForURL(/\/app\/expenses\/[0-9a-f-]{36}$/);
-    await page.getByRole("combobox", { name: "หมวด" }).selectOption({ label: "🛍️ ช้อปปิ้ง" });
+    await page.getByRole("combobox", { name: "หมวด" }).selectOption({ label: "ช้อปปิ้ง" });
     await page.getByRole("button", { name: "บันทึก" }).click();
     await expect(page).toHaveURL(/\/app\/expenses\?month=/);
 
@@ -76,7 +76,7 @@ test.describe("signed in", () => {
 
   test("dashboard, CSV export and wipe", async ({ page }) => {
     await page.goto(`/app?month=${await monthOfLabel("bbl-03")}`);
-    await expect(page.getByTestId("month-total")).not.toHaveText("฿0");
+    await expect(page.getByTestId("month-total").locator("[aria-label]")).not.toHaveAttribute("aria-label", "0.00");
 
     const download = page.waitForEvent("download");
     await page.goto("/app/settings");
@@ -108,5 +108,5 @@ test("demo account opens without a password and cannot be wiped", async ({ page 
   await page.getByRole("button", { name: "ลบข้อมูลทั้งหมด" }).click();
   await expect(page).toHaveURL(/demo=1/);
   await page.goto("/app?month=2026-10");
-  await expect(page.getByTestId("month-total")).not.toHaveText("฿0");
+  await expect(page.getByTestId("month-total").locator("[aria-label]")).not.toHaveAttribute("aria-label", "0.00");
 });

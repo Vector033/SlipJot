@@ -13,7 +13,7 @@ test("live: demo dashboard loads and a slip is read and saved", async ({ page })
   await expect(page).toHaveURL(/\/app$/);
 
   await page.goto("/app?month=2026-10");
-  await expect(page.getByTestId("month-total")).not.toHaveText("฿0");
+  await expect(page.getByTestId("month-total").locator("[aria-label]")).not.toHaveAttribute("aria-label", "0.00");
 
   await page.goto("/app/upload");
   await page.getByTestId("slip-input").setInputFiles("eval/fixtures/holdout/scb-01.jpg");

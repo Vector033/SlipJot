@@ -1,0 +1,1 @@
+ALTER TABLE "slipjot"."categories" ALTER COLUMN "icon" SET DEFAULT 'other';

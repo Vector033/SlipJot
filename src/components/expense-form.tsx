@@ -1,7 +1,22 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useId, useState } from "react";
 import type { FormState } from "@/app/app/actions";
+
+const THAI_WHEN = new Intl.DateTimeFormat("th-TH-u-ca-buddhist", {
+  timeZone: "Asia/Bangkok",
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+});
+
+/** "2026-11-04T11:12" (Bangkok wall time) → "4 พ.ย. 2569 11:12" */
+function thaiWhen(local: string) {
+  const d = new Date(`${local}:00+07:00`);
+  return Number.isNaN(d.getTime()) ? "" : `${THAI_WHEN.format(d)} น.`;
+}
 
 export interface CategoryOption {
   id: string;
@@ -18,7 +33,7 @@ export interface ExpenseFormValues {
   memo: string | null;
 }
 
-/** One form for review, edit and manual entry. `lowFields` get a marker so the eye goes there first. */
+/** One form for review, edit and manual entry. `lowFields` are painted plate-yellow so the eye goes there first. */
 export function ExpenseForm({
   action,
   values,
@@ -39,7 +54,9 @@ export function ExpenseForm({
   children?: React.ReactNode;
 }) {
   const [state, formAction, pending] = useActionState(action, {});
-  const mark = (f: (typeof lowFields)[number]) => (lowFields.includes(f) ? "border-warn bg-marker/30" : "");
+  const [when, setWhen] = useState(values.occurredAt);
+  const idBase = useId();
+  const mark = (f: (typeof lowFields)[number]) => (lowFields.includes(f) ? "border-plate-deep bg-plate-soft" : "");
 
   return (
     <form action={formAction} className="space-y-3">
@@ -66,9 +83,15 @@ export function ExpenseForm({
             name="occurredAt"
             type="datetime-local"
             required
-            defaultValue={values.occurredAt}
+            value={when}
+            onChange={(e) => setWhen(e.target.value)}
+            aria-describedby={`${idBase}-when`}
             className={`input ${mark("occurredAt")}`}
           />
+          {/* The native picker follows the browser's locale; this line always reads in Thai with the B.E. year. */}
+          <span id={`${idBase}-when`} className="mt-1.5 block text-sm text-ink-2" aria-live="polite">
+            {thaiWhen(when)}
+          </span>
         </label>
       </div>
       <label className="block">
@@ -82,7 +105,7 @@ export function ExpenseForm({
             <option value="">ยังไม่จัดหมวด</option>
             {categories.map((c) => (
               <option key={c.id} value={c.id}>
-                {c.icon} {c.name}
+                {c.name}
               </option>
             ))}
           </select>
@@ -93,11 +116,15 @@ export function ExpenseForm({
         </label>
       </div>
       {state.error && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="notice bg-red-soft text-red-deep">
           {state.error}
         </p>
       )}
-      {state.ok && !confirm && <p className="text-sm text-accent-strong">บันทึกแล้ว</p>}
+      {state.ok && !confirm && (
+        <p role="status" className="text-sm font-medium text-ok">
+          บันทึกแล้ว
+        </p>
+      )}
       <div className="flex flex-wrap items-center gap-2 pt-1">
         <button disabled={pending} className="btn-primary">
           {pending ? "กำลังบันทึก…" : submitLabel}

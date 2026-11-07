@@ -1,24 +1,34 @@
-// Screenshots of the demo account for the README (needs `npm run seed:demo` and a server).
-// Run: node scripts/screenshots.mts [baseUrl]   → docs/screenshots/*.png
+// Screenshots of the landing and the demo account (needs `npm run seed:demo` and a server).
+// Run: node scripts/screenshots.mts [baseUrl] [outDir]   → docs/screenshots/*.png by default
+// Entrance motion is settled before each capture so nothing is caught mid-animation.
 import { mkdir } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { chromium, devices } from "@playwright/test";
 
 const base = process.argv[2] ?? "http://127.0.0.1:3015";
-const out = fileURLToPath(new URL("../docs/screenshots/", import.meta.url));
+const out = process.argv[3] ?? fileURLToPath(new URL("../docs/screenshots/", import.meta.url));
 await mkdir(out, { recursive: true });
 
 const browser = await chromium.launch();
 for (const [kind, opts] of [
   ["mobile", { ...devices["Pixel 7"] }],
-  ["desktop", { viewport: { width: 1280, height: 860 } }],
+  ["desktop", { viewport: { width: 1440, height: 900 } }],
 ] as const) {
   const ctx = await browser.newContext({ ...opts, locale: "th-TH", timezoneId: "Asia/Bangkok" });
   const page = await ctx.newPage();
+  const shoot = async (name: string, fullPage = false) => {
+    await page.waitForLoadState("networkidle");
+    await page.waitForTimeout(2600); // route board read + plate digits settle
+    await page.screenshot({ path: `${out}${kind}-${name}.png`, fullPage });
+  };
+
+  await page.goto(`${base}/`);
+  await shoot("landing");
+  await shoot("landing-full", true);
   await page.goto(`${base}/login`);
-  await page.getByLabel("อีเมล").fill("demo@slipjot.test");
-  await page.getByLabel("รหัสผ่าน").fill("slipjot-demo-2026");
-  await page.getByRole("button", { name: "เข้าสู่ระบบ" }).click();
+  await shoot("login");
+
+  await page.getByRole("button", { name: /บัญชีเดโม/ }).click();
   await page.waitForURL(/\/app$/);
   for (const [name, path] of [
     ["dashboard", "/app?month=2026-10"],
@@ -28,10 +38,9 @@ for (const [kind, opts] of [
     ["settings", "/app/settings"],
   ]) {
     await page.goto(base + path);
-    await page.waitForLoadState("networkidle");
-    await page.screenshot({ path: `${out}${kind}-${name}.png`, fullPage: false });
+    await shoot(name);
   }
   await ctx.close();
 }
 await browser.close();
-console.log("screenshots written to docs/screenshots/");
+console.log(`screenshots written to ${out}`);

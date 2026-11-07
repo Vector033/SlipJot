@@ -17,6 +17,8 @@ export { parseSlipText, type OcrLine } from "./parse.ts";
 export { DEFAULT_GEMINI_MODEL, SlipReaderError, fetchWithRetry, fromGemini } from "./gemini.ts";
 export { REVIEW_THRESHOLD, finalize } from "./validate.ts";
 
+const OCR_TIMEOUT_MS = 20_000;
+
 function envKey(): string | undefined {
   return typeof process !== "undefined" ? process.env.GEMINI_API_KEY || undefined : undefined;
 }
@@ -44,7 +46,12 @@ export async function readSlip(
   const readWithOcr = async () => {
     const { ocrLines } = await import("./node/ocr.ts");
     const qrPayload = opts.decodeQr === false ? null : await tryDecodeQr(image);
-    return parseSlipText(await ocrLines(image), { now, qrPayload });
+    // A stuck OCR worker must fail the read, not the whole request.
+    const lines = await Promise.race([
+      ocrLines(image),
+      new Promise<never>((_, reject) => setTimeout(() => reject(new SlipReaderError("OCR timed out")), OCR_TIMEOUT_MS)),
+    ]);
+    return parseSlipText(lines, { now, qrPayload });
   };
 
   let raw: RawSlip;

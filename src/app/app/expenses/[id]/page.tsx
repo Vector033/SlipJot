@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { BANK_NAMES_TH, type BankCode } from "@slipjot/slip-reader";
@@ -22,11 +23,11 @@ export default async function ExpensePage({ params }: PageProps<"/app/expenses/[
 
   return (
     <div className="mx-auto max-w-xl space-y-5">
-      <Link href={back} className="text-sm text-ink-2 hover:text-ink">
-        ‹ กลับไปที่รายการ
+      <Link href={back} className="inline-flex min-h-10 items-center gap-1 text-sm font-medium text-ink-2 hover:text-ink">
+        <ChevronLeft className="size-4" aria-hidden /> กลับไปที่รายการ
       </Link>
       <h1 className="text-2xl font-bold">แก้ไขรายการ</h1>
-      <div className="card p-4">
+      <div className="board p-5">
         <ExpenseForm
           action={saveExpenseAction}
           confirm={e.status === "review"}
@@ -49,7 +50,7 @@ export default async function ExpensePage({ params }: PageProps<"/app/expenses/[
         <p className="mt-3 text-xs text-ink-3">เปลี่ยนหมวดแล้ว ครั้งหน้าที่จ่ายให้ผู้รับนี้ ระบบจะใช้หมวดที่คุณเลือก</p>
       </div>
 
-      <dl className="card grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 p-4 text-sm">
+      <dl className="board grid grid-cols-[auto_1fr] gap-x-5 gap-y-2.5 p-5 text-sm">
         <dt className="text-ink-3">ธนาคารผู้รับ</dt>
         <dd>{[bank(e.payeeBank), e.payeeLast4 && `••${e.payeeLast4}`].filter(Boolean).join(" ") || "–"}</dd>
         <dt className="text-ink-3">จากบัญชี</dt>
@@ -64,7 +65,7 @@ export default async function ExpensePage({ params }: PageProps<"/app/expenses/[
         <dt className="text-ink-3">รูปสลิป</dt>
         <dd>
           {row.hasImage ? (
-            <a href={`/api/slips/${e.id}/image`} target="_blank" className="text-accent underline">
+            <a href={`/api/slips/${e.id}/image`} target="_blank" className="font-semibold text-red underline">
               เปิดดู
             </a>
           ) : (

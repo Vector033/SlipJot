@@ -49,3 +49,7 @@ next-env.d.ts
 
 .vercel
 .env*
+
+# impeccable runtime artefacts (screenshots, caches); design.json and surfaces/ are committed
+.impeccable/review/
+.impeccable/hook.cache.json

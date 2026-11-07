@@ -1,5 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { Plus, Search } from "lucide-react";
+import { CategoryIcon } from "@/components/category-icon";
 import { MonthNav } from "@/components/month-nav";
 import { formatBaht, formatDayLabel, formatTime, toLocalInput } from "@/lib/core/format";
 import { isMonthKey, monthKeyOf } from "@/lib/core/month";
@@ -40,81 +42,87 @@ export default async function ExpensesPage({ searchParams }: PageProps<"/app/exp
         <h1 className="text-2xl font-bold">รายการ</h1>
         <div className="flex items-center gap-2">
           <MonthNav month={month} path="/app/expenses" params={base} />
-          <Link href="/app/expenses/new" className="btn">
-            + เพิ่มเอง
+          <Link href="/app/expenses/new" className="btn" aria-label="เพิ่มรายการเอง">
+            <Plus className="size-4" aria-hidden /> <span className="hidden sm:inline">เพิ่มเอง</span>
           </Link>
         </div>
       </header>
 
-      {typeof sp.added === "string" && (
-        <p className="rounded-xl bg-accent-soft px-4 py-3 text-sm text-accent-strong">
-          บันทึกสลิปที่แชร์มา {sp.added} รายการ
-        </p>
-      )}
+      {typeof sp.added === "string" && <p className="notice bg-plate-soft">บันทึกสลิปที่แชร์มา {sp.added} รายการ</p>}
 
-      <form className="flex gap-2" action="/app/expenses">
+      <form className="relative" action="/app/expenses" role="search">
         <input type="hidden" name="month" value={month} />
         {cat && <input type="hidden" name="cat" value={cat} />}
+        <Search
+          className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-ink-3"
+          aria-hidden
+        />
         <input
           name="q"
+          type="search"
           defaultValue={q}
           placeholder="ค้นหาผู้รับหรือบันทึกช่วยจำ"
-          className="input"
-          aria-label="ค้นหา"
+          className="input pl-10"
+          aria-label="ค้นหาผู้รับหรือบันทึกช่วยจำ"
         />
-        <button className="btn">ค้นหา</button>
       </form>
 
       <nav className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1" aria-label="กรองตามหมวด">
-        <Link href={chipHref()} className={`chip shrink-0 ${!cat ? "chip-on" : ""}`}>
+        <Link href={chipHref()} aria-current={!cat ? "page" : undefined} className={`chip ${!cat ? "chip-on" : ""}`}>
           ทั้งหมด
         </Link>
         {cats.map((c) => (
-          <Link key={c.id} href={chipHref(c.id)} className={`chip shrink-0 ${cat === c.id ? "chip-on" : ""}`}>
-            {c.icon} {c.name}
+          <Link
+            key={c.id}
+            href={chipHref(c.id)}
+            aria-current={cat === c.id ? "page" : undefined}
+            className={`chip ${cat === c.id ? "chip-on" : ""}`}
+          >
+            <span aria-hidden className="size-2.5 rounded-full" style={{ background: c.color }} />
+            {c.name}
           </Link>
         ))}
-        <Link href={chipHref("none")} className={`chip shrink-0 ${cat === "none" ? "chip-on" : ""}`}>
-          ❔ ยังไม่จัดหมวด
+        <Link
+          href={chipHref("none")}
+          aria-current={cat === "none" ? "page" : undefined}
+          className={`chip ${cat === "none" ? "chip-on" : ""}`}
+        >
+          ยังไม่จัดหมวด
         </Link>
       </nav>
 
       <p className="text-sm text-ink-2">
-        {rows.length} รายการ · รวม <span className="num font-semibold text-ink">{formatBaht(total, true)}</span>
+        {rows.length} รายการ · รวม{" "}
+        <span className="font-plate num text-base font-semibold text-ink">{formatBaht(total, true)}</span>
       </p>
 
       {rows.length === 0 ? (
-        <div className="card p-8 text-center text-ink-2">
-          ยังไม่มีรายการในเดือนนี้{" "}
-          <Link href="/app/upload" className="font-semibold text-accent underline">
+        <div className="board px-6 py-12 text-center">
+          <p className="sign text-xl">ไม่มีรายการ</p>
+          <p className="mt-2 text-ink-2">{q || cat ? "ลองเปลี่ยนคำค้นหรือหมวด" : "เดือนนี้ยังไม่มีรายจ่าย"}</p>
+          <Link href="/app/upload" className="btn-primary mt-5">
             ส่งสลิป
           </Link>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-5">
           {groupByDay(rows).map((g) => (
-            <section key={g.key} aria-label={g.label}>
-              <h2 className="mb-1.5 flex justify-between px-1 text-sm text-ink-3">
-                <span>{g.label}</span>
-                <span className="num">{formatBaht(g.total, true)}</span>
-              </h2>
-              <ul className="card divide-y divide-line">
+            <section key={g.key} aria-label={g.label} className="board overflow-hidden">
+              <div className="board-head">
+                <h2>{g.label}</h2>
+                <span className="font-plate num text-lg font-semibold text-plate">{formatBaht(g.total, true)}</span>
+              </div>
+              <ul className="rows">
                 {g.rows.map((r) => {
                   const c = r.categoryId ? byId.get(r.categoryId) : null;
                   return (
                     <li key={r.id}>
                       <Link
                         href={`/app/expenses/${r.id}`}
-                        className="flex items-center gap-3 px-4 py-3 hover:bg-paper"
+                        className="flex min-h-16 items-center gap-3 px-4 py-3 transition-colors hover:bg-steel"
                         data-testid="expense-row"
                       >
-                        <span
-                          className="flex size-10 shrink-0 items-center justify-center rounded-full text-lg"
-                          style={{ background: `${c?.color ?? "#adb5bd"}22` }}
-                          aria-hidden
-                        >
-                          {c?.icon ?? "❔"}
-                        </span>
+                        <CategoryIcon icon={c?.icon} slug={c?.slug} color={c?.color} />
                         <span className="min-w-0 flex-1">
                           <span className="block truncate font-medium">{r.payeeName || "ไม่ทราบผู้รับ"}</span>
                           <span className="block truncate text-sm text-ink-3">
@@ -125,11 +133,9 @@ export default async function ExpensesPage({ searchParams }: PageProps<"/app/exp
                             {r.memo ? ` · ${r.memo}` : ""}
                           </span>
                         </span>
-                        <span className="text-right">
-                          <span className="num block font-semibold">{formatBaht(r.amount, true)}</span>
-                          {r.status === "review" && (
-                            <span className="rounded bg-marker px-1.5 text-xs font-semibold">รอตรวจ</span>
-                          )}
+                        <span className="flex flex-col items-end gap-1">
+                          <span className="plate-sm text-[1.05rem]">{formatBaht(r.amount, true)}</span>
+                          {r.status === "review" && <span className="text-xs font-semibold text-red">รอตรวจ</span>}
                         </span>
                       </Link>
                     </li>

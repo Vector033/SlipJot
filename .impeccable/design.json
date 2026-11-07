@@ -1,0 +1,723 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-07T02:22:16.918Z",
+  "title": "Design System: SlipJot",
+  "extensions": {
+    "colorMeta": {
+      "red": {
+        "role": "primary",
+        "displayName": "Songthaew Body Red",
+        "canonical": "#b3121c",
+        "tonalRamp": [
+          "#2a0306",
+          "#5e0a10",
+          "#8e0e16",
+          "#b3121c",
+          "#d4454c",
+          "#e88a8e",
+          "#f6c4c6",
+          "#fbe9ea"
+        ]
+      },
+      "red-deep": {
+        "role": "primary",
+        "displayName": "Pressed Red",
+        "canonical": "#8e0e16",
+        "tonalRamp": [
+          "#210000",
+          "#480709",
+          "#721d1c",
+          "#9f3330",
+          "#c7524c",
+          "#e27d75",
+          "#feaba3",
+          "#ffe9e6"
+        ]
+      },
+      "red-night": {
+        "role": "primary",
+        "displayName": "Night Red",
+        "canonical": "#5e0a10",
+        "tonalRamp": [
+          "#1c0203",
+          "#3f1413",
+          "#662b28",
+          "#8f4340",
+          "#b5615d",
+          "#d18882",
+          "#efb3ad",
+          "#ffe8e6"
+        ]
+      },
+      "red-soft": {
+        "role": "primary",
+        "displayName": "Blush Red",
+        "canonical": "#fbe9ea",
+        "tonalRamp": [
+          "#0f0a0a",
+          "#292222",
+          "#473d3d",
+          "#675a5b",
+          "#88797a",
+          "#a89b9b",
+          "#ccc1c2",
+          "#f4eced"
+        ]
+      },
+      "on-red": {
+        "role": "neutral",
+        "displayName": "On-Red White",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#242424",
+          "#404040",
+          "#5d5d5d",
+          "#7d7d7d",
+          "#9e9e9e",
+          "#c4c4c4",
+          "#eeeeee"
+        ]
+      },
+      "on-red-2": {
+        "role": "neutral",
+        "displayName": "On-Red Rose",
+        "canonical": "#ffd9db",
+        "tonalRamp": [
+          "#120809",
+          "#2f1f20",
+          "#4f393a",
+          "#725557",
+          "#947476",
+          "#b29698",
+          "#d5bebf",
+          "#fbeaea"
+        ]
+      },
+      "plate": {
+        "role": "secondary",
+        "displayName": "Plate Yellow",
+        "canonical": "#f5c400",
+        "tonalRamp": [
+          "#130900",
+          "#2f2200",
+          "#4f3d00",
+          "#735a00",
+          "#997900",
+          "#bf9a1e",
+          "#dec170",
+          "#ffeebd"
+        ]
+      },
+      "plate-deep": {
+        "role": "secondary",
+        "displayName": "Plate Shadow",
+        "canonical": "#d9ab00",
+        "tonalRamp": [
+          "#130900",
+          "#2f2200",
+          "#503d00",
+          "#745a00",
+          "#9a7800",
+          "#bd9a35",
+          "#ddc179",
+          "#ffedc0"
+        ]
+      },
+      "plate-soft": {
+        "role": "secondary",
+        "displayName": "Plate Wash",
+        "canonical": "#fff4c2",
+        "tonalRamp": [
+          "#0f0b01",
+          "#29240c",
+          "#474020",
+          "#675e36",
+          "#877e53",
+          "#a79f7a",
+          "#cbc5a7",
+          "#f4efda"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Warm Ink",
+        "canonical": "#1b1715",
+        "tonalRamp": [
+          "#0c0b0a",
+          "#262322",
+          "#423f3d",
+          "#615c5a",
+          "#817c7a",
+          "#a29d9b",
+          "#c7c3c1",
+          "#f0eeec"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Ink 2",
+        "canonical": "#4a4440",
+        "tonalRamp": [
+          "#0d0b09",
+          "#262321",
+          "#433f3c",
+          "#625c59",
+          "#827c78",
+          "#a39d99",
+          "#c8c3c0",
+          "#f1eeeb"
+        ]
+      },
+      "ink-3": {
+        "role": "neutral",
+        "displayName": "Ink 3",
+        "canonical": "#6e6762",
+        "tonalRamp": [
+          "#0d0b09",
+          "#272321",
+          "#433f3b",
+          "#625c58",
+          "#837c77",
+          "#a39d99",
+          "#c8c3bf",
+          "#f1eeeb"
+        ]
+      },
+      "steel": {
+        "role": "neutral",
+        "displayName": "Steel",
+        "canonical": "#eef0f2",
+        "tonalRamp": [
+          "#0b0b0c",
+          "#232425",
+          "#3f4041",
+          "#5c5e5f",
+          "#7c7d7f",
+          "#9d9ea0",
+          "#c3c4c5",
+          "#eeeeef"
+        ]
+      },
+      "steel-2": {
+        "role": "neutral",
+        "displayName": "Steel 2",
+        "canonical": "#dfe3e7",
+        "tonalRamp": [
+          "#0a0b0c",
+          "#222426",
+          "#3e4042",
+          "#5b5e61",
+          "#7a7e81",
+          "#9c9fa2",
+          "#c2c4c7",
+          "#edeff0"
+        ]
+      },
+      "chrome": {
+        "role": "neutral",
+        "displayName": "Chrome",
+        "canonical": "#c8cdd3",
+        "tonalRamp": [
+          "#0a0b0d",
+          "#222427",
+          "#3d4044",
+          "#5a5e63",
+          "#797e83",
+          "#9b9fa3",
+          "#c1c4c8",
+          "#eceff1"
+        ]
+      },
+      "chrome-dark": {
+        "role": "neutral",
+        "displayName": "Chrome Dark",
+        "canonical": "#8f969e",
+        "tonalRamp": [
+          "#090b0e",
+          "#212428",
+          "#3c4045",
+          "#585e65",
+          "#787e85",
+          "#999fa5",
+          "#c0c5ca",
+          "#ebeff3"
+        ]
+      },
+      "panel": {
+        "role": "neutral",
+        "displayName": "Panel White",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#242424",
+          "#404040",
+          "#5d5d5d",
+          "#7d7d7d",
+          "#9e9e9e",
+          "#c4c4c4",
+          "#eeeeee"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Line",
+        "canonical": "#dde1e6",
+        "tonalRamp": [
+          "#0a0b0d",
+          "#222426",
+          "#3e4043",
+          "#5b5e62",
+          "#7a7e82",
+          "#9c9fa2",
+          "#c2c4c7",
+          "#edeff1"
+        ]
+      },
+      "ok": {
+        "role": "status",
+        "displayName": "Confirmed Green",
+        "canonical": "#1f7a4a",
+        "tonalRamp": [
+          "#001103",
+          "#002d15",
+          "#0b4c2b",
+          "#206e44",
+          "#409061",
+          "#6faf86",
+          "#a0d2b1",
+          "#d5f9e0"
+        ]
+      },
+      "warn": {
+        "role": "status",
+        "displayName": "Unsure Amber",
+        "canonical": "#9a5b00",
+        "tonalRamp": [
+          "#190500",
+          "#381c00",
+          "#5e3400",
+          "#864f01",
+          "#aa6e2a",
+          "#c7925e",
+          "#e6bb92",
+          "#ffead7"
+        ]
+      },
+      "danger": {
+        "role": "status",
+        "displayName": "Danger (Body Red)",
+        "canonical": "#b3121c",
+        "tonalRamp": [
+          "#230000",
+          "#4d0002",
+          "#7a0b11",
+          "#a92223",
+          "#d34540",
+          "#ed756c",
+          "#ffaba2",
+          "#ffe9e6"
+        ]
+      },
+      "route-food": {
+        "role": "tertiary",
+        "displayName": "Route: food",
+        "canonical": "#e3730b",
+        "tonalRamp": [
+          "#1c0300",
+          "#3d1800",
+          "#652e00",
+          "#914500",
+          "#c05e00",
+          "#de8548",
+          "#fab183",
+          "#ffeadd"
+        ]
+      },
+      "route-transport": {
+        "role": "tertiary",
+        "displayName": "Route: transport",
+        "canonical": "#b3121c",
+        "tonalRamp": [
+          "#230000",
+          "#4d0002",
+          "#7a0b11",
+          "#a92223",
+          "#d34540",
+          "#ed756c",
+          "#ffaba2",
+          "#ffe9e6"
+        ]
+      },
+      "route-shopping": {
+        "role": "tertiary",
+        "displayName": "Route: shopping",
+        "canonical": "#1f5fbf",
+        "tonalRamp": [
+          "#000829",
+          "#012152",
+          "#103c7f",
+          "#225aaf",
+          "#3f7bd8",
+          "#6c9fee",
+          "#a1c6ff",
+          "#e5efff"
+        ]
+      },
+      "route-housing": {
+        "role": "tertiary",
+        "displayName": "Route: housing",
+        "canonical": "#1f8a4c",
+        "tonalRamp": [
+          "#001102",
+          "#002d12",
+          "#004e24",
+          "#0c703a",
+          "#349257",
+          "#68b17e",
+          "#9bd4aa",
+          "#d2fbdc"
+        ]
+      },
+      "route-bills": {
+        "role": "tertiary",
+        "displayName": "Route: bills",
+        "canonical": "#c79a00",
+        "tonalRamp": [
+          "#130900",
+          "#302200",
+          "#513c00",
+          "#755900",
+          "#9c7800",
+          "#bc9a41",
+          "#ddc17f",
+          "#ffedc3"
+        ]
+      },
+      "route-education": {
+        "role": "tertiary",
+        "displayName": "Route: education",
+        "canonical": "#6b3fa0",
+        "tonalRamp": [
+          "#110222",
+          "#2d1548",
+          "#4b2d71",
+          "#6c469d",
+          "#8d65c4",
+          "#ac8cdd",
+          "#cfb6f8",
+          "#f2eaff"
+        ]
+      },
+      "route-health": {
+        "role": "tertiary",
+        "displayName": "Route: health",
+        "canonical": "#138a8a",
+        "tonalRamp": [
+          "#000f0f",
+          "#002b2b",
+          "#004a4a",
+          "#006c6c",
+          "#298e8d",
+          "#62adad",
+          "#97d1d0",
+          "#cff8f7"
+        ]
+      },
+      "route-entertainment": {
+        "role": "tertiary",
+        "displayName": "Route: entertainment",
+        "canonical": "#d23c7a",
+        "tonalRamp": [
+          "#21000a",
+          "#490022",
+          "#76083d",
+          "#a41e5a",
+          "#cd4179",
+          "#e8729b",
+          "#ffa6c1",
+          "#ffe7ee"
+        ]
+      },
+      "route-people": {
+        "role": "tertiary",
+        "displayName": "Route: people",
+        "canonical": "#8f969e",
+        "tonalRamp": [
+          "#090b0e",
+          "#212428",
+          "#3c4045",
+          "#585e65",
+          "#787e85",
+          "#999fa5",
+          "#c0c5ca",
+          "#ebeff3"
+        ]
+      },
+      "route-other": {
+        "role": "tertiary",
+        "displayName": "Route: other",
+        "canonical": "#7a5230",
+        "tonalRamp": [
+          "#150801",
+          "#331f0d",
+          "#553921",
+          "#795537",
+          "#9c7453",
+          "#ba977b",
+          "#dbbea7",
+          "#ffeada"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Route Sign",
+        "purpose": "Landing and login headline; Chonburi, hand-broken between whole Thai words."
+      },
+      "headline": {
+        "displayName": "Section Sign",
+        "purpose": "Landing section headings and app empty states."
+      },
+      "title": {
+        "displayName": "Page Title",
+        "purpose": "App page titles; board strip titles at 1rem."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "All running text; line-height 1.6 so Thai marks never clip."
+      },
+      "body-lead": {
+        "displayName": "Lead",
+        "purpose": "Landing subcopy, 36ch to 52ch."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Field labels, meta, chips."
+      },
+      "plate": {
+        "displayName": "Plate Digits",
+        "purpose": "Amounts on plates; tabular, rolls on change."
+      }
+    },
+    "shadows": [
+      {
+        "name": "board-rest",
+        "value": "0 1px 0 #dde1e6, 0 8px 24px -16px rgb(27 23 21 / 0.25)",
+        "purpose": "Every route-board panel."
+      },
+      {
+        "name": "plate-lift",
+        "value": "0 6px 14px -8px rgb(27 23 21 / 0.45)",
+        "purpose": "Plate button and raised mobile upload tile."
+      },
+      {
+        "name": "showpiece",
+        "value": "0 24px 48px -20px rgb(0 0 0 / 0.7)",
+        "purpose": "Landing demo route board on red only."
+      },
+      {
+        "name": "plate-frame",
+        "value": "inset 0 0 0 2px #f5c400, inset 0 0 0 3.5px #1b1715",
+        "purpose": "Inner ring of the plate's double border (a border device, not elevation)."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-roll",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Plate digit roll: 700ms + 90ms per digit, rightmost settles last."
+      },
+      {
+        "name": "press",
+        "value": "150ms; translateY(1px) on active",
+        "purpose": "Button press and colour change."
+      },
+      {
+        "name": "write-on",
+        "value": "clip-path inset(0 100% 0 0) to inset(0)",
+        "purpose": "Payee line writes on across the route board."
+      },
+      {
+        "name": "stop-light",
+        "value": "transparent/rose to plate/ink",
+        "purpose": "Destination stop lights up once, then holds."
+      },
+      {
+        "name": "board-in",
+        "value": "opacity 0, translateY(14px) to rest",
+        "purpose": "Board arrives."
+      },
+      {
+        "name": "stop-reach",
+        "value": "500ms ease-out",
+        "purpose": "Landing route stop fills plate yellow as its section arrives."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "all animation and transition 1ms",
+        "purpose": "prefers-reduced-motion collapses every move; content is visible by default."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Default action in the app: white on body red.",
+      "html": "<button class=\"ds-btn-primary\">บันทึก</button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 20px;border:0;border-radius:12px;background:var(--color-red,#b3121c);color:#fff;font:600 1rem/1.6 Anuphan,system-ui,sans-serif;cursor:pointer;transition:background-color 150ms,transform 150ms}.ds-btn-primary:hover{background:var(--color-red-deep,#8e0e16)}.ds-btn-primary:active{transform:translateY(1px)}.ds-btn-primary:focus-visible{outline:3px solid #f5c400;outline-offset:2px}"
+    },
+    {
+      "name": "Plate Button",
+      "kind": "button",
+      "refersTo": "button-plate",
+      "description": "The one headline action per surface: ink on plate yellow with an ink border.",
+      "html": "<button class=\"ds-btn-plate\">ลองดูบัญชีเดโม <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></button>",
+      "css": ".ds-btn-plate{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:12px 24px;border:2px solid #1b1715;border-radius:12px;background:#f5c400;color:#1b1715;font:700 1rem/1.6 Anuphan,system-ui,sans-serif;box-shadow:0 6px 14px -8px rgb(27 23 21/.45);cursor:pointer;transition:background-color 150ms,transform 150ms}.ds-btn-plate:hover{background:#d9ab00}.ds-btn-plate:active{transform:translateY(1px)}.ds-btn-plate:focus-visible{outline:3px solid #f5c400;outline-offset:2px}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "White with a 2px line border; border goes ink on hover.",
+      "html": "<button class=\"ds-btn\">ส่งออก CSV</button>",
+      "css": ".ds-btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 16px;border:2px solid #dde1e6;border-radius:12px;background:#fff;color:#1b1715;font:600 .875rem/1.6 Anuphan,system-ui,sans-serif;cursor:pointer;transition:border-color 150ms}.ds-btn:hover{border-color:#1b1715}.ds-btn:focus-visible{outline:3px solid #f5c400;outline-offset:2px}"
+    },
+    {
+      "name": "Ghost Button on Red",
+      "kind": "button",
+      "refersTo": "button-ghost-red",
+      "description": "Secondary action on a red region: rose outline, white text.",
+      "html": "<div style=\"background:#b3121c;padding:20px\"><button class=\"ds-btn-ghost-red\">สมัครแล้วส่งสลิปจริง</button></div>",
+      "css": ".ds-btn-ghost-red{display:inline-flex;align-items:center;min-height:48px;padding:12px 20px;border:2px solid rgb(255 217 219/.6);border-radius:12px;background:transparent;color:#fff;font:600 1rem/1.6 Anuphan,system-ui,sans-serif;cursor:pointer;transition:background-color 150ms,border-color 150ms}.ds-btn-ghost-red:hover{border-color:#fff;background:#8e0e16}.ds-btn-ghost-red:focus-visible{outline:3px solid #f5c400;outline-offset:2px}"
+    },
+    {
+      "name": "Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "2px line stroke, red caret, ink border on focus; the unsure variant is plate wash.",
+      "html": "<label class=\"ds-label\">ผู้รับ / ร้าน</label><input class=\"ds-input\" value=\"ก๋วยเตี๋ยวเรือลุงชัย\"><input class=\"ds-input ds-input-unsure\" value=\"ร้านข้าวมันไก่ป่าแดง\">",
+      "css": ".ds-label{display:block;margin-bottom:6px;font:500 .875rem/1.6 Anuphan,system-ui,sans-serif;color:#4a4440}.ds-input{display:block;width:100%;margin-bottom:8px;padding:10px 14px;border:2px solid #dde1e6;border-radius:12px;background:#fff;color:#1b1715;caret-color:#b3121c;font:400 1rem/1.6 Anuphan,system-ui,sans-serif;outline:none;transition:border-color 150ms}.ds-input:focus{border-color:#1b1715}.ds-input:focus-visible{outline:3px solid #f5c400;outline-offset:2px}.ds-input-unsure{background:#fff4c2;border-color:#d9ab00}"
+    },
+    {
+      "name": "Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Category filter pill; the lit stop is plate yellow with an ink border.",
+      "html": "<span class=\"ds-chip\">ทั้งหมด</span> <span class=\"ds-chip ds-chip-on\">อาหาร</span> <span class=\"ds-chip\">เดินทาง</span>",
+      "css": ".ds-chip{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 12px;border:2px solid #dde1e6;border-radius:9999px;background:#fff;color:#4a4440;font:500 .875rem/1.6 Anuphan,system-ui,sans-serif;white-space:nowrap;cursor:pointer;transition:border-color 150ms}.ds-chip:hover{border-color:#6e6762}.ds-chip-on{border-color:#1b1715;background:#f5c400;color:#1b1715;font-weight:600}.ds-chip-on:hover{border-color:#1b1715}"
+    },
+    {
+      "name": "Route Board",
+      "kind": "card",
+      "refersTo": "board",
+      "description": "White panel with an ink title strip; rows divided by chrome trim.",
+      "html": "<section class=\"ds-board\"><header class=\"ds-board-head\"><h3>ตามหมวด</h3><span>ตุลาคม 2569</span></header><ul class=\"ds-rows\"><li><span>อาหาร</span><b>฿3,240.00</b></li><li><span>เดินทาง</span><b>฿1,180.50</b></li><li><span>ค่าหอ</span><b>฿4,500.00</b></li></ul></section>",
+      "css": ".ds-board{border-radius:16px;background:#fff;box-shadow:0 1px 0 #dde1e6,0 8px 24px -16px rgb(27 23 21/.25);overflow:hidden;font:400 1rem/1.6 Anuphan,system-ui,sans-serif;color:#1b1715}.ds-board-head{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:10px 20px;background:#1b1715;color:#fff}.ds-board-head h3{margin:0;font-size:1rem;font-weight:700;line-height:1.3}.ds-board-head span{font-size:.875rem;color:#ffd9db}.ds-rows{list-style:none;margin:0;padding:8px 20px 12px}.ds-rows li{display:flex;justify-content:space-between;padding:10px 0}.ds-rows li+li{background-image:linear-gradient(#c8cdd3 0 1px,#8f969e 1px 2px);background-repeat:no-repeat;background-size:100% 2px}.ds-rows b{font-family:'Barlow Semi Condensed',sans-serif;font-weight:600;font-variant-numeric:tabular-nums}"
+    },
+    {
+      "name": "Plate",
+      "kind": "custom",
+      "refersTo": "plate",
+      "description": "The licence plate every headline amount sits on; the small plate carries percentages and badges.",
+      "html": "<span class=\"ds-plate\">฿10,656.25</span> <span class=\"ds-plate-sm\">96.6%</span>",
+      "css": ".ds-plate{display:inline-flex;align-items:center;justify-content:center;padding:0 .45em;border:2px solid #1b1715;border-radius:.4em;background:#f5c400;color:#1b1715;font:600 2.4rem/1.15 'Barlow Semi Condensed',Anuphan,sans-serif;font-variant-numeric:tabular-nums;box-shadow:inset 0 0 0 2px #f5c400,inset 0 0 0 3.5px #1b1715}.ds-plate-sm{display:inline-flex;align-items:center;padding:0 6px;border-radius:6px;background:#f5c400;color:#1b1715;font:600 1rem/1.5 'Barlow Semi Condensed',Anuphan,sans-serif;font-variant-numeric:tabular-nums}"
+    },
+    {
+      "name": "App Header with Chrome Trim",
+      "kind": "nav",
+      "refersTo": "button-ghost-red",
+      "description": "Red header strip, rose nav links, active pressed red, plate upload, chrome trim beneath.",
+      "html": "<header class=\"ds-header\"><b class=\"ds-mark\">SlipJot</b><nav><a class=\"ds-nav-on\">ภาพรวม</a><a>รายการ</a><a>รอตรวจ <span class=\"ds-count\">2</span></a><a class=\"ds-nav-plate\">+ ส่งสลิป</a></nav></header><div class=\"ds-trim\"></div>",
+      "css": ".ds-header{display:flex;align-items:center;gap:16px;height:64px;padding:0 24px;background:#b3121c;color:#fff;font:600 .875rem/1.6 Anuphan,system-ui,sans-serif}.ds-mark{font:400 1.35rem/1 Chonburi,Anuphan,sans-serif}.ds-header nav{margin-left:auto;display:flex;align-items:center;gap:4px}.ds-header a{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 12px;border-radius:8px;color:#ffd9db;cursor:pointer;transition:background-color 150ms,color 150ms}.ds-header a:hover{background:rgb(142 14 22/.6);color:#fff}.ds-header a.ds-nav-on{background:#8e0e16;color:#fff}.ds-header a.ds-nav-plate{margin-left:8px;border:2px solid #1b1715;border-radius:12px;background:#f5c400;color:#1b1715;font-weight:700}.ds-header a.ds-nav-plate:hover{background:#d9ab00}.ds-count{display:inline-flex;min-width:24px;justify-content:center;padding:0 6px;border-radius:6px;background:#f5c400;color:#1b1715;font:600 .8rem/1.5 'Barlow Semi Condensed',sans-serif}.ds-trim{height:4px;background:linear-gradient(#c8cdd3 0 2px,#8f969e 2px 3px,transparent 3px)}"
+    },
+    {
+      "name": "Notice",
+      "kind": "custom",
+      "refersTo": "notice",
+      "description": "Plate wash for confirmations, blush red for over-budget and errors.",
+      "html": "<p class=\"ds-notice\">บันทึกสลิปที่แชร์มา 3 รายการ</p><p class=\"ds-notice ds-notice-over\"><b>ช้อปปิ้ง:</b> เกินงบแล้ว ฿997</p>",
+      "css": ".ds-notice{margin:0 0 8px;padding:12px 16px;border-radius:16px;background:#fff4c2;color:#1b1715;font:400 .875rem/1.6 Anuphan,system-ui,sans-serif}.ds-notice-over{background:#fbe9ea;color:#8e0e16}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Red Songthaew",
+    "overview": "SlipJot is dressed as a Chiang Mai red songthaew, the shared pickup-truck bus. Every slip is a passenger: it climbs on, the route board reads who it paid and how much, and it gets off at its category stop. The truck's materials are the whole vocabulary: body red painted across whole regions, a yellow public-transport licence plate for every amount, double chrome trim between parts of the body, ink-black route-board title strips with white lettering, and the city's real route colours for categories. The display face is Chonburi, the looped heavy Thai sign-painter letter painted on route boards.\n\nThe landing is the side of the truck: full-bleed red, the headline in white and plate yellow, a working route board beside a synthetic slip, chrome trim closing the band. The app is the cabin: a steel-light ground with white route-board panels, a red header strip with chrome trim under it, and the same plate under every total. App screens are calmer than the landing; red narrows to the header, the primary action, charts and over-budget warnings. The world refuses the white-card fintech dashboard and the dark neon crypto look.\n\nLight theme only. There is no dark mode yet; every token here is a light-theme value, and a dark theme would need its own pass rather than inverted tokens. Thai is the first language, so every typographic decision starts from Thai's stacked vowels and tone marks.",
+    "keyCharacteristics": [
+      "Body red owns whole regions; it is a surface, not a sprinkle.",
+      "Plate yellow with a warm ink border carries every headline amount, in condensed tabular digits.",
+      "Double chrome trim (light line over a dark hairline) divides regions and board rows.",
+      "Route boards: white panels with an ink title strip; no nested cards.",
+      "Category colours are Chiang Mai's songthaew route colours.",
+      "Thai never clips: headings at line-height 1.25 or more, body at 1.6.",
+      "Motion is the route board's own: payee writes on, plate digits roll, the stop lights. Everything is visible by default."
+    ],
+    "rules": [
+      {
+        "name": "The Red Owns Regions Rule",
+        "body": "Red is painted as whole regions (full-bleed bands, the header strip, a login half) or as the single primary action. It is not used as a scattered accent on app screens.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tinted-On-Red Rule",
+        "body": "Text on red is white or rose (on-red-2). Never grey on red.",
+        "section": "colors"
+      },
+      {
+        "name": "The Plate Rule",
+        "body": "A headline amount or total sits on plate yellow with an ink border. Yellow is reserved for amounts, the lit stop, the plate action and focus; it is not a generic highlight.",
+        "section": "colors"
+      },
+      {
+        "name": "The No-Clip Rule",
+        "body": "Thai stacks marks above and below the line. Headings never go below line-height 1.25 (h1 to h3 default 1.3), body stays at 1.6, and letter-spacing on Thai stays 0.",
+        "section": "typography"
+      },
+      {
+        "name": "The Whole-Word Break Rule",
+        "body": "Thai has no word spaces, so display lines break by hand between whole words: each phrase in a nowrap span, a `<wbr>` where a break is allowed, `<br>` where one is required. Never let the browser break a Thai display line mid-word.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Digits Rule",
+        "body": "Every number that can change or be compared is tabular (`.num` or the plate face).",
+        "section": "typography"
+      },
+      {
+        "name": "The Bolted-On Rule",
+        "body": "Shadows sit tight under their object with negative spread; nothing glows and nothing floats in a halo.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do paint red as whole regions (full-bleed bands, the header strip) and close each red band with chrome trim.",
+      "Do put every headline amount on a plate: plate yellow, ink double border, Barlow Semi Condensed 600, tabular.",
+      "Do use white or rose (#ffd9db) for text on red.",
+      "Do title route boards with the ink strip and separate their rows with chrome trim.",
+      "Do keep Thai headings at line-height 1.25 or more and body at 1.6, with letter-spacing 0.",
+      "Do break Thai display lines by hand between whole words with nowrap spans and `<wbr>`.",
+      "Do mark unsure fields with plate wash and a plate-deep border, and label sample data as ข้อมูลสมมติ.",
+      "Do keep app screens calmer than the landing: motion only where a number or a read changes."
+    ],
+    "donts": [
+      "Don't use grey text on red.",
+      "Don't spend plate yellow on decoration; it means an amount, a lit stop, the headline action or focus.",
+      "Don't nest boards inside boards.",
+      "Don't use emoji as icons; use the single lucide stroke family.",
+      "Don't let any element depend on animation to become visible.",
+      "Don't ship a raster without recorded provenance, and never a real slip."
+    ]
+  }
+}

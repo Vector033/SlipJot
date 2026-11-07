@@ -12,9 +12,9 @@ the month at a glance on a phone.
 > Status: MVP deployed (all six brief items), Gemini measured. Accuracy numbers below come from **fictional
 > synthetic slips**, not real ones. See [Evaluation](#evaluation).
 
-| Dashboard | Review queue | Expenses |
+| Landing | Dashboard | Expenses |
 |---|---|---|
-| ![Dashboard](docs/screenshots/mobile-dashboard.png) | ![Review](docs/screenshots/mobile-review.png) | ![Expenses](docs/screenshots/mobile-expenses.png) |
+| ![Landing](docs/screenshots/mobile-landing.png) | ![Dashboard](docs/screenshots/mobile-dashboard.png) | ![Expenses](docs/screenshots/mobile-expenses.png) |
 
 ## What it does
 
@@ -44,6 +44,36 @@ the month at a glance on a phone.
 - No bank connection. Reading a slip's QR code is **not** verification; SlipJot never claims a slip is genuine.
 - It shows your own statistics only. No financial advice.
 
+## Security
+
+Slips are financial data, so the app assumes someone will try:
+
+- **XSS:** a strict Content-Security-Policy with a fresh nonce per request and `'strict-dynamic'` (`src/proxy.ts`), so
+  only scripts the server rendered can run. React escapes all text, and the slip image route sends `sandbox`.
+- **Session theft:** Supabase session cookies are `httpOnly`, `Secure` and `SameSite=Lax`. Nothing in the browser
+  uses the Supabase client, so no script can read the token.
+- **CSRF and clickjacking:** server actions get Next's origin check, route handlers check Fetch Metadata / Origin, and
+  pages cannot be framed (`frame-ancestors 'none'`, `X-Frame-Options: DENY`). HSTS, nosniff, a strict Referrer-Policy
+  and a Permissions-Policy are on every response.
+- **Brute force and abuse:** Postgres-backed rate limits that hold across every serverless instance (keys HMAC-hashed,
+  never raw IPs or emails): sign-in per IP and per email, sign-up per IP, demo login, uploads per user per hour and
+  day, a shared daily cap for the demo account, CSV export. New passwords need 10+ characters and are refused when they
+  appear in a public breach corpus (Have I Been Pwned range API, k-anonymity: only 5 hash characters leave the server).
+- **Hostile files:** the file type comes from the bytes, decoded size is capped against decompression bombs, and every
+  image is re-encoded to JPEG before anything reads, stores or sends it, which drops EXIF/GPS and any appended payload.
+- **Data exposure:** tables live in a schema the Supabase data API does not expose, with RLS on and no policies, and every
+  query goes through the user-scoped data-access layer. Production dependencies: `npm audit --omit=dev` reports 0.
+- Tested in `e2e/security.spec.ts` (headers, no CSP violations, cross-site POST refused, cookie not readable from JS),
+  `src/lib/security.test.ts`, and against the live site with `E2E_BASE_URL=https://slipjot.vercel.app npx playwright
+  test security`.
+
+## Design
+
+A Chiang Mai red songthaew: body red owns whole regions, amounts sit on yellow licence plates, panels are route boards
+with an ink title strip and chrome trim, and categories use the real songthaew route colours. Chonburi (Thai
+sign-painter lettering) for display, Anuphan for UI, Barlow Semi Condensed for plate digits. Thai text never clips, and
+line breaks fall between whole words. The full system is in [DESIGN.md](DESIGN.md).
+
 ## Evaluation
 
 ### Slip reading (local OCR, no API key)
@@ -62,17 +92,21 @@ dev set. The held-out set uses another seed and was not looked at while tuning.
 | local OCR | held-out (5 × 8) | 40 | 95% | 95% | 85% | 100% | 98% | 100% | 93% | 15% | **0%** |
 | Gemini Flash-Lite | dev | 60 | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 0% | **0%** |
 | Gemini Flash-Lite | held-out | 40 | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 0% | **0%** |
+| Gemini 3.5 Flash-Lite | held-out | 40 | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 0% | **0%** |
 
 Per-bank tables are in [`eval/results/`](eval/results).
 
 - **Local OCR** takes ~0.75 s per slip on a laptop and costs $0. "Payee exact" is low because tesseract drops Thai vowel
   and tone marks (ภานุวัฒน์ → ภานวัฒน์), so payee keys use the consonant skeleton to keep learned rules matching.
-- **Gemini** (`gemini-flash-lite-latest`, measured 2026-11-04) uses ~1,200 input + ~330 output tokens per slip, which
+- **Gemini** (`gemini-flash-lite-latest` measured 2026-11-04; `gemini-3.5-flash-lite` re-measured 2026-11-07 at ~3 s per
+  slip) uses ~1,200 input + ~330 output tokens per slip, which
   is ≈ $0.0012 per slip at Gemini 2.5 *Flash* prices ($0.30 / $2.50 per 1M). That is an upper bound: Flash-Lite is
   cheaper, and the prices are configurable in `.env`. It takes ~3.4 s per slip. During demand spikes the API returns
   503s and the retries push that to ~16 s. On the free tier, `gemini-flash-latest` is capped at 5 requests/minute and
-  was overloaded during testing, so Flash-Lite is the default. If Gemini still fails after retries, the app falls back
-  to local OCR.
+  was overloaded during testing, so Flash-Lite is the default. The default is now the pinned `gemini-3.5-flash-lite`:
+  on 2026-11-07 the `-latest` alias moved to a model that took 20 s+ per slip and pushed uploads past Vercel's 60 s
+  limit. Gemini calls run inside a 35 s budget (per-attempt timeouts, retries only while time is left). If Gemini still
+  fails, the app falls back to local OCR, which has its own 20 s limit.
 - Synthetic slips are clean renders, so Gemini's 100% will not survive real phone screenshots. The OCR → Gemini gap
   is the meaningful part. **Not measured yet:** real slips (`--dir <folder outside the repo>`, which writes only
   aggregate scores).

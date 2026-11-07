@@ -1,0 +1,117 @@
+"use client";
+
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { RotateCcw } from "lucide-react";
+import { RollingNumber } from "@/components/rolling-number";
+
+// The landing's signature moment: a fictional slip is read onto the route board.
+// The payee is written on like sign paint, the amount rolls onto the plate, and the stop
+// for its category lights up. It plays once, holds, and replays on request.
+
+const STOPS = ["อาหาร", "เดินทาง", "ช้อปปิ้ง", "ค่าหอ", "บิล"] as const;
+const SLIP = {
+  payee: "ก๋วยเตี๋ยวเรือลุงชัย",
+  amount: "268.00",
+  when: "6 ต.ค. 2569 · 05:15 น.",
+  memo: "ค่ากาแฟ",
+  stop: "อาหาร",
+};
+
+export function RouteBoardDemo() {
+  const [run, setRun] = useState(0);
+  const [phase, setPhase] = useState<"scan" | "read">("scan");
+
+  useEffect(() => {
+    const t = setTimeout(() => setPhase("read"), 1100);
+    return () => clearTimeout(t);
+  }, [run]);
+
+  return (
+    <figure className="relative mx-auto w-full max-w-[34rem] lg:max-w-[40rem]" aria-label="ตัวอย่าง: SlipJot อ่านสลิปแล้วบันทึกเป็นรายจ่าย">
+      <div className="grid grid-cols-[minmax(0,0.78fr)_minmax(0,1fr)] items-start gap-3 sm:gap-4">
+        {/* The slip, as it sits in the photo album */}
+        <div className="relative mt-6 overflow-hidden rounded-xl bg-white shadow-[0_18px_40px_-18px_rgb(0_0_0/0.55)] ring-1 ring-black/10">
+          <Image
+            src="/demo/slip-sample.jpg"
+            alt="สลิปโอนเงินตัวอย่าง (ข้อมูลสมมติ) ยอด 268 บาท ถึงก๋วยเตี๋ยวเรือลุงชัย"
+            width={1050}
+            height={1133}
+            className="h-auto w-full"
+            priority
+          />
+          {phase === "scan" && (
+            <span
+              key={run}
+              aria-hidden
+              className="pointer-events-none absolute inset-x-0 top-0 h-[10%] bg-gradient-to-b from-plate/0 via-plate/55 to-plate/0"
+              style={{ animation: "scan 1.1s cubic-bezier(0.45, 0, 0.55, 1) both" }}
+            />
+          )}
+        </div>
+
+        {/* The route board */}
+        <div key={run} className="overflow-hidden rounded-2xl bg-red-night text-white shadow-[0_24px_48px_-20px_rgb(0_0_0/0.7)] ring-1 ring-white/10">
+          <div className="flex items-center justify-between bg-ink px-3.5 py-2 text-[0.8rem] text-on-red-2">
+            <span>สลิปตัวอย่าง · ข้อมูลสมมติ</span>
+            <span className={phase === "read" ? "text-plate" : ""}>{phase === "read" ? "อ่านแล้ว" : "กำลังอ่าน…"}</span>
+          </div>
+          <div className="space-y-3 px-3.5 pt-3 pb-4">
+            <div>
+              <p className="text-[0.8rem] text-on-red-2">จ่ายให้</p>
+              <p
+                className="sign text-[1.05rem] leading-snug sm:text-2xl"
+                style={phase === "read" ? { animation: "write-on 0.9s cubic-bezier(0.65, 0, 0.35, 1) both" } : { visibility: "hidden" }}
+              >
+                {SLIP.payee}
+              </p>
+            </div>
+            <div>
+              <p className="text-[0.8rem] text-on-red-2">ยอด</p>
+              <span className="plate text-[1.6rem] sm:text-[2rem]">
+                ฿{phase === "read" ? <RollingNumber text={SLIP.amount} delayMs={250} /> : <span className="num">0.00</span>}
+              </span>
+              <p className="mt-2 text-[0.75rem] leading-relaxed text-on-red-2">
+                {SLIP.when}
+                <br />
+                บันทึกช่วยจำ: <span className="text-white">{SLIP.memo}</span>
+              </p>
+            </div>
+            <div className="trim opacity-70" />
+            <div>
+              <p className="mb-1.5 text-[0.8rem] text-on-red-2">ลงป้าย</p>
+              <ul className="flex flex-wrap gap-1 lg:flex-nowrap" aria-label="หมวด">
+                {STOPS.map((s) => {
+                  const on = phase === "read" && s === SLIP.stop;
+                  return (
+                    <li
+                      key={s}
+                      aria-current={on ? "true" : undefined}
+                      className={`rounded-full border px-2 py-0.5 text-[0.8rem] whitespace-nowrap ${on ? "border-plate font-semibold" : "border-white/25 text-on-red-2"}`}
+                      style={on ? { animation: "stop-light 0.35s ease-out 1.15s both" } : undefined}
+                    >
+                      {s}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <figcaption className="mt-3 flex items-center justify-end gap-3 text-[0.8rem] text-on-red-2">
+        <span>ตัวอย่างการทำงาน · ข้อมูลสมมติ · จัดหมวดจากบันทึกช่วยจำ “ค่ากาแฟ”</span>
+        <button
+          type="button"
+          onClick={() => {
+            setPhase("scan");
+            setRun((r) => r + 1);
+          }}
+          className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-white/35 px-3 text-white hover:border-white"
+        >
+          <RotateCcw className="size-3.5" aria-hidden /> อ่านอีกครั้ง
+        </button>
+      </figcaption>
+    </figure>
+  );
+}

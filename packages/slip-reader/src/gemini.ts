@@ -32,31 +32,54 @@ async function quotaHint(res: Response): Promise<{ waitS: number | null; daily: 
   }
 }
 
+export interface RetryBudget {
+  attempts?: number;
+  /** Abort one attempt after this long. */
+  attemptTimeoutMs?: number;
+  /** Never start a wait or attempt that would end past this many ms from the first call. */
+  budgetMs?: number;
+}
+
 /**
  * Gemini returns 503 "high demand" and per-minute 429s routinely; back off and retry.
- * A per-day quota is not retried: waiting minutes inside a request helps nobody.
+ * A per-day quota is not retried, and nothing outlives the budget: inside a serverless
+ * request a late answer is worth less than handing over to the OCR fallback in time.
  */
-export async function fetchWithRetry(url: string, init: RequestInit, attempts = 4): Promise<Response> {
+export async function fetchWithRetry(
+  url: string,
+  init: RequestInit,
+  { attempts = 3, attemptTimeoutMs = 25_000, budgetMs = 35_000 }: RetryBudget = {},
+): Promise<Response> {
+  const deadline = Date.now() + budgetMs;
   for (let i = 0; ; i++) {
-    const res = await fetch(url, { ...init, signal: AbortSignal.timeout(60_000) });
+    const left = deadline - Date.now();
+    const res = await fetch(url, {
+      ...init,
+      signal: AbortSignal.timeout(Math.max(1000, Math.min(attemptTimeoutMs, left))),
+    });
     if (res.ok || !RETRYABLE.has(res.status) || i === attempts - 1) return res;
     const hint = res.status === 429 ? await quotaHint(res) : { waitS: null, daily: false };
     if (hint.daily) return res;
     const retryAfter = Number(res.headers.get("retry-after")) || hint.waitS;
     const delay = retryAfter ? retryAfter * 1000 + 500 : 1000 * 2 ** i + Math.random() * 500;
-    await new Promise((r) => setTimeout(r, Math.min(delay, 65_000)));
+    // Not enough budget left for the wait plus a useful attempt: give up now.
+    if (Date.now() + delay + 5_000 > deadline) return res;
+    await new Promise((r) => setTimeout(r, delay));
   }
 }
 
-// Flash-Lite reads synthetic slips as well as Flash (eval/results), costs less, and its free tier
-// is not capped at 5 requests/minute like Flash, which matters for batch uploads.
-export const DEFAULT_GEMINI_MODEL = "gemini-flash-lite-latest";
+// A pinned Flash-Lite version, not a "-latest" alias: the alias moved to a model that took 20 s+
+// per slip (2026-11-07). 3.5 Flash-Lite read all 40 held-out slips right at ~3 s each.
+export const DEFAULT_GEMINI_MODEL = "gemini-3.5-flash-lite";
 
 const conf = z.number().min(0).max(1).describe("How sure you are this value is exactly what is printed, 0 to 1");
 const party = z.object({
   name: z.string().nullable().describe("Name exactly as printed, including any title like นาย/น.ส./MR."),
   name_confidence: conf,
-  bank: z.enum(BANK_CODES).nullable().describe("Bank or wallet of this party; OTHER if a bank is shown but not in the list"),
+  bank: z
+    .enum(BANK_CODES)
+    .nullable()
+    .describe("Bank or wallet of this party; OTHER if a bank is shown but not in the list"),
   bank_confidence: conf,
   account_masked: z
     .string()
@@ -155,10 +178,7 @@ export async function readWithGemini(
       contents: [
         {
           role: "user",
-          parts: [
-            { inlineData: { mimeType, data: toBase64(image) } },
-            { text: "Read this slip." },
-          ],
+          parts: [{ inlineData: { mimeType, data: toBase64(image) } }, { text: "Read this slip." }],
         },
       ],
       generationConfig: {

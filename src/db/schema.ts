@@ -58,7 +58,7 @@ export const categories = slipjot.table(
     /** Built-in categories have a slug the keyword rules and the LLM refer to. */
     slug: text("slug"),
     name: text("name").notNull(),
-    icon: text("icon").notNull().default("📦"),
+    icon: text("icon").notNull().default("other"),
     color: text("color").notNull().default("#94a3b8"),
     monthlyBudget: money("monthly_budget"),
     sort: integer("sort").notNull().default(0),
