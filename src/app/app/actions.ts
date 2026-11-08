@@ -131,7 +131,7 @@ export async function signOutAction() {
 }
 
 export async function deleteAccountAction(fd: FormData) {
-  if (form(fd).confirm?.trim() !== "ลบบัญชี") redirect("/app/settings?confirm=account#danger");
+  if (form(fd).confirm?.trim() !== "ลบบัญชี") redirect("/app/settings/account?confirm=account#delete");
   const user = await blockDemo();
   // Deleting the auth user cascades to every SlipJot table.
   const { error } = await createAdminClient().auth.admin.deleteUser(user.id);

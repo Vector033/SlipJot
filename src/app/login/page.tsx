@@ -3,7 +3,8 @@ import type { Metadata } from "next";
 import { Logo } from "@/components/logo";
 import { demoEmail } from "@/lib/supabase/admin";
 import { DemoButton } from "./demo-button";
-import { LoginForm } from "./login-form";
+import { googleEnabled } from "@/lib/site";
+import { GoogleButton, LoginForm } from "./login-form";
 
 export const metadata: Metadata = { title: "เข้าสู่ระบบ" };
 
@@ -47,7 +48,24 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
       <div className="flex flex-1 items-start justify-center px-5 py-10 lg:items-center">
         <div className="w-full max-w-sm">
           <h1 className="text-2xl font-bold">ยินดีต้อนรับ</h1>
-          <p className="mt-1 mb-6 text-ink-2">เข้าสู่ระบบ หรือสร้างบัญชีใหม่ด้วยอีเมล</p>
+          <p className="mt-1 mb-6 text-ink-2">
+            {googleEnabled() ? "เข้าสู่ระบบด้วย Google หรืออีเมล ครั้งแรกจะสร้างบัญชีให้" : "เข้าสู่ระบบ หรือสร้างบัญชีใหม่ด้วยอีเมล"}
+          </p>
+          {sp.oauth && (
+            <p role="alert" className="notice mb-4 bg-red-soft text-red-deep">
+              {sp.oauth === "cancelled" ? "ยกเลิกการเข้าสู่ระบบด้วย Google แล้ว" : "เข้าสู่ระบบด้วย Google ไม่สำเร็จ ลองใหม่อีกครั้ง"}
+            </p>
+          )}
+          {googleEnabled() && (
+            <>
+              <GoogleButton />
+              <p className="my-5 flex items-center gap-3 text-sm text-ink-3" aria-hidden>
+                <span className="h-0.5 flex-1 bg-line" />
+                หรือใช้อีเมล
+                <span className="h-0.5 flex-1 bg-line" />
+              </p>
+            </>
+          )}
           <LoginForm initialMode={sp.mode === "signup" ? "signup" : "signin"} />
           {demoEmail() && (
             <div className="mt-6 border-t-2 border-line pt-6">

@@ -6,6 +6,8 @@ import { createAdminClient, demoEmail } from "@/lib/supabase/admin";
 import { isBreachedPassword } from "@/lib/breached-password";
 import { LIMITS, RateLimitError, clientIp, enforce, hit, retryText } from "@/lib/rate-limit";
 import { createClient } from "@/lib/supabase/server";
+import { passwordProblem } from "@/lib/password";
+import { googleEnabled, requestOrigin } from "@/lib/site";
 
 export type AuthState = { error?: string; message?: string };
 
@@ -38,7 +40,8 @@ export async function authAction(_prev: AuthState, fd: FormData): Promise<AuthSt
   }
 
   if (mode === "signup") {
-    if (password.length < 10) return { error: "รหัสผ่านสำหรับบัญชีใหม่ต้องมีอย่างน้อย 10 ตัวอักษร" };
+    const problem = passwordProblem(password, email);
+    if (problem) return { error: problem };
     if (await isBreachedPassword(password)) {
       return { error: "รหัสผ่านนี้เคยหลุดในเหตุข้อมูลรั่วของเว็บอื่นแล้ว เลือกรหัสใหม่ที่ไม่ซ้ำกับที่เคยใช้" };
     }
@@ -63,4 +66,18 @@ export async function demoLoginAction(): Promise<AuthState> {
   const { error } = await supabase.auth.signInWithPassword({ email, password: process.env.DEMO_PASSWORD! });
   if (error) return { error: "เปิดบัญชีเดโมไม่สำเร็จ" };
   redirect("/app");
+}
+
+/** "เข้าสู่ระบบด้วย Google": Supabase sends the browser to Google and back to /auth/callback. */
+export async function googleSignInAction(): Promise<AuthState> {
+  if (!googleEnabled()) return { error: "เซิร์ฟเวอร์นี้ยังไม่ได้เปิดใช้การเข้าสู่ระบบด้วย Google" };
+  const limit = await hit(LIMITS.signinIp, await clientIp());
+  if (!limit.ok) return { error: `ลองหลายครั้งเกินไป รออีก ${retryText(limit.retryAfterSec)} แล้วลองใหม่` };
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: { redirectTo: `${await requestOrigin()}/auth/callback?next=/app` },
+  });
+  if (error || !data.url) return { error: "ติดต่อ Google ไม่ได้ ลองใหม่ หรือเข้าสู่ระบบด้วยอีเมล" };
+  redirect(data.url);
 }

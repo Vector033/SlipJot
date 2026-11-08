@@ -180,13 +180,25 @@ Set `GEMINI_API_KEY` in `.env.local` to read slips with Gemini and to let the LL
 slips are read with local Thai OCR (language data downloads once, ~2 MB) and categories come from rules only.
 
 ```bash
-npm test                 # 83 unit tests
+npm test                 # 90 unit tests
 npm run test:e2e         # Playwright, mobile viewport, against the local stack
 npm run eval:slips       # add -- --set holdout, -- --provider gemini, or -- --dir <path>
 npm run eval:categorize
 npm run eval:compare     # several free models via local FreeLLMAPI (synthetic slips only)
 npm run lint && npm run typecheck
 ```
+
+## Account settings and Google sign-in
+
+`/app/settings/account` shows the account (email, sign-in methods), changes or sets the password (the current one is
+re-checked with a throwaway session, the new one must pass the same rules as sign-up plus the HIBP check), lists signed-in
+devices from `auth.sessions` with per-device sign-out, and holds account deletion. Every password field has a show/hide
+button. The shared demo account is read-only here.
+
+Google sign-in goes through Supabase (`/auth/callback` swaps the PKCE code for the session cookie) and stays hidden until
+`GOOGLE_AUTH_ENABLED=true`. On the shared Supabase project the Google provider and manual identity linking are already
+on (set up for FactFit); SlipJot only needs its own redirect URL in Authentication → URL Configuration:
+`https://slipjot.vercel.app/**`. Without it Supabase falls back to the project's Site URL, which is another app.
 
 ## Deploy
 

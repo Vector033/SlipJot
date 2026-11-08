@@ -1,18 +1,18 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { getOptionalUser } from "@/lib/auth";
 import { getCategories, getInsights, getSettings } from "@/lib/data";
 import { llmLabel } from "@/lib/llm/categorize-llm";
 import { isDemoUser } from "@/lib/supabase/admin";
 import {
-  deleteAccountAction,
   deleteAllDataAction,
   deleteCategoryAction,
   setKeepImagesAction,
-  signOutAction,
 } from "../actions";
-import { Download, LogOut } from "lucide-react";
+import { Download } from "lucide-react";
 import { DEFAULT_CATEGORIES } from "@/lib/core/categories";
 import { CategoryRow } from "./category-row";
+import { SettingsTabs } from "./tabs";
 import { ConfirmDelete } from "@/components/confirm-delete";
 
 export const metadata: Metadata = { title: "ตั้งค่า" };
@@ -34,6 +34,7 @@ export default async function SettingsPage({ searchParams }: PageProps<"/app/set
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <h1 className="text-2xl font-bold">ตั้งค่า</h1>
+      <SettingsTabs />
       {isDemoUser(user?.email) && (
         <p role="status" className="notice bg-plate-soft">
           นี่คือบัญชีเดโมที่ทุกคนใช้ร่วมกัน: ลองแก้หมวด ตั้งงบ หรือส่งสลิปได้ แต่ลบข้อมูล ลบบัญชี
@@ -124,12 +125,6 @@ export default async function SettingsPage({ searchParams }: PageProps<"/app/set
             <a href="/api/export" className="btn">
               <Download className="size-4" aria-hidden /> ดาวน์โหลด CSV
             </a>
-            <form action={signOutAction}>
-              <button className="btn">
-                <LogOut className="size-4" aria-hidden /> ออกจากระบบ{" "}
-                <span className="max-w-[16ch] truncate text-ink-3">{user?.email}</span>
-              </button>
-            </form>
           </div>
 
           <form action={deleteAllDataAction} className="mt-6 space-y-2 border-t-2 border-line pt-5">
@@ -148,21 +143,12 @@ export default async function SettingsPage({ searchParams }: PageProps<"/app/set
             </div>
           </form>
 
-          <form action={deleteAccountAction} className="mt-4 space-y-2">
-            <p className="text-sm font-medium">ลบบัญชีและข้อมูลทั้งหมดถาวร</p>
-            <label htmlFor="confirm-account" className="label">
-              พิมพ์ &quot;ลบบัญชี&quot; เพื่อยืนยัน
-            </label>
-            {sp.confirm === "account" && (
-              <p role="alert" className="text-sm text-red-deep">
-                พิมพ์คำว่า &quot;ลบบัญชี&quot; ให้ตรงก่อนกดลบบัญชี
-              </p>
-            )}
-            <div className="flex flex-wrap gap-2">
-              <input id="confirm-account" name="confirm" autoComplete="off" className="input max-w-56" />
-              <button className="btn-danger border-2 border-red/30">ลบบัญชี</button>
-            </div>
-          </form>
+          <p className="mt-4 text-sm text-ink-3">
+            ลบบัญชี เปลี่ยนรหัสผ่าน หรือเชื่อม Google ได้ที่{" "}
+            <Link href="/app/settings/account" className="font-semibold text-ink underline">
+              บัญชีและความปลอดภัย
+            </Link>
+          </p>
         </div>
       </section>
     </div>

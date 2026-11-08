@@ -19,3 +19,6 @@ const sql =
 if (process.env.NODE_ENV !== "production") globalForDb.sql = sql;
 
 export const db = drizzle(sql, { schema });
+
+/** Raw client, for the few queries Drizzle has no schema for (auth.sessions). */
+export { sql };

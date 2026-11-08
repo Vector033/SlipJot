@@ -23,7 +23,7 @@ test("sign up lands on an empty dashboard", async ({ page }) => {
   await page.goto("/login");
   await page.getByRole("button", { name: "สมัครใช้งาน", exact: true }).click();
   await page.getByLabel("อีเมล").fill(email);
-  await page.getByLabel("รหัสผ่าน").fill(password);
+  await page.getByLabel("รหัสผ่าน", { exact: true }).fill(password);
   await page.getByRole("button", { name: "สร้างบัญชี" }).click();
   await expect(page).toHaveURL(/\/app$/);
   await expect(page.getByText("ยังไม่มีรายจ่ายเดือนนี้")).toBeVisible();
@@ -33,7 +33,7 @@ test.describe("signed in", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/login");
     await page.getByLabel("อีเมล").fill(email);
-    await page.getByLabel("รหัสผ่าน").fill(password);
+    await page.getByLabel("รหัสผ่าน", { exact: true }).fill(password);
     await page.getByRole("button", { name: "เข้าสู่ระบบ", exact: true }).last().click();
     await expect(page).toHaveURL(/\/app$/);
   });
@@ -72,6 +72,20 @@ test.describe("signed in", () => {
     await item.getByLabel("ผู้รับ / ร้าน").fill("ร้านข้าวมันไก่ป้าแดง");
     await item.getByRole("button", { name: "ยืนยันและบันทึก" }).click();
     await expect(page.getByText("ไม่มีรายการค้างตรวจ")).toBeVisible();
+  });
+
+  test("account page shows passwords on request and checks the current one", async ({ page }) => {
+    await page.goto("/app/settings/account");
+    await expect(page.getByText(email)).toBeVisible();
+    const current = page.locator("#current-password");
+    await current.fill("not-my-password-1");
+    await expect(current).toHaveAttribute("type", "password");
+    await page.getByRole("button", { name: "แสดงรหัสผ่าน" }).first().click();
+    await expect(current).toHaveAttribute("type", "text");
+    await page.locator("#new-password").fill("red-truck-2570y");
+    await page.locator("#confirm-password").fill("red-truck-2570y");
+    await page.getByRole("button", { name: "เปลี่ยนรหัสผ่าน" }).click();
+    await expect(page.getByText("รหัสผ่านปัจจุบันไม่ถูกต้อง")).toBeVisible();
   });
 
   test("dashboard, CSV export and wipe", async ({ page }) => {
