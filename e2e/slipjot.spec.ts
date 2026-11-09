@@ -11,7 +11,7 @@ async function upload(page: Page, ...ids: string[]) {
   await page.getByTestId("slip-input").setInputFiles(ids.map(slip));
   // Every row leaves the waiting/reading states.
   await expect(page.getByTestId("upload-row")).toHaveCount(ids.length);
-  await expect(page.getByText(/รอคิว|กำลังอ่านสลิป/)).toHaveCount(0, { timeout: 90_000 });
+  await expect(page.getByText(/รอคิว|กำลังอ่าน/)).toHaveCount(0, { timeout: 90_000 });
 }
 
 // Creates throwaway accounts, so it only runs against a local stack, never a deployed site.

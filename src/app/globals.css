@@ -220,13 +220,18 @@ html {
     transform: translateY(14px);
   }
 }
-@keyframes scan {
-  from {
-    transform: translateY(-10%);
+/* Landing demo laser: down the slip and back, forever (hidden under reduced motion). */
+@keyframes laser-scan {
+  0%,
+  100% {
+    transform: translateY(0);
   }
-  to {
-    transform: translateY(1000%);
+  50% {
+    transform: translateY(calc(100% - 3px));
   }
+}
+.laser {
+  animation: laser-scan 2.2s ease-in-out infinite;
 }
 
 /* The upload reader passing over a slip; alternates so it reads as one band moving back and forth. */

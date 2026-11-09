@@ -126,14 +126,21 @@ export function Uploader({ shared }: { shared: boolean }) {
           setDragging(false);
           add([...e.dataTransfer.files]);
         }}
-        className={`flex flex-col items-center gap-3 rounded-3xl border-[3px] border-dashed px-6 py-12 text-center transition-colors ${dragging ? "border-red bg-red-soft" : "border-chrome-dark bg-white"}`}
+        // Once slips are in, the drop zone shrinks to one row so the slips being read stay on a phone screen.
+        className={`flex items-center rounded-3xl border-[3px] border-dashed text-center transition-colors ${items.length ? "justify-between gap-3 px-4 py-3" : "flex-col gap-3 px-6 py-12"} ${dragging ? "border-red bg-red-soft" : "border-chrome-dark bg-white"}`}
       >
-        <span className="flex size-16 items-center justify-center rounded-2xl bg-red text-white">
-          <ImagePlus className="size-8" aria-hidden />
-        </span>
-        <p className="mt-1 text-lg font-bold">เลือกรูปสลิปจากอัลบั้ม</p>
-        <p className="max-w-[34ch] text-sm text-ink-2">เลือกได้หลายรูปพร้อมกัน หรือลากไฟล์มาวางตรงนี้ · JPG, PNG, WebP ไม่เกิน 10 MB</p>
-        <button type="button" onClick={() => inputRef.current?.click()} className="btn-plate mt-2">
+        {items.length === 0 && (
+          <span className="flex size-16 items-center justify-center rounded-2xl bg-red text-white">
+            <ImagePlus className="size-8" aria-hidden />
+          </span>
+        )}
+        <p className={items.length ? "text-left font-bold" : "mt-1 text-lg font-bold"}>
+          {items.length ? "เพิ่มสลิปอีก" : "เลือกรูปสลิปจากอัลบั้ม"}
+        </p>
+        {items.length === 0 && (
+          <p className="max-w-[34ch] text-sm text-ink-2">เลือกได้หลายรูปพร้อมกัน หรือลากไฟล์มาวางตรงนี้ · JPG, PNG, WebP ไม่เกิน 10 MB</p>
+        )}
+        <button type="button" onClick={() => inputRef.current?.click()} className={items.length ? "btn" : "btn-plate mt-2"}>
           เลือกรูป
         </button>
         <input
@@ -183,7 +190,10 @@ export function Uploader({ shared }: { shared: boolean }) {
           <ul className="space-y-2">
             {items.map((it) => (
               <li key={it.key} className="board flex items-center gap-3 p-3" data-testid="upload-row">
-                <div className="relative h-20 w-14 shrink-0 overflow-hidden rounded-lg border border-line bg-steel">
+                {/* The slip grows while it is read so the scan band is the moment you watch, then shrinks back to a row. */}
+                <div
+                  className={`relative shrink-0 overflow-hidden rounded-lg border border-line bg-steel transition-[width,height] duration-300 ease-out motion-reduce:transition-none ${it.state === "reading" ? "h-36 w-26" : "h-20 w-14"}`}
+                >
                   {/* eslint-disable-next-line @next/next/no-img-element -- local blob preview */}
                   <img src={it.preview} alt="" className="size-full object-cover object-top" />
                   {it.state === "reading" && (
@@ -213,9 +223,9 @@ function Row({ item, onRetry }: { item: Item; onRetry: () => void }) {
     return (
       <div className="space-y-1.5">
         <p className="flex items-center gap-2 text-ink-2">
-          <ScanLine className="size-4 text-red" aria-hidden /> กำลังอ่านสลิป…
+          <ScanLine className="size-4 shrink-0 text-red" aria-hidden /> กำลังอ่านยอดเงิน วันที่ และผู้รับ…
         </p>
-        <p className="text-xs text-ink-3">อ่านยอด เวลา และผู้รับ แล้วจัดหมวดให้</p>
+        <p className="text-xs text-ink-3">อ่านเสร็จแล้วจะจัดหมวดให้</p>
       </div>
     );
   if (item.state === "error")

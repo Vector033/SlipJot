@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { RollingNumber } from "@/components/rolling-number";
 
@@ -85,14 +85,24 @@ export function RouteBoardDemo() {
   const [run, setRun] = useState(0);
   const [idx, setIdx] = useState(0);
   const [phase, setPhase] = useState<"scan" | "read">("scan");
+  // On phones the board sits below the fold: hold the first read until it is on screen.
+  const [seen, setSeen] = useState(false);
+  const ref = useRef<HTMLElement>(null);
   const slip = SAMPLES[idx];
 
   useEffect(() => {
+    const io = new IntersectionObserver(([e]) => e.isIntersecting && setSeen(true), { threshold: 0.5 });
+    io.observe(ref.current!);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!seen) return;
     // Reduced motion: no scan, the read is there at once.
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const t = setTimeout(() => setPhase("read"), reduce ? 0 : 1100);
     return () => clearTimeout(t);
-  }, [run]);
+  }, [run, seen]);
 
   const next = () => {
     setPhase("scan");
@@ -101,7 +111,7 @@ export function RouteBoardDemo() {
   };
 
   return (
-    <figure className="relative mx-auto w-full max-w-[34rem] lg:max-w-[40rem]" aria-label="ตัวอย่าง: SlipJot อ่านสลิปแล้วบันทึกเป็นรายจ่าย">
+    <figure ref={ref} className="relative mx-auto w-full max-w-[34rem] lg:max-w-[40rem]" aria-label="ตัวอย่าง: SlipJot อ่านสลิปแล้วบันทึกเป็นรายจ่าย">
       <div className="grid grid-cols-[minmax(0,0.78fr)_minmax(0,1fr)] items-start gap-3 sm:gap-4">
         {/* The slip, as it sits in the photo album. All samples share one cell so nothing shifts. */}
         <div className="relative mt-6 grid overflow-hidden rounded-xl bg-white shadow-[0_18px_40px_-18px_rgb(0_0_0/0.55)] ring-1 ring-black/10">
@@ -118,18 +128,17 @@ export function RouteBoardDemo() {
               loading={i === 0 ? undefined : "eager"}
             />
           ))}
-          {phase === "scan" && (
-            <span
-              key={run}
-              aria-hidden
-              className="pointer-events-none absolute inset-x-0 top-0 h-[10%] bg-gradient-to-b from-plate/0 via-plate/55 to-plate/0"
-              style={{ animation: "scan 1.1s cubic-bezier(0.45, 0, 0.55, 1) both" }}
-            />
+          {/* The reader's laser: a glowing plate-yellow line sweeping the slip, looping while the demo is on screen.
+              The full-height wrapper moves (transform only), so 100% is the slip's height. */}
+          {seen && (
+            <span aria-hidden className="laser pointer-events-none absolute inset-0 motion-reduce:hidden">
+              <span className="block h-[3px] rounded-full bg-plate shadow-[0_0_6px_1px_rgb(245_196_0/0.95),0_0_22px_6px_rgb(245_196_0/0.55),0_0_44px_14px_rgb(217_171_0/0.25)]" />
+            </span>
           )}
         </div>
 
         {/* The route board */}
-        <div key={run} className="overflow-hidden rounded-2xl bg-red-night text-white shadow-[0_24px_48px_-20px_rgb(0_0_0/0.7)] ring-1 ring-white/10">
+        <div key={run} className="overflow-hidden rounded-2xl border-t border-white/25 bg-red-night text-white shadow-[inset_0_-2px_0_rgb(0_0_0/0.35),0_24px_48px_-20px_rgb(0_0_0/0.7)] ring-1 ring-white/10">
           <div className="flex items-center justify-between bg-ink px-3.5 py-2 text-[0.8rem] text-on-red-2">
             <span className="whitespace-nowrap">
               สลิปตัวอย่าง <span className="num">{idx + 1}/{SAMPLES.length}</span>

@@ -113,7 +113,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
                         {r.bank}
                       </th>
                       <td className="px-4 py-3 text-right">
-                        <span className="plate-sm text-base">{r.gemini}%</span>
+                        <span className="num font-semibold">{r.gemini}%</span>
                       </td>
                       <td className="num px-4 py-3 text-right text-ink-2">{r.ocr}%</td>
                     </tr>
@@ -232,7 +232,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
                   key={t}
                   className="trim-top grid gap-x-8 gap-y-1 px-6 pt-6 pb-5 sm:grid-cols-[16rem_1fr_auto] sm:items-center sm:px-10"
                 >
-                    <dt className="sign text-xl text-plate">
+                    <dt className="sign text-xl text-white">
                       {t.split("|").map((w, i) => (
                         <span key={i}>
                           {i > 0 && <wbr />}

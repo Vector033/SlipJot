@@ -270,7 +270,7 @@ Depth is mostly material, not shadow: red regions, white boards on steel, ink st
 - **Showpiece** (`box-shadow: 0 24px 48px -20px rgb(0 0 0 / 0.7)`): the landing's demo route board on red only.
 
 ### Named Rules
-**The Bolted-On Rule.** Shadows sit tight under their object with negative spread; nothing glows and nothing floats in a halo.
+**The Bolted-On Rule.** Shadows sit tight under their object with negative spread; nothing glows and nothing floats in a halo. The one exception is the landing demo's scan laser.
 
 ## Shapes
 
@@ -323,7 +323,7 @@ All moves come from the route board and the slip reader:
 - **Roll:** plate digits roll (700ms plus 90ms per digit, cubic-bezier(0.16, 1, 0.3, 1)).
 - **Stop lights:** the destination stop fills plate yellow.
 - **Split-flap (landing demo only):** "สลิปถัดไป" turns each board row over from its top edge (rotateX, 380ms, 70ms stagger) onto the next sample, then the read plays. Only on tap; the board never cycles by itself.
-- **Scan band:** while a slip is read, a flat plate-yellow band passes over it (the landing demo once, upload thumbnails back and forth until the read ends). No glow: it is a band of paint, not a laser. Hidden under reduced motion.
+- **Scan band:** while a slip is read, a flat plate-yellow band passes over upload thumbnails (no glow) back and forth until the read ends. On the landing demo it is a laser instead: a 3px plate-yellow line with a plate glow, sweeping down and back up the slip every 2.2s for as long as the demo is on screen, starting only once the board has scrolled into view (`.laser`, `@keyframes laser-scan`, transform only). Both are hidden under reduced motion. An upload thumbnail grows to 104px by 144px while it is read. Once slips are added, the upload drop zone shrinks to a one-row "เพิ่มสลิปอีก" bar so the slips being read stay on a phone screen.
 - **Settle:** when a read lands, the amount plate and the saved/review badge settle in (scale from 0.82, slight overshoot, 320ms).
 Boards may rise 14px into place. Nothing else moves; reduced motion collapses all of it to an instant state, and every element is visible without animation. No scroll-jacking: lists and pages scroll natively.
 

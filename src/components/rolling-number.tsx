@@ -23,7 +23,7 @@ export function RollingNumber({ text, className = "", delayMs = 0 }: { text: str
       {chars.map((ch, i) => {
         if (!/\d/.test(ch)) {
           return (
-            <span key={i} aria-hidden>
+            <span key={i} aria-hidden className="select-none">
               {ch}
             </span>
           );
@@ -31,7 +31,8 @@ export function RollingNumber({ text, className = "", delayMs = 0 }: { text: str
         const order = seen++;
         const d = Number(ch);
         return (
-          <span key={i} aria-hidden className="relative inline-block h-[1.15em] overflow-hidden" style={{ width: "0.58em" }}>
+          // select-none: copying the amount yields the sr-only value, not the 0–9 strips.
+          <span key={i} aria-hidden className="relative inline-block select-none h-[1.15em] overflow-hidden" style={{ width: "0.58em" }}>
             <span
               className="absolute inset-x-0 top-0 flex flex-col text-center"
               style={{
