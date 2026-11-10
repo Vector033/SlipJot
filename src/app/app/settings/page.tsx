@@ -1,6 +1,10 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { Download } from "lucide-react";
+import { ConfirmDelete } from "@/components/confirm-delete";
+import { ThaiPhrases } from "@/components/thai-phrases";
 import { getOptionalUser } from "@/lib/auth";
+import { DEFAULT_CATEGORIES } from "@/lib/core/categories";
 import { getCategories, getInsights, getSettings } from "@/lib/data";
 import { llmLabel } from "@/lib/llm/categorize-llm";
 import { isDemoUser } from "@/lib/supabase/admin";
@@ -9,11 +13,8 @@ import {
   deleteCategoryAction,
   setKeepImagesAction,
 } from "../actions";
-import { Download } from "lucide-react";
-import { DEFAULT_CATEGORIES } from "@/lib/core/categories";
 import { CategoryRow } from "./category-row";
 import { SettingsTabs } from "./tabs";
-import { ConfirmDelete } from "@/components/confirm-delete";
 
 export const metadata: Metadata = { title: "ตั้งค่า" };
 
@@ -37,8 +38,7 @@ export default async function SettingsPage({ searchParams }: PageProps<"/app/set
       <SettingsTabs />
       {isDemoUser(user?.email) && (
         <p role="status" className="notice bg-plate-soft">
-          นี่คือบัญชีเดโมที่ทุกคนใช้ร่วมกัน: ลองแก้หมวด ตั้งงบ หรือส่งสลิปได้ แต่ลบข้อมูล ลบบัญชี
-          และเปลี่ยนการเก็บรูปไม่ได้
+          <ThaiPhrases text="นี่คือบัญชีเดโมที่ทุกคนใช้ร่วมกัน:| ลองแก้หมวด ตั้งงบ หรือส่งสลิปได้| แต่ลบข้อมูล ลบบัญชี| และเปลี่ยนการเก็บรูปไม่ได้" />
         </p>
       )}
 
@@ -48,7 +48,7 @@ export default async function SettingsPage({ searchParams }: PageProps<"/app/set
         </div>
         <div className="p-5">
           <p className="text-sm text-ink-2">
-            ตั้งงบแล้วจะเตือนที่หน้าภาพรวมเมื่อใช้ถึง 80% หรือเมื่อคาดว่าจะเกินภายในสิ้นเดือน
+            <ThaiPhrases text="ตั้งงบแล้วจะเตือนที่หน้าภาพรวม|เมื่อใช้ถึง 80%| หรือเมื่อคาดว่าจะเกิน|ภายในสิ้นเดือน" />
           </p>
           <div className="rows">
             {cats.map((c) => (
@@ -83,7 +83,7 @@ export default async function SettingsPage({ searchParams }: PageProps<"/app/set
               <span>
                 <span className="font-medium">เก็บรูปสลิปไว้</span>
                 <span className="block text-sm text-ink-2">
-                  ปิดอยู่เป็นค่าเริ่มต้น: รูปถูกลบทันทีเมื่อคุณยืนยันรายการ และรูปที่ค้างตรวจจะถูกลบเองภายใน 7 วัน
+                  <ThaiPhrases text="ปิดอยู่เป็นค่าเริ่มต้น:| รูปถูกลบทันทีเมื่อคุณยืนยันรายการ| และรูปที่ค้างตรวจ|จะถูกลบเองภายใน 7 วัน" />
                 </span>
               </span>
             </label>
@@ -107,11 +107,13 @@ export default async function SettingsPage({ searchParams }: PageProps<"/app/set
             />
           </dl>
           <p className="mt-3 text-xs text-ink-3">
-            {llmLabel() === "local"
-              ? "โหมดพัฒนา: อ่านสลิปและจัดหมวดด้วย LLM ฟรีในเครื่อง (FreeLLMAPI) ใช้กับสลิปจำลองเท่านั้น"
-              : llmLabel() === "gemini"
-                ? "อ่านสลิปด้วย Gemini และใช้ AI จัดหมวดเฉพาะเมื่อกฎจากประวัติและชื่อร้านไม่รู้จักผู้รับ"
-                : "ยังไม่ได้ตั้งค่า Gemini: อ่านสลิปด้วย OCR ในเซิร์ฟเวอร์ และจัดหมวดด้วยกฎอย่างเดียว"}
+            {llmLabel() === "local" ? (
+              <ThaiPhrases text="โหมดพัฒนา:| อ่านสลิปและจัดหมวดด้วย LLM ฟรีในเครื่อง (FreeLLMAPI)| ใช้กับสลิปจำลองเท่านั้น" />
+            ) : llmLabel() === "gemini" ? (
+              <ThaiPhrases text="อ่านสลิปด้วย Gemini| และใช้ AI จัดหมวดเฉพาะเมื่อ|กฎจากประวัติและชื่อร้านไม่รู้จักผู้รับ" />
+            ) : (
+              <ThaiPhrases text="ยังไม่ได้ตั้งค่า Gemini:| อ่านสลิปด้วย OCR ในเซิร์ฟเวอร์| และจัดหมวดด้วยกฎอย่างเดียว" />
+            )}
           </p>
         </div>
       </section>
@@ -128,13 +130,15 @@ export default async function SettingsPage({ searchParams }: PageProps<"/app/set
           </div>
 
           <form action={deleteAllDataAction} className="mt-6 space-y-2 border-t-2 border-line pt-5">
-            <p className="text-sm font-medium">ลบรายการ หมวด และกฎที่ระบบเรียนรู้ทั้งหมด (บัญชียังอยู่)</p>
+            <p className="text-sm font-medium">
+              <ThaiPhrases text="ลบรายการ หมวด และกฎที่ระบบเรียนรู้ทั้งหมด| (บัญชียังอยู่)" />
+            </p>
             <label htmlFor="confirm-wipe" className="label">
               พิมพ์ &quot;ลบ&quot; เพื่อยืนยัน
             </label>
             {sp.confirm === "wipe" && (
               <p role="alert" className="text-sm text-red-deep">
-                พิมพ์คำว่า &quot;ลบ&quot; ให้ตรงก่อนกดลบข้อมูลทั้งหมด
+                <ThaiPhrases text='พิมพ์คำว่า "ลบ" ให้ตรง|ก่อนกดลบข้อมูลทั้งหมด' />
               </p>
             )}
             <div className="flex flex-wrap gap-2">
@@ -144,8 +148,8 @@ export default async function SettingsPage({ searchParams }: PageProps<"/app/set
           </form>
 
           <p className="mt-4 text-sm text-ink-3">
-            ลบบัญชี เปลี่ยนรหัสผ่าน หรือเชื่อม Google ได้ที่{" "}
-            <Link href="/app/settings/account" className="font-semibold text-ink underline">
+            <span className="inline-block">ลบบัญชี เปลี่ยนรหัสผ่าน หรือเชื่อม Google ได้ที่</span>{" "}
+            <Link href="/app/settings/account" className="inline-block font-semibold text-ink underline">
               บัญชีและความปลอดภัย
             </Link>
           </p>

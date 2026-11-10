@@ -2,6 +2,7 @@
 
 import { useActionState, useState } from "react";
 import { PasswordInput, PasswordRules } from "@/components/password-input";
+import { ThaiPhrases } from "@/components/thai-phrases";
 import { GoogleMark } from "@/app/login/login-form";
 import {
   changePasswordAction,
@@ -45,7 +46,9 @@ export function GoogleUnlinkButton({ blockedReason }: { blockedReason?: string }
   return (
     <form action={action} className="space-y-2">
       {blockedReason ? (
-        <p className="text-sm text-ink-3">{blockedReason}</p>
+        <p className="text-sm text-ink-3">
+          <ThaiPhrases text={blockedReason} />
+        </p>
       ) : (
         // Two taps, like every other removal in the app.
         <details>

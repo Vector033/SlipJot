@@ -2,11 +2,12 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { CircleCheckBig } from "lucide-react";
 import { BANK_NAMES_TH, type BankCode } from "@slipjot/slip-reader";
+import { ConfirmDelete } from "@/components/confirm-delete";
 import { ExpenseForm } from "@/components/expense-form";
+import { ThaiPhrases } from "@/components/thai-phrases";
 import { formatBaht, toLocalInput } from "@/lib/core/format";
 import { getCategories, getReviewQueue } from "@/lib/data";
 import { deleteExpenseAction, saveExpenseAction } from "../actions";
-import { ConfirmDelete } from "@/components/confirm-delete";
 
 export const metadata: Metadata = { title: "รอตรวจ" };
 
@@ -28,9 +29,13 @@ export default async function ReviewPage() {
       <header>
         <h1 className="text-2xl font-bold">รอตรวจ</h1>
         <p className="mt-1 text-ink-2">
-          {queue.length
-            ? `${queue.length} รายการที่ระบบไม่แน่ใจ ช่องสีเหลืองคือที่ควรดู ตรวจแล้วกดยืนยัน รูปสลิปจะถูกลบทันที`
-            : "ไม่มีรายการค้างตรวจ"}
+          {queue.length ? (
+            <ThaiPhrases
+              text={`${queue.length} รายการที่ระบบไม่แน่ใจ| ช่องสีเหลืองคือที่ควรดู| ตรวจแล้วกดยืนยัน| รูปสลิปจะถูกลบทันที`}
+            />
+          ) : (
+            "ไม่มีรายการค้างตรวจ"
+          )}
         </p>
       </header>
 
@@ -82,10 +87,22 @@ export default async function ReviewPage() {
                   </ul>
                 )}
                 <p className="text-sm text-ink-3">
-                  {e.readSource === "gemini" ? "อ่านด้วย Gemini" : e.readSource === "ocr" ? "อ่านด้วย OCR" : e.readSource === "local-llm" ? "อ่านด้วย LLM ในเครื่อง" : "เพิ่มเอง"}
-                  {e.confidence !== null && ` · มั่นใจ ${Math.round(e.confidence * 100)}%`}
-                  {e.payeeBank && ` · ${BANK_NAMES_TH[e.payeeBank as BankCode] ?? e.payeeBank}`}
-                  {e.payeeLast4 && ` ••${e.payeeLast4}`}
+                  <span className="inline-block">
+                    {e.readSource === "gemini"
+                      ? "อ่านด้วย Gemini"
+                      : e.readSource === "ocr"
+                        ? "อ่านด้วย OCR"
+                        : e.readSource === "local-llm"
+                          ? "อ่านด้วย LLM ในเครื่อง"
+                          : "เพิ่มเอง"}
+                  </span>
+                  {e.confidence !== null && (
+                    <span className="inline-block"> · มั่นใจ {Math.round(e.confidence * 100)}%</span>
+                  )}
+                  {e.payeeBank && (
+                    <span className="inline-block"> · {BANK_NAMES_TH[e.payeeBank as BankCode] ?? e.payeeBank}</span>
+                  )}
+                  {e.payeeLast4 && <span className="inline-block"> ••{e.payeeLast4}</span>}
                 </p>
                 <ExpenseForm
                   action={saveExpenseAction}

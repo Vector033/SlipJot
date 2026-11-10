@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { RollingNumber } from "@/components/rolling-number";
+import { ThaiPhrases } from "@/components/thai-phrases";
 
 // The landing's signature moment: a fictional slip is read onto the route board.
 // The payee is written on like sign paint, the amount rolls onto the plate, and the stop
@@ -32,7 +33,7 @@ const SAMPLES: Sample[] = [
     w: 1050,
     h: 1133,
     alt: "สลิปโอนเงินตัวอย่าง (ข้อมูลสมมติ) ยอด 268 บาท ถึงก๋วยเตี๋ยวเรือลุงชัย",
-    payee: "ก๋วยเตี๋ยวเรือลุงชัย",
+    payee: "ก๋วยเตี๋ยวเรือ|ลุงชัย",
     amount: "268.00",
     when: "6 ต.ค. 2569 · 05:15 น.",
     memo: "ค่ากาแฟ",
@@ -44,7 +45,7 @@ const SAMPLES: Sample[] = [
     w: 1050,
     h: 1173,
     alt: "สลิปโอนเงินตัวอย่าง (ข้อมูลสมมติ) ยอด 30 บาท ถึงนายศุภชัย คำแสน",
-    payee: "นาย ศุภชัย คำแสน",
+    payee: "นาย ศุภชัย| คำแสน",
     amount: "30.00",
     when: "6 ต.ค. 2569 · 08:42 น.",
     memo: "ค่ารถแดง",
@@ -56,19 +57,19 @@ const SAMPLES: Sample[] = [
     w: 1050,
     h: 1150,
     alt: "สลิปโอนเงินตัวอย่าง (ข้อมูลสมมติ) ยอด 145 บาท ถึงร้านเครื่องเขียนหน้ามอ",
-    payee: "ร้านเครื่องเขียนหน้ามอ",
+    payee: "ร้านเครื่องเขียน|หน้ามอ",
     amount: "145.00",
     when: "7 ต.ค. 2569 · 12:18 น.",
     memo: null,
     stop: "ช้อปปิ้ง",
-    why: "ไม่มีบันทึกช่วยจำ จึงจัดหมวดจากชื่อร้าน",
+    why: "ไม่มีบันทึกช่วยจำ| จึงจัดหมวดจากชื่อร้าน",
   },
   {
     src: "/demo/slip-housing.jpg",
     w: 1050,
     h: 1155,
     alt: "สลิปโอนเงินตัวอย่าง (ข้อมูลสมมติ) ยอด 3,500 บาท ถึงหอพักบ้านสวนนิมมาน",
-    payee: "หอพักบ้านสวนนิมมาน",
+    payee: "หอพัก|บ้านสวนนิมมาน",
     amount: "3,500.00",
     when: "1 ต.ค. 2569 · 19:05 น.",
     memo: "ค่าหอเดือนนี้",
@@ -143,9 +144,9 @@ export function RouteBoardDemo() {
           key={run}
           className="overflow-hidden rounded-2xl border border-white/15 border-t-white/30 bg-red-night text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.22),inset_0_-2px_0_rgb(0_0_0/0.45),0_24px_48px_-20px_rgb(0_0_0/0.7)]"
         >
-          <div className="flex items-center justify-between border-b border-white/10 bg-ink px-3.5 py-2 text-[0.8rem] text-on-red-2">
+          <div className="flex items-center justify-between gap-2 border-b border-white/10 bg-ink px-3 py-2 text-[0.75rem] text-on-red-2 sm:px-3.5 sm:text-[0.8rem]">
             <span className="whitespace-nowrap">
-              สลิปตัวอย่าง <span className="num">{idx + 1}/{SAMPLES.length}</span>
+              <span className="hidden min-[390px]:inline">สลิป</span>ตัวอย่าง <span className="num">{idx + 1}/{SAMPLES.length}</span>
               <span className="hidden sm:inline"> · ข้อมูลสมมติ</span>
             </span>
             <span className={`whitespace-nowrap font-medium ${phase === "read" ? "text-plate" : ""}`}>
@@ -156,7 +157,7 @@ export function RouteBoardDemo() {
           <div className="relative space-y-2.5 px-3 pt-3 pb-3.5 [perspective:600px]">
             {/* #18 Square-Dot Grid / #22 ASCII & Pixels LED matrix (6% opacity) + #8 Halftone corner accents */}
             <span aria-hidden className="led-matrix-light pointer-events-none absolute inset-0 z-0" />
-            <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-on-red-2 opacity-[0.12]" />
+            <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-on-red-2 opacity-[0.2]" />
 
             <div
               className="relative z-10 origin-top rounded-[4px] bg-black/20 px-2.5 py-2 shadow-[inset_0_1px_0_rgb(255_255_255/0.08),inset_0_-1px_0_rgb(0_0_0/0.45)]"
@@ -168,7 +169,7 @@ export function RouteBoardDemo() {
                 className="sign relative min-h-[2.8em] pt-0.5 text-[1.05rem] leading-[1.35] sm:min-h-0 sm:text-2xl"
                 style={phase === "read" ? { animation: "write-on 0.9s cubic-bezier(0.65, 0, 0.35, 1) both" } : { visibility: "hidden" }}
               >
-                {slip.payee}
+                <ThaiPhrases text={slip.payee} />
               </p>
             </div>
 
@@ -182,12 +183,12 @@ export function RouteBoardDemo() {
                 ฿{phase === "read" ? <RollingNumber text={slip.amount} delayMs={250} /> : <span className="num">0.00</span>}
               </span>
               <p className="relative mt-2 text-[0.75rem] leading-relaxed text-on-red-2">
-                {slip.when}
+                <span className="inline-block">{slip.when}</span>
                 <br />
                 {slip.memo ? (
-                  <>
+                  <span className="inline-block">
                     บันทึกช่วยจำ: <span className="text-white">{slip.memo}</span>
-                  </>
+                  </span>
                 ) : (
                   "ไม่มีบันทึกช่วยจำ"
                 )}
@@ -219,12 +220,12 @@ export function RouteBoardDemo() {
       </div>
       <figcaption className="mt-3 flex flex-wrap items-center justify-end gap-x-3 gap-y-2 text-[0.8rem] text-on-red-2">
         <span aria-live="polite">
-          ตัวอย่างการทำงาน · ข้อมูลสมมติ · <Unbroken text={slip.why} />
+          <span className="inline-block">ตัวอย่างการทำงาน · ข้อมูลสมมติ ·</span> <Unbroken text={slip.why} />
         </span>
         <button
           type="button"
           onClick={next}
-          className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-white/35 px-3.5 text-white transition-[border-color,transform] duration-150 hover:border-white active:scale-[0.97]"
+          className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-white/35 px-3.5 text-white whitespace-nowrap transition-[border-color,transform] duration-150 hover:border-white active:scale-[0.97]"
         >
           สลิปถัดไป <ArrowRight className="size-3.5" aria-hidden />
         </button>
@@ -233,14 +234,17 @@ export function RouteBoardDemo() {
   );
 }
 
-// Thai has no word spaces: keep a quoted memo on one line instead of breaking it mid-word.
+// Thai has no word spaces: keep "บันทึกช่วยจำ “...”" together so the quoted memo never orphans alone.
 function Unbroken({ text }: { text: string }) {
-  const at = text.indexOf("“");
-  if (at < 0) return text;
+  if (text.includes("|")) {
+    return <ThaiPhrases text={text} />;
+  }
+  const at = text.indexOf("บันทึกช่วยจำ");
+  if (at < 0) return <span className="inline-block">{text}</span>;
   return (
     <>
-      {text.slice(0, at)}
-      <span className="whitespace-nowrap">{text.slice(at)}</span>
+      {at > 0 && <span className="inline-block">{text.slice(0, at)}</span>}
+      <span className="inline-block">{text.slice(at)}</span>
     </>
   );
 }

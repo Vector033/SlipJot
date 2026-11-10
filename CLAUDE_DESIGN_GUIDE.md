@@ -142,7 +142,46 @@ To escape sterile, flat digital canvases without creating noisy **AI Slop**, app
 
 ---
 
-## 6. Token-Efficient Claude Prompts for SlipJot (Copy-Paste Ready)
+## 6. GPU Shader Background Architecture (Andres The Designer Workflow)
+
+Reference Tutorial: **Shaders Tutorial: SICK Website Backgrounds** ([YouTube](https://www.youtube.com/watch?v=XVfUl8DB2D8)) & **Paper Shaders** ([shaders.paper.design](https://shaders.paper.design) / [shaders.com](https://shaders.com)).
+
+Unlike heavy MP4 videos or CPU-laggy CSS blurs, **WebGL/Canvas Fragment Shaders** compute textured motion directly on the GPU at 60 FPS with minimal bundle footprint.
+
+### 6.1 Implementation Paths in Next.js 16 + React 19
+* **Option A — `@paper-design/shaders-react` (Recommended):**
+  * Install `npm install @paper-design/shaders-react` and tune props visually on [shaders.paper.design](https://shaders.paper.design).
+* **Option B — Zero-Dependency WebGL `<canvas>` Fragment Shader:**
+  * Write a lightweight `'use client'` GLSL fragment shader (`u_time`, `u_resolution`, `u_colors`) with `ResizeObserver` and clean GPU resource disposal (`gl.deleteProgram`) on unmount.
+
+### 6.2 Mandatory Next.js & Anti-AI-Slop Guardrails for Shaders
+1. **`'use client'` + Static CSS Fallback:** Wrap shaders in a `'use client'` component layered over `--color-red` (`#b3121c`) / `--color-red-deep` (`#8e0e16`) so SSR renders instantly with zero CLS.
+2. **Battery & Accessibility (`prefers-reduced-motion` + Offscreen Pause):** Set `speed={0}` when `prefers-reduced-motion` is enabled, and pause rendering via `IntersectionObserver` when scrolled out of view.
+3. **Hero Body Red & Route-Board Frame Only:** Never place moving shaders behind Recharts budget graphs (`charts.tsx`), expense tables, or OCR slip dropzones (`upload/page.tsx`). Keep it on the Hero Songthaew body red section (`src/app/page.tsx`) with a soft contrast scrim so white Thai text stays crisp.
+4. **Strict Songthaew Palette:** Use SlipJot's Body Red (`#b3121c`, `#8e0e16`, `#5e0a10`) and subtle Plate Gold (`#d9ab00`) tokens only—zero generic purple AI slop.
+
+### 6.3 SlipJot Shader Recipe
+```tsx
+// src/components/songthaew-shader.tsx ('use client')
+import { Dithering, GrainGradient } from '@paper-design/shaders-react';
+
+// Painted metallic red songthaew enamel shader for the Landing Hero
+<GrainGradient
+  colorBack="#8e0e16"
+  colors={["#b3121c", "#8e0e16", "#5e0a10", "#d9ab00"]}
+  softness={0.6}
+  intensity={0.42}
+  noise={0.3}
+  shape="wave"
+  speed={reducedMotion || !isVisible ? 0 : 0.25}
+  style={{ width: '100%', height: '100%' }}
+/>
+```
+*(Optional LED route-board retro dithering inside `route-board-demo.tsx` frame: `<Dithering colorBack="#1b1715" colorFront="#f5c400" shape="warp" type="4x4" size={2} speed={0.18} />` at low opacity.)*
+
+---
+
+## 7. Token-Efficient Claude Prompts for SlipJot (Copy-Paste Ready)
 
 ### Prompt 1: Landing Page & Route-Board Motion Design
 ```text
@@ -209,4 +248,18 @@ Requirements:
 4. Guardrails:
    - Pure CSS + inline SVG data-URIs only (60 FPS mobile PWA performance).
    - Strictly preserve contrast >= 4.5:1 for `--color-on-red` (`#ffffff`) and `--color-ink` on `--color-plate` (`#f5c400`). Do not alter OCR, Drizzle, or Supabase logic.
+```
+
+### Prompt 4: Read Guide & Implement GPU Shader Background (SlipJot)
+```text
+Task: First, read `CLAUDE_DESIGN_GUIDE.md` thoroughly (especially Section 3 Anti-AI-Slop Rules, Section 4 Design Tokens, and Section 6 GPU Shader Background Architecture). Then follow the guide to implement a GPU Shader background on SlipJot's landing page (`src/app/page.tsx`).
+
+Steps to Follow:
+1. Create a reusable `'use client'` component `src/components/songthaew-shader.tsx` using `@paper-design/shaders-react` (`GrainGradient` from Section 6.3) or a zero-dependency WebGL `<canvas>` fragment shader.
+2. Strictly bind to SlipJot's Chiang Mai Red Songthaew palette (`#b3121c` body red, `#8e0e16` red-deep, `#5e0a10` red-night, subtle `#d9ab00` plate highlight). Never introduce purple AI gradients.
+3. Implement mandatory guardrails from Section 6.2:
+   - Respect `prefers-reduced-motion` (`speed = 0`) and pause offscreen via `IntersectionObserver` to protect mobile PWA battery.
+   - Layer behind the Hero Songthaew region only (`pointer-events-none`, `aria-hidden="true"`) with a subtle contrast scrim so white Thai display headings (`--color-on-red`) never clip or lose contrast (>= 4.5:1).
+   - Never apply animated shaders behind `charts.tsx` or `upload/page.tsx` OCR previews.
+4. Run `npm run build` / TypeScript check and verify mobile responsiveness without touching `@slipjot/slip-reader`, Drizzle, or Supabase logic.
 ```

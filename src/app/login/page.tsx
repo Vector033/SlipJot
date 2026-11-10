@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { Logo } from "@/components/logo";
+import { ThaiPhrases } from "@/components/thai-phrases";
 import { demoEmail } from "@/lib/supabase/admin";
 import { DemoButton } from "./demo-button";
 import { googleEnabled } from "@/lib/site";
@@ -22,14 +23,16 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
             <br />
             <span className="text-plate">รายจ่ายออก</span>
           </p>
-          <p className="mt-3 max-w-[34ch] text-on-red-2">ส่งสลิปที่มีอยู่แล้วในอัลบั้ม ที่เหลือ SlipJot จัดการให้</p>
+          <p className="mt-3 max-w-[36ch] text-on-red-2">
+            <ThaiPhrases text="ส่งสลิปที่มีอยู่แล้วในอัลบั้ม| ที่เหลือ SlipJot จัดการให้" />
+          </p>
           {/* The route a slip rides, stop by stop. Desktop only: on a phone the form comes first. */}
           <ol className="relative mt-16 hidden space-y-7 border-l-[3px] border-chrome/70 pl-7 lg:block" aria-label="สลิปผ่านอะไรบ้าง">
             {[
-              ["ส่งสลิป", "เลือกหลายรูปจากอัลบั้ม หรือแชร์จากแอปธนาคาร"],
-              ["อ่าน", "ยอด วันเวลา ผู้รับ ธนาคาร และบันทึกช่วยจำ"],
-              ["ลงป้ายหมวด", "ร้านเดิมเข้าหมวดเดิม ใบไหนไม่แน่ใจจะถามก่อน"],
-              ["สรุปเดือน", "ยอดรวม หมวด ร้านที่จ่ายบ่อย และเตือนเมื่อใกล้เกินงบ"],
+              ["ส่งสลิป", "เลือกหลายรูปจากอัลบั้ม| หรือแชร์จากแอปธนาคาร"],
+              ["อ่าน", "ยอด วันเวลา ผู้รับ| ธนาคาร และบันทึกช่วยจำ"],
+              ["ลงป้ายหมวด", "ร้านเดิมเข้าหมวดเดิม| ใบไหนไม่แน่ใจจะถามก่อน"],
+              ["สรุปเดือน", "ยอดรวม หมวด| ร้านที่จ่ายบ่อย| และเตือนเมื่อใกล้เกินงบ"],
             ].map(([stop, what], i) => (
               <li key={stop} className="relative">
                 <span
@@ -37,7 +40,9 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
                   className={`absolute top-1.5 -left-[2.32rem] size-4 rounded-full border-[3px] ${i === 0 ? "border-ink bg-plate" : "border-chrome bg-red"}`}
                 />
                 <p className="sign text-xl text-white">{stop}</p>
-                <p className="mt-0.5 text-on-red-2">{what}</p>
+                <p className="mt-0.5 text-on-red-2">
+                  <ThaiPhrases text={what} />
+                </p>
               </li>
             ))}
           </ol>
@@ -49,7 +54,11 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
         <div className="w-full max-w-sm">
           <h1 className="text-2xl font-bold">ยินดีต้อนรับ</h1>
           <p className="mt-1 mb-6 text-ink-2">
-            {googleEnabled() ? "เข้าสู่ระบบด้วย Google หรืออีเมล ครั้งแรกจะสร้างบัญชีให้" : "เข้าสู่ระบบ หรือสร้างบัญชีใหม่ด้วยอีเมล"}
+            {googleEnabled() ? (
+              <ThaiPhrases text="เข้าสู่ระบบด้วย Google หรืออีเมล| ครั้งแรกจะสร้างบัญชีให้" />
+            ) : (
+              <ThaiPhrases text="เข้าสู่ระบบ| หรือสร้างบัญชีใหม่ด้วยอีเมล" />
+            )}
           </p>
           {sp.oauth && (
             <p role="alert" className="notice mb-4 bg-red-soft text-red-deep">
@@ -70,11 +79,13 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
           {demoEmail() && (
             <div className="mt-6 border-t-2 border-line pt-6">
               <DemoButton />
-              <p className="mt-2 text-center text-sm text-ink-3">ข้อมูลสมมติ ใช้ร่วมกับคนอื่น ไม่ต้องสมัคร</p>
+              <p className="mt-2 text-center text-sm text-ink-3">
+                <ThaiPhrases text="ข้อมูลสมมติ| ใช้ร่วมกับคนอื่น| ไม่ต้องสมัคร" />
+              </p>
             </div>
           )}
           <p className="mt-8 text-sm leading-relaxed text-ink-3">
-            รูปสลิปถูกลบหลังคุณยืนยันรายการ เก็บเลขบัญชีแค่ 4 ตัวท้าย และลบข้อมูลทั้งหมดได้เองจากหน้าตั้งค่า
+            <ThaiPhrases text="รูปสลิปถูกลบหลังคุณยืนยันรายการ| เก็บเลขบัญชีแค่ 4 ตัวท้าย| และลบข้อมูลทั้งหมดได้เอง|จากหน้าตั้งค่า" />
           </p>
         </div>
       </div>

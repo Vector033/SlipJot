@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { KeyRound, LogOut, Mail, Monitor, Smartphone } from "lucide-react";
+import { ThaiPhrases } from "@/components/thai-phrases";
 import { getAccount, listSessions } from "@/lib/account";
 import { formatDate, formatDateTime } from "@/lib/core/format";
 import { googleEnabled } from "@/lib/site";
@@ -36,12 +37,12 @@ export default async function AccountPage({ searchParams }: PageProps<"/app/sett
 
       {account.demo && (
         <p role="status" className="notice bg-plate-soft">
-          นี่คือบัญชีเดโมที่ทุกคนใช้ร่วมกัน จึงเปลี่ยนรหัสผ่าน เชื่อม Google ดูอุปกรณ์ หรือลบบัญชีไม่ได้
+          <ThaiPhrases text="นี่คือบัญชีเดโมที่ทุกคนใช้ร่วมกัน| จึงเปลี่ยนรหัสผ่าน เชื่อม Google| ดูอุปกรณ์ หรือลบบัญชีไม่ได้" />
         </p>
       )}
       {sp.linked === "google" && (
         <p role="status" className="notice bg-plate-soft">
-          เชื่อม Google แล้ว จากนี้เข้าสู่ระบบด้วย Google ได้
+          <ThaiPhrases text="เชื่อม Google แล้ว| จากนี้เข้าสู่ระบบด้วย Google ได้" />
         </p>
       )}
       {sp.oauth && (
@@ -96,7 +97,7 @@ export default async function AccountPage({ searchParams }: PageProps<"/app/sett
               {!account.demo &&
                 (account.google ? (
                   <GoogleUnlinkButton
-                    blockedReason={!account.hasPassword ? "ตั้งรหัสผ่านก่อน จึงจะยกเลิกการเชื่อม Google ได้" : undefined}
+                    blockedReason={!account.hasPassword ? "ตั้งรหัสผ่านก่อน| จึงจะยกเลิกการเชื่อม Google ได้" : undefined}
                   />
                 ) : (
                   <GoogleLinkButton />
@@ -114,7 +115,7 @@ export default async function AccountPage({ searchParams }: PageProps<"/app/sett
         <div className="p-5">
           {!account.hasPassword && (
             <p className="mb-4 text-sm text-ink-2">
-              บัญชีนี้เข้าด้วย Google อย่างเดียว ตั้งรหัสผ่านไว้เผื่อเข้า Google ไม่ได้
+              <ThaiPhrases text="บัญชีนี้เข้าด้วย Google อย่างเดียว| ตั้งรหัสผ่านไว้เผื่อเข้า Google ไม่ได้" />
             </p>
           )}
           <ChangePasswordForm hasPassword={account.hasPassword} email={account.email} disabled={account.demo} />
@@ -128,9 +129,13 @@ export default async function AccountPage({ searchParams }: PageProps<"/app/sett
         </div>
         <div className="p-5">
           {account.demo ? (
-            <p className="text-sm text-ink-2">บัญชีเดโมไม่แสดงรายการอุปกรณ์ เพราะเป็นเครื่องของคนอื่น</p>
+            <p className="text-sm text-ink-2">
+              <ThaiPhrases text="บัญชีเดโมไม่แสดงรายการอุปกรณ์| เพราะเป็นเครื่องของคนอื่น" />
+            </p>
           ) : sessions === null ? (
-            <p className="text-sm text-ink-2">ดูรายการอุปกรณ์ไม่ได้ในตอนนี้ แต่ยังออกจากระบบเครื่องอื่นทั้งหมดได้ด้วยปุ่มด้านล่าง</p>
+            <p className="text-sm text-ink-2">
+              <ThaiPhrases text="ดูรายการอุปกรณ์ไม่ได้ในตอนนี้| แต่ยังออกจากระบบเครื่องอื่นทั้งหมดได้ด้วยปุ่มด้านล่าง" />
+            </p>
           ) : (
             <ul className="rows -mt-2">
               {sessions.map((s) => (
@@ -141,7 +146,7 @@ export default async function AccountPage({ searchParams }: PageProps<"/app/sett
                   <span className="min-w-0 flex-1">
                     <span className="block font-semibold">
                       {s.device}
-                      {s.current && <span className="plate-sm ml-2 text-xs">เครื่องนี้</span>}
+                      {s.current && <span className="plate-sm ml-2 text-xs whitespace-nowrap">เครื่องนี้</span>}
                     </span>
                     <span className="text-sm text-ink-3">
                       {ago(s.lastActive)}
@@ -151,7 +156,7 @@ export default async function AccountPage({ searchParams }: PageProps<"/app/sett
                   {!s.current && (
                     <form action={revokeSessionAction}>
                       <input type="hidden" name="sessionId" value={s.id} />
-                      <button className="btn-danger" aria-label={`ออกจากระบบ ${s.device}`}>
+                      <button className="btn-danger whitespace-nowrap" aria-label={`ออกจากระบบ ${s.device}`}>
                         ออกจากระบบ
                       </button>
                     </form>
@@ -177,13 +182,15 @@ export default async function AccountPage({ searchParams }: PageProps<"/app/sett
             <h2 id="delete-h">ลบบัญชี</h2>
           </div>
           <form action={deleteAccountAction} className="space-y-2 p-5">
-            <p className="text-sm text-ink-2">ลบบัญชีและข้อมูลทั้งหมดถาวร ทั้งรายการ หมวด กฎ และรูปสลิปที่ยังเก็บไว้ ย้อนกลับไม่ได้</p>
+            <p className="text-sm text-ink-2">
+              <ThaiPhrases text="ลบบัญชีและข้อมูลทั้งหมดถาวร| ทั้งรายการ หมวด กฎ| และรูปสลิปที่ยังเก็บไว้| ย้อนกลับไม่ได้" />
+            </p>
             <label htmlFor="confirm-account" className="label">
               พิมพ์ &quot;ลบบัญชี&quot; เพื่อยืนยัน
             </label>
             {sp.confirm === "account" && (
               <p role="alert" className="text-sm text-red-deep">
-                พิมพ์คำว่า &quot;ลบบัญชี&quot; ให้ตรงก่อนกดลบบัญชี
+                <ThaiPhrases text='พิมพ์คำว่า "ลบบัญชี" ให้ตรง|ก่อนกดลบบัญชี' />
               </p>
             )}
             <div className="flex flex-wrap gap-2">

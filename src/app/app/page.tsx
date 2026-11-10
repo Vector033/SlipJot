@@ -4,6 +4,7 @@ import { AlertTriangle, ArrowRight, ClipboardCheck, TrendingDown, TrendingUp } f
 import { CategoryIcon } from "@/components/category-icon";
 import { MonthNav } from "@/components/month-nav";
 import { RollingNumber } from "@/components/rolling-number";
+import { ThaiPhrases } from "@/components/thai-phrases";
 import { formatMoney } from "@/lib/core/format";
 import { bangkokDay, isMonthKey, monthKeyOf, monthLabel, type MonthKey } from "@/lib/core/month";
 import { getMonthSummary } from "@/lib/data";
@@ -38,7 +39,9 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
           className="flex min-h-14 items-center gap-3 rounded-2xl border-2 border-ink bg-plate px-4 font-semibold transition-colors hover:bg-plate-deep"
         >
           <ClipboardCheck className="size-5 shrink-0" aria-hidden />
-          <span className="flex-1">มี {s.reviewCount} รายการรอให้คุณตรวจ</span>
+          <span className="flex-1">
+            <ThaiPhrases text={`มี ${s.reviewCount} รายการ|รอให้คุณตรวจ`} />
+          </span>
           <ArrowRight className="size-5" aria-hidden />
         </Link>
       )}
@@ -54,11 +57,13 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
             <AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden />
             <span>
               <span className="font-semibold">{c.name}</span>:{" "}
-              {over
-                ? `เกินงบแล้ว ${formatMoney(c.total - c.budget!.budget)}`
-                : c.budget!.ratio >= 0.8
-                  ? `ใช้ไป ${Math.round(c.budget!.ratio * 100)}% ของงบ`
-                  : `ถ้าใช้เท่านี้ต่อไป สิ้นเดือนจะเกินงบ (คาดว่า ${formatMoney(c.budget!.projected)})`}
+              {over ? (
+                <ThaiPhrases text={`เกินงบแล้ว| ${formatMoney(c.total - c.budget!.budget)}`} />
+              ) : c.budget!.ratio >= 0.8 ? (
+                <ThaiPhrases text={`ใช้ไป ${Math.round(c.budget!.ratio * 100)}% ของงบ`} />
+              ) : (
+                <ThaiPhrases text={`ถ้าใช้เท่านี้ต่อไป| สิ้นเดือนจะเกินงบ| (คาดว่า ${formatMoney(c.budget!.projected)})`} />
+              )}
             </span>
           </p>
         );
@@ -67,12 +72,12 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
       <section className="board overflow-hidden" aria-labelledby="month-head">
         <div className="board-head">
           <h2 id="month-head">{isCurrent ? "ใช้ไปแล้วเดือนนี้" : "ใช้ไปทั้งเดือน"}</h2>
-          <span className="meta">{monthLabel(month)}</span>
+          <span className="meta whitespace-nowrap">{monthLabel(month)}</span>
         </div>
         <div className="relative overflow-hidden">
           {/* #18 Square-Dot Grid / #22 ASCII & Pixels LED matrix (6% opacity) + #8 Halftone corner accents */}
           <span aria-hidden className="led-matrix pointer-events-none absolute inset-0 z-0" />
-          <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.07]" />
+          <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.12]" />
           <div className="relative z-10 flex flex-wrap items-end justify-between gap-4 p-5 pb-3">
             <div>
               <p data-testid="month-total">
@@ -88,11 +93,14 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
                   className={`mt-1 inline-flex items-center gap-1 font-medium ${diff > 0 ? "text-red-deep" : "text-ok"}`}
                 >
                   {diff > 0 ? (
-                    <TrendingUp className="size-4" aria-hidden />
+                    <TrendingUp className="size-4 shrink-0" aria-hidden />
                   ) : (
-                    <TrendingDown className="size-4" aria-hidden />
+                    <TrendingDown className="size-4 shrink-0" aria-hidden />
                   )}
-                  {diff > 0 ? "มากกว่า" : "น้อยกว่า"}เดือนก่อน {formatMoney(Math.abs(diff))}
+                  <span>
+                    <span className="inline-block">{diff > 0 ? "มากกว่า" : "น้อยกว่า"}เดือนก่อน</span>{" "}
+                    <span className="font-plate num inline-block">{formatMoney(Math.abs(diff))}</span>
+                  </span>
                 </p>
               )}
             </div>
@@ -108,7 +116,9 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
       {s.count === 0 ? (
         <section className="board flex flex-col items-center px-6 py-12 text-center">
           <p className="sign text-2xl">ยังไม่มีรายจ่ายเดือนนี้</p>
-          <p className="mt-2 max-w-[36ch] text-ink-2">ส่งสลิปจากอัลบั้มเข้ามา ระบบจะอ่านและจัดหมวดให้</p>
+          <p className="mt-2 max-w-[38ch] text-ink-2">
+            <ThaiPhrases text="ส่งสลิปจากอัลบั้มเข้ามา| ระบบจะอ่านและจัดหมวดให้" />
+          </p>
           <Link href="/app/upload" className="btn-primary mt-6">
             ส่งสลิป <ArrowRight className="size-4" aria-hidden />
           </Link>
@@ -118,7 +128,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
           <section className="board overflow-hidden" aria-labelledby="by-cat">
             <div className="board-head">
               <h2 id="by-cat">ตามหมวด</h2>
-              <span className="meta">กดเพื่อดูรายการ</span>
+              <span className="meta whitespace-nowrap">กดเพื่อดูรายการ</span>
             </div>
             <div className="flex flex-col items-center gap-6 p-5 sm:flex-row sm:items-start">
               <CategoryDonut data={s.byCategory} />
@@ -154,7 +164,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
           <section className="board overflow-hidden" aria-labelledby="top-payees">
             <div className="board-head">
               <h2 id="top-payees">จ่ายบ่อยสุด</h2>
-              <span className="meta">5 อันดับ</span>
+              <span className="meta whitespace-nowrap">5 อันดับ</span>
             </div>
             <ol className="rows px-5">
               {s.topPayees.map((p, i) => (
@@ -172,17 +182,21 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
             </ol>
             {budgets.length === 0 && (
               <p className="steel-speckled m-5 mt-1 rounded-lg p-3 text-sm text-ink-2">
-                ตั้งงบรายเดือนให้แต่ละหมวดได้ใน{" "}
-                <Link href="/app/settings#categories" className="font-semibold text-red underline">
-                  ตั้งค่า
-                </Link>{" "}
-                แล้วระบบจะเตือนเมื่อใกล้เกิน
+                <span className="inline-block">
+                  ตั้งงบรายเดือนให้แต่ละหมวดได้ใน{" "}
+                  <Link href="/app/settings#categories" className="font-semibold text-red underline">
+                    ตั้งค่า
+                  </Link>
+                </span>{" "}
+                <span className="inline-block">แล้วระบบจะเตือนเมื่อใกล้เกิน</span>
               </p>
             )}
           </section>
         </div>
       )}
-      <p className="text-xs text-ink-3">ตัวเลขทั้งหมดมาจากรายการของคุณเอง ไม่ใช่คำแนะนำทางการเงิน</p>
+      <p className="text-xs text-ink-3">
+        <ThaiPhrases text="ตัวเลขทั้งหมดมาจากรายการของคุณเอง| ไม่ใช่คำแนะนำทางการเงิน" />
+      </p>
     </div>
   );
 }
@@ -201,7 +215,7 @@ function BudgetBar({ ratio, level, budget }: { ratio: number; level: "ok" | "nea
       >
         <span className={`block h-full rounded-full ${color}`} style={{ width: `${Math.min(ratio, 1) * 100}%` }} />
       </span>
-      <span className="font-plate num text-xs text-ink-3">งบ {formatMoney(budget)}</span>
+      <span className="font-plate num text-xs whitespace-nowrap text-ink-3">งบ {formatMoney(budget)}</span>
     </span>
   );
 }

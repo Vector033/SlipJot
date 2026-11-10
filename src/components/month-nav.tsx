@@ -12,7 +12,7 @@ export function MonthNav({ month, path, params = {} }: { month: MonthKey; path: 
       <Link href={href(shiftMonth(month, -1))} className={arrow} aria-label="เดือนก่อน">
         <ChevronLeft className="size-5" aria-hidden />
       </Link>
-      <span className="min-w-36 text-center font-semibold" aria-live="polite">
+      <span className="min-w-36 text-center font-semibold whitespace-nowrap" aria-live="polite">
         {monthLabel(month)}
       </span>
       {isCurrent ? (

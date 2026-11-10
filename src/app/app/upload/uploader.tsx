@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Check, CircleAlert, ImagePlus, RotateCcw, ScanLine } from "lucide-react";
 import { RollingNumber } from "@/components/rolling-number";
+import { ThaiPhrases } from "@/components/thai-phrases";
 import type { IngestResult } from "@/lib/slips";
 import { formatDateTime } from "@/lib/core/format";
 
@@ -138,7 +139,9 @@ export function Uploader({ shared }: { shared: boolean }) {
           {items.length ? "เพิ่มสลิปอีก" : "เลือกรูปสลิปจากอัลบั้ม"}
         </p>
         {items.length === 0 && (
-          <p className="max-w-[34ch] text-sm text-ink-2">เลือกได้หลายรูปพร้อมกัน หรือลากไฟล์มาวางตรงนี้ · JPG, PNG, WebP ไม่เกิน 10 MB</p>
+          <p className="max-w-[38ch] text-sm text-ink-2">
+            <ThaiPhrases text="เลือกได้หลายรูปพร้อมกัน| หรือลากไฟล์มาวางตรงนี้| · JPG, PNG, WebP| ไม่เกิน 10 MB" />
+          </p>
         )}
         <button type="button" onClick={() => inputRef.current?.click()} className={items.length ? "btn" : "btn-plate mt-2"}>
           เลือกรูป
@@ -233,10 +236,15 @@ function Row({ item, onRetry }: { item: Item; onRetry: () => void }) {
   if (item.state === "reading")
     return (
       <div className="space-y-1.5">
-        <p className="flex items-center gap-2 font-medium text-ink-2">
-          <ScanLine className="size-4 shrink-0 text-red" aria-hidden /> กำลังอ่านยอดเงิน วันที่ และผู้รับ...
+        <p className="flex items-start gap-2 font-medium text-ink-2">
+          <ScanLine className="mt-1 size-4 shrink-0 text-red" aria-hidden />
+          <span>
+            <ThaiPhrases text="กำลังอ่านยอดเงิน| วันที่ และผู้รับ..." />
+          </span>
         </p>
-        <p className="text-xs text-ink-3">อ่านเสร็จแล้วจะจัดหมวดให้</p>
+        <p className="text-xs text-ink-3">
+          <ThaiPhrases text="อ่านเสร็จแล้ว|จะจัดหมวดให้" />
+        </p>
       </div>
     );
   if (item.state === "error")

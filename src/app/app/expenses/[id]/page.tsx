@@ -9,6 +9,7 @@ import { monthKeyOf } from "@/lib/core/month";
 import { getCategories, getExpense } from "@/lib/data";
 import { deleteExpenseAction, saveExpenseAction } from "../../actions";
 import { ConfirmDelete } from "@/components/confirm-delete";
+import { ThaiPhrases } from "@/components/thai-phrases";
 
 export const metadata: Metadata = { title: "แก้ไขรายการ" };
 
@@ -52,7 +53,9 @@ export default async function ExpensePage({ params }: PageProps<"/app/expenses/[
             className="ml-auto"
           />
         </ExpenseForm>
-        <p className="mt-3 text-xs text-ink-3">เปลี่ยนหมวดแล้ว ครั้งหน้าที่จ่ายให้ผู้รับนี้ ระบบจะใช้หมวดที่คุณเลือก</p>
+        <p className="mt-3 text-xs text-ink-3">
+          <ThaiPhrases text="เปลี่ยนหมวดแล้ว| ครั้งหน้าที่จ่ายให้ผู้รับนี้| ระบบจะใช้หมวดที่คุณเลือก" />
+        </p>
       </div>
 
       <dl className="board grid grid-cols-[auto_1fr] gap-x-5 gap-y-2.5 p-5 text-sm">

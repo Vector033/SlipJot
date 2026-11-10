@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/logo";
+import { ThaiPhrases } from "@/components/thai-phrases";
 import { requireUser } from "@/lib/auth";
 import { ensureSetup, reviewCount } from "@/lib/data";
 import { isDemoUser } from "@/lib/supabase/admin";
@@ -24,7 +25,7 @@ export default async function AppLayout({ children }: LayoutProps<"/app">) {
       </header>
       {isDemoUser(user.email) && (
         <aside aria-label="บัญชีเดโม" className="bg-plate px-4 py-1.5 text-center text-[0.8rem] font-medium text-ink">
-          บัญชีเดโม: ข้อมูลทั้งหมดเป็นข้อมูลสมมติ และคนอื่นก็เห็นสิ่งที่คุณเพิ่ม
+          <ThaiPhrases text="บัญชีเดโม:| ข้อมูลทั้งหมดเป็นข้อมูลสมมติ| และคนอื่นก็เห็นสิ่งที่คุณเพิ่ม" />
         </aside>
       )}
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 pt-6 pb-32 sm:px-6 sm:pb-14">{children}</main>

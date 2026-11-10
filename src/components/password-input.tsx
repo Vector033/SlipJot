@@ -50,7 +50,10 @@ export function PasswordRules({ value, email, id }: { value: string; email?: str
           <span className="sr-only">{r.ok ? "(ผ่าน)" : "(ยังไม่ผ่าน)"}</span>
         </li>
       ))}
-      <li className="text-ink-3">และต้องไม่ใช่รหัสที่เคยหลุดจากเว็บอื่น (ตรวจตอนกดบันทึก)</li>
+      <li className="text-ink-3">
+        <span className="inline-block">และต้องไม่ใช่รหัสที่เคยหลุดจากเว็บอื่น</span>{" "}
+        <span className="inline-block">(ตรวจตอนกดบันทึก)</span>
+      </li>
     </ul>
   );
 }

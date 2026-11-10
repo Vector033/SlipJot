@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Plus, Search } from "lucide-react";
 import { CategoryIcon } from "@/components/category-icon";
 import { MonthNav } from "@/components/month-nav";
+import { ThaiPhrases } from "@/components/thai-phrases";
 import { formatBaht, formatDayLabel, formatTime, toLocalInput } from "@/lib/core/format";
 import { isMonthKey, monthKeyOf } from "@/lib/core/month";
 import { getCategories, listExpenses } from "@/lib/data";
@@ -100,7 +101,7 @@ export default async function ExpensesPage({ searchParams }: PageProps<"/app/exp
         <div className="board px-6 py-12 text-center">
           <p className="sign text-xl">{q || cat ? "ไม่พบรายการ" : "ยังไม่มีรายการ"}</p>
           <p className="mt-2 text-ink-2">
-            {q || cat ? "ไม่มีรายการที่ตรงกับคำค้นหรือหมวดนี้ในเดือนนี้" : "เดือนนี้ยังไม่มีรายจ่าย"}
+            {q || cat ? <ThaiPhrases text="ไม่มีรายการที่ตรงกับคำค้น|หรือหมวดนี้ในเดือนนี้" /> : "เดือนนี้ยังไม่มีรายจ่าย"}
           </p>
           {q || cat ? (
             <Link href={`/app/expenses?${new URLSearchParams({ month })}`} className="btn mt-5">

@@ -46,7 +46,7 @@ export function DesktopNav({ reviewCount }: { reviewCount: number }) {
             key={it.href}
             href={it.href}
             aria-current={active ? "page" : undefined}
-            className={`relative inline-flex min-h-10 items-center gap-2 rounded-lg px-3 text-sm font-semibold transition-colors ${active ? "bg-red-deep text-white" : "text-on-red-2 hover:bg-red-deep/60 hover:text-white"}`}
+            className={`relative inline-flex min-h-10 items-center gap-2 rounded-lg px-3 text-sm font-semibold whitespace-nowrap transition-colors ${active ? "bg-red-deep text-white" : "text-on-red-2 hover:bg-red-deep/60 hover:text-white"}`}
           >
             {it.label}
             {it.href === "/app/review" && reviewCount > 0 && <Count n={reviewCount} onRed />}
