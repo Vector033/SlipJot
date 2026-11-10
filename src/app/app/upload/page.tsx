@@ -10,7 +10,7 @@ export default async function UploadPage({ searchParams }: PageProps<"/app/uploa
     <div className="mx-auto max-w-2xl space-y-5">
       <header>
         <h1 className="text-2xl font-bold">ส่งสลิป</h1>
-        <p className="mt-1 text-ink-2">
+        <p className="mt-1 leading-relaxed text-ink-2">
           ระบบอ่านยอด เวลา ผู้รับ แล้วจัดหมวดให้ รายการที่ไม่แน่ใจจะไปรอให้คุณตรวจก่อน
         </p>
       </header>
@@ -22,7 +22,7 @@ export default async function UploadPage({ searchParams }: PageProps<"/app/uploa
       )}
       {sp.shared === "error" && <p className="text-sm text-danger">รับรูปที่แชร์มาไม่สำเร็จ ลองเลือกจากอัลบั้มแทน</p>}
       <Uploader shared={sp.shared === "1"} />
-      <p className="text-xs text-ink-3">
+      <p className="paper-texture rounded-xl border border-line/70 bg-white/70 px-3.5 py-2.5 text-xs leading-relaxed text-ink-3">
         {llmLabel() === "local"
           ? "อ่านด้วย LLM ฟรีในเครื่อง (โหมดพัฒนา)"
           : llmLabel() === "gemini"

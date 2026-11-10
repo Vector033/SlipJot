@@ -18,12 +18,15 @@ export function RollingNumber({ text, className = "", delayMs = 0 }: { text: str
   const digitCount = chars.filter((c) => /\d/.test(c)).length;
   let seen = 0;
   return (
-    <span className={`num inline-flex ${className}`}>
+    <span className={`font-plate num relative isolate inline-flex items-center ${className}`}>
+      {/* #18 Square-Dot Grid / #22 ASCII & Pixels LED matrix (6%) + #8 Halftone corner accents behind odometer digits */}
+      <span aria-hidden className="led-matrix pointer-events-none absolute -inset-x-1 inset-y-0 z-0 rounded-[0.2em]" />
+      <span aria-hidden className="halftone-corners pointer-events-none absolute -inset-x-1 inset-y-0 z-0 rounded-[0.2em] text-ink opacity-[0.07]" />
       <span className="sr-only">{text}</span>
       {chars.map((ch, i) => {
         if (!/\d/.test(ch)) {
           return (
-            <span key={i} aria-hidden className="select-none">
+            <span key={i} aria-hidden className="relative z-10 select-none">
               {ch}
             </span>
           );
@@ -32,9 +35,9 @@ export function RollingNumber({ text, className = "", delayMs = 0 }: { text: str
         const d = Number(ch);
         return (
           // select-none: copying the amount yields the sr-only value, not the 0–9 strips.
-          <span key={i} aria-hidden className="relative inline-block select-none h-[1.15em] overflow-hidden" style={{ width: "0.58em" }}>
+          <span key={i} aria-hidden className="relative z-10 inline-block h-[1.15em] select-none overflow-hidden" style={{ width: "0.58em" }}>
             <span
-              className="absolute inset-x-0 top-0 flex flex-col text-center"
+              className="absolute inset-x-0 top-0 flex flex-col text-center will-change-transform"
               style={{
                 transform: `translateY(-${(rolled ? d : 0) * 1.15}em)`,
                 transition: `transform ${700 + order * 90}ms cubic-bezier(0.16, 1, 0.3, 1) ${delayMs + (digitCount - order) * 35}ms`,

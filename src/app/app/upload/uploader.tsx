@@ -127,10 +127,10 @@ export function Uploader({ shared }: { shared: boolean }) {
           add([...e.dataTransfer.files]);
         }}
         // Once slips are in, the drop zone shrinks to one row so the slips being read stay on a phone screen.
-        className={`flex items-center rounded-3xl border-[3px] border-dashed text-center transition-colors ${items.length ? "justify-between gap-3 px-4 py-3" : "flex-col gap-3 px-6 py-12"} ${dragging ? "border-red bg-red-soft" : "border-chrome-dark bg-white"}`}
+        className={`paper-texture flex items-center rounded-3xl border-[3px] border-dashed text-center transition-[background-color,border-color,box-shadow] duration-150 ${items.length ? "justify-between gap-3 px-4 py-3" : "flex-col gap-3 px-6 py-12"} ${dragging ? "border-red bg-red-soft ring-4 ring-red/15" : "border-chrome-dark bg-white hover:border-red/60"}`}
       >
         {items.length === 0 && (
-          <span className="flex size-16 items-center justify-center rounded-2xl bg-red text-white">
+          <span className="flex size-16 items-center justify-center rounded-xl bg-red text-white shadow-[0_6px_14px_-8px_rgb(179_18_28/0.55)]">
             <ImagePlus className="size-8" aria-hidden />
           </span>
         )}
@@ -187,29 +187,40 @@ export function Uploader({ shared }: { shared: boolean }) {
               </Link>
             )}
           </div>
-          <ul className="space-y-2">
-            {items.map((it) => (
-              <li key={it.key} className="board flex items-center gap-3 p-3" data-testid="upload-row">
-                {/* The slip grows while it is read so the scan band is the moment you watch, then shrinks back to a row. */}
-                <div
-                  className={`relative shrink-0 overflow-hidden rounded-lg border border-line bg-steel transition-[width,height] duration-300 ease-out motion-reduce:transition-none ${it.state === "reading" ? "h-36 w-26" : "h-20 w-14"}`}
+          <ul className="space-y-2.5">
+            {items.map((it) => {
+              const verified = it.state === "done" && it.result?.status === "saved";
+              const unsure = it.state === "done" && it.result?.status === "review";
+              return (
+                <li
+                  key={it.key}
+                  className="board paper-texture flex items-center gap-3 p-3"
+                  data-testid="upload-row"
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element -- local blob preview */}
-                  <img src={it.preview} alt="" className="size-full object-cover object-top" />
-                  {it.state === "reading" && (
-                    // The reader passing over the slip: a flat plate band, no glow. Hidden for reduced motion.
-                    <span
-                      aria-hidden
-                      className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,transparent_38%,rgb(245_196_0/0.7)_50%,transparent_62%)] motion-reduce:hidden"
-                      style={{ animation: "scan-loop 1.6s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate" }}
-                    />
-                  )}
-                </div>
-                <div className="min-w-0 flex-1 text-sm">
-                  <Row item={it} onRetry={() => retry(it)} />
-                </div>
-              </li>
-            ))}
+                  {/* Inner radius = outer (16px) - padding (12px) = 4px.
+                      Verified slips carry an edge-only #20 Iridescent Shape border; #12 Paper Texture overlays the slip preview. */}
+                  <div
+                    className={`relative shrink-0 overflow-hidden rounded-[4px] bg-steel transition-[width,height] duration-300 ease-out motion-reduce:transition-none ${
+                      it.state === "reading" ? "h-36 w-26 border border-plate-deep" : "h-20 w-14"
+                    } ${verified ? "iridescent-border" : unsure ? "border-2 border-plate-deep" : "border border-line"}`}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element -- local blob preview */}
+                    <img src={it.preview} alt="" className="size-full object-cover object-top" />
+                    {/* #12 Paper Texture over the slip preview (baseFrequency=0.85, opacity 3.5%) */}
+                    <span aria-hidden className="paper-overlay pointer-events-none absolute inset-0 z-10" />
+                    {it.state === "reading" && (
+                      <span aria-hidden className="animate-laser pointer-events-none absolute inset-0 z-10 motion-reduce:hidden">
+                        <span className="block h-[3px] w-full rounded-full bg-plate shadow-[0_0_6px_1px_rgb(245_196_0/0.95),0_0_18px_4px_rgb(245_196_0/0.45)]" />
+                        <span className="block h-5 w-full bg-gradient-to-b from-plate/30 to-transparent" />
+                      </span>
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1 text-sm">
+                    <Row item={it} onRetry={() => retry(it)} />
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         </section>
       )}
@@ -222,8 +233,8 @@ function Row({ item, onRetry }: { item: Item; onRetry: () => void }) {
   if (item.state === "reading")
     return (
       <div className="space-y-1.5">
-        <p className="flex items-center gap-2 text-ink-2">
-          <ScanLine className="size-4 shrink-0 text-red" aria-hidden /> กำลังอ่านยอดเงิน วันที่ และผู้รับ…
+        <p className="flex items-center gap-2 font-medium text-ink-2">
+          <ScanLine className="size-4 shrink-0 text-red" aria-hidden /> กำลังอ่านยอดเงิน วันที่ และผู้รับ...
         </p>
         <p className="text-xs text-ink-3">อ่านเสร็จแล้วจะจัดหมวดให้</p>
       </div>
@@ -250,26 +261,32 @@ function Row({ item, onRetry }: { item: Item; onRetry: () => void }) {
   return (
     <>
       <p className="flex items-baseline justify-between gap-2">
-        <span className="truncate font-medium">{r.payeeName || "ไม่ทราบผู้รับ"}</span>
-        <span className="plate-sm shrink-0 text-base" style={{ animation: "pop-chip 0.32s cubic-bezier(0.34, 1.4, 0.64, 1) both" }}>
+        <span className="animate-pop-chip truncate font-medium">{r.payeeName || "ไม่ทราบผู้รับ"}</span>
+        <span className="plate-sm animate-pop-chip shrink-0 text-base">
           {r.amount !== null ? <>฿<RollingNumber text={r.amount.toLocaleString("en-US", { minimumFractionDigits: 2 })} /></> : "–"}
         </span>
       </p>
-      <p className="flex flex-wrap items-center gap-x-2 text-ink-3">
-        {r.occurredAt && <span>{formatDateTime(r.occurredAt)}</span>}
-        <span>· {r.category ?? "ยังไม่จัดหมวด"}</span>
+      <p className="mt-1 flex flex-wrap items-center gap-x-2 text-ink-3">
+        {r.occurredAt && (
+          <span className="animate-pop-chip" style={{ animationDelay: "45ms" }}>
+            {formatDateTime(r.occurredAt)}
+          </span>
+        )}
+        <span className="animate-pop-chip" style={{ animationDelay: "70ms" }}>
+          · {r.category ?? "ยังไม่จัดหมวด"}
+        </span>
         {r.status === "review" ? (
           <Link
             href="/app/review"
-            className="ml-auto inline-flex min-h-6 items-center gap-1 rounded-full bg-plate-soft px-2 text-xs font-semibold text-warn underline"
-            style={{ animation: "pop-chip 0.32s cubic-bezier(0.34, 1.4, 0.64, 1) 90ms both" }}
+            className="animate-pop-chip ml-auto inline-flex min-h-6 items-center gap-1 rounded-full bg-plate-soft px-2 text-xs font-semibold text-warn underline"
+            style={{ animationDelay: "100ms" }}
           >
             <CircleAlert className="size-3.5" aria-hidden /> รอตรวจ
           </Link>
         ) : (
           <span
-            className="ml-auto inline-flex min-h-6 items-center gap-1 rounded-full bg-ok/10 px-2 text-xs font-semibold text-ok"
-            style={{ animation: "pop-chip 0.32s cubic-bezier(0.34, 1.4, 0.64, 1) 90ms both" }}
+            className="animate-pop-chip ml-auto inline-flex min-h-6 items-center gap-1 rounded-full bg-ok/12 px-2 text-xs font-semibold text-ok"
+            style={{ animationDelay: "100ms" }}
           >
             <Check className="size-3.5" aria-hidden /> บันทึกแล้ว
           </span>

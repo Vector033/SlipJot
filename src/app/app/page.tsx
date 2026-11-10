@@ -69,35 +69,40 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
           <h2 id="month-head">{isCurrent ? "ใช้ไปแล้วเดือนนี้" : "ใช้ไปทั้งเดือน"}</h2>
           <span className="meta">{monthLabel(month)}</span>
         </div>
-        <div className="flex flex-wrap items-end justify-between gap-4 p-5 pb-3">
-          <div>
-            <p data-testid="month-total">
-              <span className="plate text-[clamp(1.75rem,9vw,2.4rem)] sm:text-5xl">
-                ฿<RollingNumber text={bahtText(s.total)} />
-              </span>
-            </p>
-          </div>
-          <div className="text-sm text-ink-2 sm:text-right">
-            <p className="num">{s.count} รายการ</p>
-            {s.previousTotal > 0 && (
-              <p
-                className={`mt-1 inline-flex items-center gap-1 font-medium ${diff > 0 ? "text-red-deep" : "text-ok"}`}
-              >
-                {diff > 0 ? (
-                  <TrendingUp className="size-4" aria-hidden />
-                ) : (
-                  <TrendingDown className="size-4" aria-hidden />
-                )}
-                {diff > 0 ? "มากกว่า" : "น้อยกว่า"}เดือนก่อน {formatMoney(Math.abs(diff))}
+        <div className="relative overflow-hidden">
+          {/* #18 Square-Dot Grid / #22 ASCII & Pixels LED matrix (6% opacity) + #8 Halftone corner accents */}
+          <span aria-hidden className="led-matrix pointer-events-none absolute inset-0 z-0" />
+          <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.07]" />
+          <div className="relative z-10 flex flex-wrap items-end justify-between gap-4 p-5 pb-3">
+            <div>
+              <p data-testid="month-total">
+                <span className="plate text-[clamp(1.75rem,9vw,2.4rem)] sm:text-5xl">
+                  ฿<RollingNumber text={bahtText(s.total)} />
+                </span>
               </p>
-            )}
+            </div>
+            <div className="text-sm text-ink-2 sm:text-right">
+              <p className="num">{s.count} รายการ</p>
+              {s.previousTotal > 0 && (
+                <p
+                  className={`mt-1 inline-flex items-center gap-1 font-medium ${diff > 0 ? "text-red-deep" : "text-ok"}`}
+                >
+                  {diff > 0 ? (
+                    <TrendingUp className="size-4" aria-hidden />
+                  ) : (
+                    <TrendingDown className="size-4" aria-hidden />
+                  )}
+                  {diff > 0 ? "มากกว่า" : "น้อยกว่า"}เดือนก่อน {formatMoney(Math.abs(diff))}
+                </p>
+              )}
+            </div>
           </div>
+          {s.total > 0 && (
+            <div className="relative z-10 px-3 pb-3">
+              <DailyBars data={s.byDay} today={isCurrent ? bangkokDay(now) : null} />
+            </div>
+          )}
         </div>
-        {s.total > 0 && (
-          <div className="px-3 pb-3">
-            <DailyBars data={s.byDay} today={isCurrent ? bangkokDay(now) : null} />
-          </div>
-        )}
       </section>
 
       {s.count === 0 ? (
@@ -166,7 +171,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
               ))}
             </ol>
             {budgets.length === 0 && (
-              <p className="m-5 mt-1 rounded-xl bg-steel p-3 text-sm text-ink-2">
+              <p className="steel-speckled m-5 mt-1 rounded-lg p-3 text-sm text-ink-2">
                 ตั้งงบรายเดือนให้แต่ละหมวดได้ใน{" "}
                 <Link href="/app/settings#categories" className="font-semibold text-red underline">
                   ตั้งค่า

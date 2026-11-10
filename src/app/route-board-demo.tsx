@@ -128,6 +128,7 @@ export function RouteBoardDemo() {
               loading={i === 0 ? undefined : "eager"}
             />
           ))}
+          <span aria-hidden className="paper-overlay pointer-events-none absolute inset-0" />
           {/* The reader's laser: a glowing plate-yellow line sweeping the slip, looping while the demo is on screen.
               The full-height wrapper moves (transform only), so 100% is the slip's height. */}
           {seen && (
@@ -137,31 +138,50 @@ export function RouteBoardDemo() {
           )}
         </div>
 
-        {/* The route board */}
-        <div key={run} className="overflow-hidden rounded-2xl border-t border-white/25 bg-red-night text-white shadow-[inset_0_-2px_0_rgb(0_0_0/0.35),0_24px_48px_-20px_rgb(0_0_0/0.7)] ring-1 ring-white/10">
-          <div className="flex items-center justify-between bg-ink px-3.5 py-2 text-[0.8rem] text-on-red-2">
+        {/* Embossed metallic route board */}
+        <div
+          key={run}
+          className="overflow-hidden rounded-2xl border border-white/15 border-t-white/30 bg-red-night text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.22),inset_0_-2px_0_rgb(0_0_0/0.45),0_24px_48px_-20px_rgb(0_0_0/0.7)]"
+        >
+          <div className="flex items-center justify-between border-b border-white/10 bg-ink px-3.5 py-2 text-[0.8rem] text-on-red-2">
             <span className="whitespace-nowrap">
               สลิปตัวอย่าง <span className="num">{idx + 1}/{SAMPLES.length}</span>
               <span className="hidden sm:inline"> · ข้อมูลสมมติ</span>
             </span>
-            <span className={`whitespace-nowrap ${phase === "read" ? "text-plate" : ""}`}>{phase === "read" ? "อ่านแล้ว" : "กำลังอ่าน…"}</span>
+            <span className={`whitespace-nowrap font-medium ${phase === "read" ? "text-plate" : ""}`}>
+              {phase === "read" ? "อ่านแล้ว" : "กำลังอ่าน…"}
+            </span>
           </div>
-          <div className="space-y-3 px-3.5 pt-3 pb-4 [perspective:600px]">
-            <div className="origin-top" style={flip(run, 0)}>
-              <p className="text-[0.8rem] text-on-red-2">จ่ายให้</p>
+
+          <div className="relative space-y-2.5 px-3 pt-3 pb-3.5 [perspective:600px]">
+            {/* #18 Square-Dot Grid / #22 ASCII & Pixels LED matrix (6% opacity) + #8 Halftone corner accents */}
+            <span aria-hidden className="led-matrix-light pointer-events-none absolute inset-0 z-0" />
+            <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-on-red-2 opacity-[0.12]" />
+
+            <div
+              className="relative z-10 origin-top rounded-[4px] bg-black/20 px-2.5 py-2 shadow-[inset_0_1px_0_rgb(255_255_255/0.08),inset_0_-1px_0_rgb(0_0_0/0.45)]"
+              style={flip(run, 0)}
+            >
+              <span aria-hidden className="pointer-events-none absolute inset-x-0 top-1/2 h-px bg-black/25" />
+              <p className="relative text-[0.8rem] text-on-red-2">จ่ายให้</p>
               <p
-                className="sign min-h-[2.75em] text-[1.05rem] leading-snug sm:min-h-0 sm:text-2xl"
+                className="sign relative min-h-[2.8em] pt-0.5 text-[1.05rem] leading-[1.35] sm:min-h-0 sm:text-2xl"
                 style={phase === "read" ? { animation: "write-on 0.9s cubic-bezier(0.65, 0, 0.35, 1) both" } : { visibility: "hidden" }}
               >
                 {slip.payee}
               </p>
             </div>
-            <div className="origin-top" style={flip(run, 1)}>
-              <p className="text-[0.8rem] text-on-red-2">ยอด</p>
-              <span className="plate text-[1.6rem] sm:text-[2rem]">
+
+            <div
+              className="relative z-10 origin-top rounded-[4px] bg-black/20 px-2.5 py-2 shadow-[inset_0_1px_0_rgb(255_255_255/0.08),inset_0_-1px_0_rgb(0_0_0/0.45)]"
+              style={flip(run, 1)}
+            >
+              <span aria-hidden className="pointer-events-none absolute inset-x-0 top-1/2 h-px bg-black/25" />
+              <p className="relative mb-1 text-[0.8rem] text-on-red-2">ยอด</p>
+              <span className="plate relative text-[1.6rem] sm:text-[2rem]">
                 ฿{phase === "read" ? <RollingNumber text={slip.amount} delayMs={250} /> : <span className="num">0.00</span>}
               </span>
-              <p className="mt-2 text-[0.75rem] leading-relaxed text-on-red-2">
+              <p className="relative mt-2 text-[0.75rem] leading-relaxed text-on-red-2">
                 {slip.when}
                 <br />
                 {slip.memo ? (
@@ -173,8 +193,10 @@ export function RouteBoardDemo() {
                 )}
               </p>
             </div>
-            <div className="trim opacity-70" />
-            <div className="origin-top" style={flip(run, 2)}>
+
+            <div className="trim relative z-10 opacity-70" />
+
+            <div className="relative z-10 origin-top px-0.5" style={flip(run, 2)}>
               <p className="mb-1.5 text-[0.8rem] text-on-red-2">ลงป้าย</p>
               <ul className="flex flex-wrap gap-1 lg:flex-nowrap" aria-label="หมวด">
                 {STOPS.map((s) => {

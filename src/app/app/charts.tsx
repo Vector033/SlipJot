@@ -5,15 +5,15 @@ import { Bar, BarChart, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis
 
 const baht = formatMoney;
 
-// Tooltips read like the licence plate every amount sits on: label above, plate digits below.
+// Tooltips are styled directly like yellow public-transport licence plates with bold black digits.
 type TipProps = { active?: boolean; payload?: readonly { value?: unknown; name?: unknown }[]; label?: unknown };
 function plateTip(labelOf: (p: TipProps) => string) {
   function PlateTooltip(p: TipProps) {
     if (!p.active || !p.payload?.length) return null;
     return (
-      <div className="flex flex-col items-start gap-1 rounded-xl bg-white/95 px-2.5 py-2 shadow-[0_6px_14px_-8px_rgb(27_23_21/0.45)] ring-1 ring-line">
-        <span className="text-xs font-medium text-ink-2">{labelOf(p)}</span>
-        <span className="plate text-lg">{baht(Number(p.payload[0].value))}</span>
+      <div className="flex flex-col items-start gap-0.5 rounded-[10px] border-2 border-ink bg-plate px-3 py-1.5 text-ink shadow-[0_6px_14px_-8px_rgb(27_23_21/0.45),inset_0_0_0_2px_var(--color-plate),inset_0_0_0_3.5px_var(--color-ink)]">
+        <span className="text-[0.72rem] leading-snug font-semibold text-ink/85">{labelOf(p)}</span>
+        <span className="font-plate num text-lg leading-tight font-bold text-ink">{baht(Number(p.payload[0].value))}</span>
       </div>
     );
   }

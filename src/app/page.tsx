@@ -24,8 +24,8 @@ export default async function Home({ searchParams }: PageProps<"/">) {
   return (
     <main className="flex-1">
       {/* First viewport: the side of the truck */}
-      <div className="on-red relative overflow-hidden bg-red text-white">
-        <header className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+      <div className="on-red songthaew-enamel relative overflow-hidden text-white">
+        <header className="relative z-10 mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
           <Logo tone="white" />
           <Link
             href={user ? "/app" : "/login"}
@@ -36,10 +36,12 @@ export default async function Home({ searchParams }: PageProps<"/">) {
         </header>
 
         {sp.deleted && (
-          <p className="mx-auto mb-2 max-w-6xl px-4 text-sm font-semibold text-white sm:px-6 lg:px-8" role="status">ลบบัญชีและข้อมูลทั้งหมดแล้ว</p>
+          <p className="relative z-10 mx-auto mb-2 max-w-6xl px-4 text-sm font-semibold text-white sm:px-6 lg:px-8" role="status">
+            ลบบัญชีและข้อมูลทั้งหมดแล้ว
+          </p>
         )}
 
-        <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 pt-6 pb-14 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:gap-12 lg:px-8 lg:pt-10 lg:pb-20">
+        <div className="relative z-10 mx-auto grid max-w-6xl items-center gap-10 px-4 pt-6 pb-14 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:gap-12 lg:px-8 lg:pt-10 lg:pb-20">
           <div>
             {/* Thai has no spaces: line breaks are placed by hand between whole words. */}
             <h1 className="sign text-[2rem] min-[360px]:text-[2.5rem] sm:text-[3.4rem] lg:text-[3.75rem]">
@@ -77,7 +79,40 @@ export default async function Home({ searchParams }: PageProps<"/">) {
           </div>
           <RouteBoardDemo />
         </div>
-        <div className="trim" />
+
+        {/* #6 Single-Hue Landscape & #13 Contour Lines: minimal Chiang Mai mountain curves in --color-red-night at 12% opacity. */}
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 1440 160"
+          preserveAspectRatio="none"
+          className="pointer-events-none absolute inset-x-0 bottom-1 z-0 h-28 w-full opacity-[0.12] sm:h-36"
+        >
+          <path
+            d="M0 160V116C180 88 310 66 470 76C610 85 710 42 890 48C1050 54 1210 92 1440 72V160Z"
+            fill="var(--color-red-night)"
+            fillOpacity="0.55"
+          />
+          <path
+            d="M0 160V128C220 112 360 84 540 94C710 104 860 66 1050 74C1210 80 1330 108 1440 96V160Z"
+            fill="var(--color-red-night)"
+          />
+          <path
+            d="M0 98C210 66 360 44 540 58C710 70 840 24 1030 32C1200 39 1330 68 1440 52"
+            fill="none"
+            stroke="var(--color-red-night)"
+            strokeWidth="1.25"
+            vectorEffect="non-scaling-stroke"
+          />
+          <path
+            d="M0 114C200 94 350 66 530 78C705 90 850 48 1045 55C1215 62 1335 86 1440 74"
+            fill="none"
+            stroke="var(--color-red-night)"
+            strokeWidth="1"
+            vectorEffect="non-scaling-stroke"
+          />
+        </svg>
+
+        <div className="trim relative z-10" />
       </div>
 
       <RouteStops>
@@ -232,16 +267,16 @@ export default async function Home({ searchParams }: PageProps<"/">) {
                   key={t}
                   className="trim-top grid gap-x-8 gap-y-1 px-6 pt-6 pb-5 sm:grid-cols-[16rem_1fr_auto] sm:items-center sm:px-10"
                 >
-                    <dt className="sign text-xl text-white">
-                      {t.split("|").map((w, i) => (
-                        <span key={i}>
-                          {i > 0 && <wbr />}
-                          <span className="whitespace-nowrap">{w}</span>
-                        </span>
-                      ))}
-                    </dt>
-                    <dd className="text-[0.95rem] leading-relaxed text-white/80">{d}</dd>
-                    <dd className="mt-2 sm:mt-0">{mark}</dd>
+                  <dt className="sign text-xl text-white">
+                    {t.split("|").map((w, i) => (
+                      <span key={i}>
+                        {i > 0 && <wbr />}
+                        <span className="whitespace-nowrap">{w}</span>
+                      </span>
+                    ))}
+                  </dt>
+                  <dd className="text-[0.95rem] leading-relaxed text-white/80">{d}</dd>
+                  <dd className="mt-2 sm:mt-0">{mark}</dd>
                 </div>
               ))}
             </dl>
@@ -253,7 +288,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
         </Stop>
       </RouteStops>
 
-      <div className="on-red bg-red text-white">
+      <div className="on-red songthaew-enamel relative overflow-hidden text-white">
         <div className="trim" />
         <div className="mx-auto flex max-w-6xl flex-col items-start gap-6 px-4 py-14 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
           <h2 className="sign text-3xl sm:text-4xl">ลองกับข้อมูลสมมติก่อนก็ได้</h2>

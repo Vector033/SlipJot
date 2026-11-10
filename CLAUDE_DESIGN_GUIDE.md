@@ -105,7 +105,44 @@ Add/verify in `src/app/globals.css`:
 
 ---
 
-## 5. Token-Efficient Claude Prompts for SlipJot (Copy-Paste Ready)
+## 5. 22 Backgrounds to Make Designs Less Flat (Anti-Flatness Texture & Depth Guide)
+
+To escape sterile, flat digital canvases without creating noisy **AI Slop**, apply tactile textures, optical glass, or structured grids deliberately. Always maintain WCAG AA contrast (≥ 4.5:1), use `pointer-events: none`, and keep pattern opacities subtle (`0.02`–`0.08`) or masked at edges (`mask-image: radial-gradient(...)`):
+
+| # | Technique | Visual Style & Depth Effect | Pure CSS / SVG Implementation Hint |
+|---|---|---|---|
+| 1 | **Felt texture** | Soft matte textile fiber warmth | Inline SVG `<feTurbulence>` fine grain + soft warm tint overlay |
+| 2 | **Fluted glass** | Vertical ribbed optical refraction | Repeating linear-gradient strips + `backdrop-filter: blur(12px)` (great for songthaew cabin window glass) |
+| 3 | **Thermal gradients** | Infrared heat-map color transitions | Multi-stop smooth radial gradient (strictly for budget alerts, never purple AI slop) |
+| 4 | **Water ripples** | Concentric liquid light refractions | Subtle SVG displacement map or layered radial ring highlights |
+| 5 | **Speckled graphite** | Fine metallic/graphite cabin enamel texture | Micro-dot radial pattern + SVG fractal noise (`opacity: 0.04`) over `--color-steel` |
+| 6 | **Single-hue landscapes** | Layered monochrome depth planes | Layered SVG Doi Suthep silhouette in stepped opacities of `--color-red-deep` |
+| 7 | **Blueprint grids** | Precision engineering grid lines | CSS `linear-gradient` 1px grid (`background-size: 24px 24px`) with radial fade mask |
+| 8 | **Halftone** | Retro Thai transit signage print dots | CSS `radial-gradient(circle, currentColor 1px, transparent 1px)` staggered |
+| 9 | **Grainy gradients** | Tactile painted-metal finish without flat plastic look | CSS radial gradient + SVG `feTurbulence` noise layer over `--color-red` |
+| 10 | **Grass texture** | Organic natural directional fiber | Fine directional micro-stroke SVG pattern |
+| 11 | **Dithered images** | 1-bit retro thermal-receipt dithering | Pre-dithered SVG/Canvas image filter for receipt previews |
+| 12 | **Paper texture** | Authentic thermal slip & route-ticket fiber | Subtle SVG paper fiber noise (`baseFrequency="0.85"`) over slip preview panels |
+| 13 | **Contour lines** | Topographic elevation / Chiang Mai route curves | Clean ultra-thin 1px SVG bezier contour curves (`opacity: 0.06`) |
+| 14 | **Cloud sky** | Soft atmospheric depth with natural diffusion | Layered ultra-soft blurred radial ellipses at low opacity |
+| 15 | **Pixel mosaics** | Structured color-stepped pixel blocks | Crisp `image-rendering: pixelated` low-res gradient grid |
+| 16 | **Lens distortion** | Subtle optical edge vignette & light bending | Soft edge vignette + curved specular highlight arc |
+| 17 | **Stippled gradients** | Hand-drawn stipple dot density fade | Variable-density SVG dot scatter or masked halftone fade |
+| 18 | **Square-dot grids** | Crisp LED / split-flap matrix grid | CSS `radial-gradient` / `conic-gradient` 1.5px square dots behind odometer |
+| 19 | **Blurred photos** | Ambient photographic color wash | Real photo with `filter: blur(48px) saturate(1.1)` + contrast scrim |
+| 20 | **Iridescent shapes** | Subtle holographic bank-slip security sheen | Restrained `conic-gradient` specular highlight on verified slip badge |
+| 21 | **Impressionist paintings** | Rich textured brushwork warmth | Softly blurred painterly color dabs under a translucent matte scrim |
+| 22 | **ASCII and pixels** | Technical monospace character matrix & pixel art | Lightweight LED pixel matrix behind `route-board-demo.tsx` & `rolling-number.tsx` |
+
+### Best Background Picks for SlipJot (Chiang Mai Red Songthaew)
+* **#9 Grainy gradients & #5 Speckled graphite:** Gives the Songthaew body red (`--color-red: #b3121c`) and steel cabin (`--color-steel: #eef0f2`) a rich painted-metal enamel finish rather than flat digital blocks.
+* **#8 Halftone & #12 Paper texture:** Vintage Thai bus-signage halftone dot shading on hero route boards + authentic thermal receipt paper texture inside `src/app/app/upload/page.tsx`.
+* **#18 Square-dot grids & #22 ASCII and pixels:** Subtle mechanical LED/split-flap dot matrix behind `route-board-demo.tsx` and the odometer `rolling-number.tsx`.
+* **#6 Single-hue landscapes / #13 Contour lines:** Optional ultra-subtle Doi Suthep / Chiang Mai road contour lines in `--color-red-deep` (`opacity: 0.08`) across the landing hero.
+
+---
+
+## 6. Token-Efficient Claude Prompts for SlipJot (Copy-Paste Ready)
 
 ### Prompt 1: Landing Page & Route-Board Motion Design
 ```text
@@ -153,4 +190,23 @@ Requirements:
 3. Accessibility & Contrast:
    - WCAG AA contrast (>= 4.5:1) for all typography on steel and red panels.
    - Touch targets >= 44px on mobile devices.
+```
+
+### Prompt 3: Background & Songthaew Surface Depth (Anti-Flatness Without AI Slop)
+```text
+Role: Senior UI/UX Designer & Frontend Engineer
+Task: Transform SlipJot's flat solid panels into tactile painted-metal, paper-slip, and LED route-board surfaces (`src/app/globals.css`, `src/app/page.tsx`, `src/app/route-board-demo.tsx`, `src/app/app/page.tsx`, and `src/app/app/upload/page.tsx`) using Section 5 ("22 Backgrounds to Make Designs Less Flat") with zero AI slop.
+
+Requirements:
+1. Hero Songthaew Body Red & Cabin Steel (`src/app/globals.css` & `src/app/page.tsx`):
+   - Replace flat `--color-red` hero blocks with a #9 Grainy Gradient (subtle radial illumination from `--color-red` to `--color-red-deep` + inline SVG `<feTurbulence>` metallic paint enamel grain at 4% opacity).
+   - Optionally frame the hero bottom edge with minimal #6 Single-Hue Landscape / #13 Contour Lines evoking Chiang Mai mountain curves in `--color-red-night` at 12% opacity (`pointer-events: none`).
+   - Across `--color-steel` (`#eef0f2`) cabin dashboard backgrounds, apply subtle #5 Speckled Graphite brushed-steel noise (`opacity: 0.03`).
+2. Route-Board & Odometer Matrix (`route-board-demo.tsx` & `rolling-number.tsx`):
+   - Behind the split-flap route board and odometer readout, layer an ultra-subtle #18 Square-Dot Grid / #22 ASCII & Pixels LED matrix pattern (`opacity: 0.06`) with crisp #8 Halftone corner accents.
+3. Receipt Upload Dropzone (`src/app/app/upload/page.tsx`):
+   - Style the slip preview area with a #12 Paper Texture (`baseFrequency="0.85"`, `opacity: 0.035`) and an edge-only #20 Iridescent Shape specular verification border when OCR succeeds.
+4. Guardrails:
+   - Pure CSS + inline SVG data-URIs only (60 FPS mobile PWA performance).
+   - Strictly preserve contrast >= 4.5:1 for `--color-on-red` (`#ffffff`) and `--color-ink` on `--color-plate` (`#f5c400`). Do not alter OCR, Drizzle, or Supabase logic.
 ```
