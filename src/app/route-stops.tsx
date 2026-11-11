@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { SongthaewContours } from "@/components/songthaew-contours";
 
 /**
  * The landing's scroll grammar: a route line down the page whose stop markers fill in as
@@ -22,9 +23,10 @@ export function RouteStops({ children }: { children: React.ReactNode }) {
     return () => io.disconnect();
   }, []);
   return (
-    <div ref={root} className="relative">
-      <span aria-hidden className="absolute top-0 bottom-0 left-[1.1rem] w-[3px] rounded-full bg-chrome sm:left-8 lg:left-[calc(50%-37rem)]" />
-      {children}
+    <div ref={root} className="relative overflow-hidden">
+      <SongthaewContours variant="cabin" className="absolute inset-x-0 bottom-0 z-0 h-44 w-full opacity-75" />
+      <span aria-hidden className="absolute top-0 bottom-0 left-[1.1rem] z-[1] w-[3px] rounded-full bg-chrome sm:left-8 lg:left-[calc(50%-37rem)]" />
+      <div className="relative z-10">{children}</div>
     </div>
   );
 }

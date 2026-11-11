@@ -1,6 +1,15 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { AlertTriangle, ArrowRight, ClipboardCheck, TrendingDown, TrendingUp } from "lucide-react";
+import {
+  AlertTriangle,
+  ArrowRight,
+  CircleCheckBig,
+  ClipboardCheck,
+  ImagePlus,
+  ScanLine,
+  TrendingDown,
+  TrendingUp,
+} from "lucide-react";
 import { CategoryIcon } from "@/components/category-icon";
 import { MonthNav } from "@/components/month-nav";
 import { RollingNumber } from "@/components/rolling-number";
@@ -91,9 +100,9 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
           <span className="meta whitespace-nowrap">{monthLabel(month)}</span>
         </div>
         <div className="relative overflow-hidden">
-          {/* #18 Square-Dot Grid / #22 ASCII & Pixels LED matrix (6%+ opacity) + #8 Halftone corner accents */}
+          {/* #18 Square-Dot Grid / #22 ASCII & Pixels LED matrix + #8 Halftone corner accents */}
           <span aria-hidden className="led-matrix pointer-events-none absolute inset-0 z-0" />
-          <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.12]" />
+          <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.18]" />
           <div className="relative z-10 flex flex-wrap items-end justify-between gap-4 p-4 pb-3 sm:p-5 sm:pb-3">
             <div>
               <p data-testid="month-total">
@@ -130,23 +139,47 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
       </section>
 
       {s.count === 0 ? (
-        <section className="board flex flex-col items-center px-6 py-12 text-center">
-          <p className="sign text-2xl">ยังไม่มีรายจ่ายเดือนนี้</p>
-          <p className="mt-2 max-w-[38ch] text-ink-2">
-            <ThaiPhrases text="ส่งสลิปจากอัลบั้มเข้ามา| ระบบจะอ่านและจัดหมวดให้" />
-          </p>
-          <Link href="/app/upload" className="btn-primary mt-6">
-            ส่งสลิป <ArrowRight className="size-4" aria-hidden />
-          </Link>
+        <section className="board paper-texture relative overflow-hidden" aria-label="เริ่มต้นใช้งาน">
+          <div className="board-head">
+            <span>กระดานสายรถแดง</span>
+            <span className="meta whitespace-nowrap">พร้อมรับสลิป</span>
+          </div>
+          <div className="relative overflow-hidden px-6 py-10 text-center sm:py-12">
+            <span aria-hidden className="blueprint-bay pointer-events-none absolute inset-0 z-0 opacity-75" />
+            <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.14]" />
+            <div className="relative z-10 flex flex-col items-center">
+              <div className="mb-5 flex items-center gap-2 sm:gap-3" aria-hidden>
+                <span className="flex size-10 items-center justify-center rounded-xl border border-line bg-steel text-ink shadow-xs">
+                  <ImagePlus className="size-4" />
+                </span>
+                <span className="h-px w-6 border-t-2 border-dashed border-chrome-dark sm:w-10" />
+                <span className="flex size-10 items-center justify-center rounded-xl border border-red/25 bg-red-soft text-red shadow-xs">
+                  <ScanLine className="size-4" />
+                </span>
+                <span className="h-px w-6 border-t-2 border-dashed border-chrome-dark sm:w-10" />
+                <span className="flex size-10 items-center justify-center rounded-xl border border-line bg-steel text-ok shadow-xs">
+                  <CircleCheckBig className="size-4" />
+                </span>
+              </div>
+              <p className="sign text-2xl">ยังไม่มีรายจ่ายเดือนนี้</p>
+              <p className="mt-2 max-w-[38ch] text-ink-2">
+                <ThaiPhrases text="ส่งสลิปจากอัลบั้มเข้ามา| ระบบจะอ่านและจัดหมวดให้" />
+              </p>
+              <Link href="/app/upload" className="btn-primary mt-6">
+                ส่งสลิป <ArrowRight className="size-4" aria-hidden />
+              </Link>
+            </div>
+          </div>
         </section>
       ) : (
         <div className="grid gap-8 lg:grid-cols-[3fr_2fr]">
-          <section className="board overflow-hidden" aria-labelledby="by-cat">
-            <div className="board-head">
+          <section className="board paper-texture relative overflow-hidden" aria-labelledby="by-cat">
+            <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.09]" />
+            <div className="board-head relative z-10">
               <h2 id="by-cat">ตามหมวด</h2>
               <span className="meta whitespace-nowrap">กดเพื่อดูรายการ</span>
             </div>
-            <div className="flex flex-col items-center gap-6 p-4 sm:flex-row sm:items-start sm:p-5">
+            <div className="relative z-10 flex flex-col items-center gap-6 p-4 sm:flex-row sm:items-start sm:p-5">
               <CategoryDonut data={s.byCategory} />
               <ul className="rows w-full min-w-0 sm:flex-1">
                 {s.byCategory
@@ -182,12 +215,13 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
             </div>
           </section>
 
-          <section className="board overflow-hidden" aria-labelledby="top-payees">
-            <div className="board-head">
+          <section className="board paper-texture relative overflow-hidden" aria-labelledby="top-payees">
+            <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.09]" />
+            <div className="board-head relative z-10">
               <h2 id="top-payees">จ่ายบ่อยสุด</h2>
               <span className="meta whitespace-nowrap">5 อันดับ</span>
             </div>
-            <ol className="rows px-4 sm:px-5">
+            <ol className="rows relative z-10 px-4 sm:px-5">
               {s.topPayees.map((p, i) => (
                 <li key={p.name + i} className="flex items-center gap-3 py-3">
                   <span className="num flex size-7 shrink-0 items-center justify-center rounded-full bg-steel text-sm font-semibold text-ink-2">
@@ -233,7 +267,7 @@ function BudgetBar({
   level: "ok" | "near" | "over";
   budget: number;
 }) {
-  const color = level === "over" ? "bg-red" : level === "near" ? "bg-plate-deep" : "bg-ink";
+  const color = level === "over" ? "thermal-budget-over" : level === "near" ? "thermal-budget-near" : "bg-ink";
   const remaining = budget - spent;
   return (
     <span className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1">

@@ -27,8 +27,9 @@ export default async function UploadPage({ searchParams }: PageProps<"/app/uploa
         </p>
       )}
       <Uploader shared={sp.shared === "1"} />
-      <p className="paper-texture rounded-xl border border-line/70 bg-white/70 px-3.5 py-2.5 text-xs leading-relaxed text-ink-3">
-        <span className="inline-block">
+      <p className="paper-texture relative overflow-hidden rounded-xl border border-line/80 bg-white/85 px-4 py-3 text-xs leading-relaxed text-ink-3 shadow-xs">
+        <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.07]" />
+        <span className="relative z-10 inline-block">
           {llmLabel() === "local"
             ? "อ่านด้วย LLM ฟรีในเครื่อง (โหมดพัฒนา)"
             : llmLabel() === "gemini"
@@ -36,7 +37,9 @@ export default async function UploadPage({ searchParams }: PageProps<"/app/uploa
               : "อ่านด้วย OCR ในเซิร์ฟเวอร์ (ยังไม่ได้ตั้งค่า Gemini)"}{" "}
           ·
         </span>{" "}
-        <ThaiPhrases text="รูปที่บันทึกได้เลยจะไม่ถูกเก็บ| รูปที่รอตรวจจะถูกลบเมื่อคุณยืนยัน| หรือภายใน 7 วัน" />
+        <span className="relative z-10">
+          <ThaiPhrases text="รูปที่บันทึกได้เลยจะไม่ถูกเก็บ| รูปที่รอตรวจจะถูกลบเมื่อคุณยืนยัน| หรือภายใน 7 วัน" />
+        </span>
       </p>
     </div>
   );

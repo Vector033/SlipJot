@@ -38,7 +38,7 @@ export default async function ExpensesPage({ searchParams }: PageProps<"/app/exp
     `/app/expenses?${new URLSearchParams({ month, ...(c ? { cat: c } : {}), ...(q ? { q } : {}) })}`;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold">รายการ</h1>
         <div className="flex items-center gap-2">
@@ -92,31 +92,45 @@ export default async function ExpensesPage({ searchParams }: PageProps<"/app/exp
         </Link>
       </nav>
 
-      <p className="text-sm text-ink-2">
-        {rows.length} รายการ · รวม{" "}
-        <span className="font-plate num text-base font-semibold text-ink">{formatBaht(total, true)}</span>
-      </p>
+      <div className="paper-texture relative flex items-center justify-between gap-3 overflow-hidden rounded-xl border border-line bg-white/90 px-4 py-2.5 text-sm text-ink-2 shadow-xs">
+        <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.07]" />
+        <span className="num relative z-10 font-medium">{rows.length} รายการ</span>
+        <span className="relative z-10 flex items-center gap-2">
+          <span>รวม</span>
+          <span className="plate-sm text-base font-semibold text-ink">{formatBaht(total, true)}</span>
+        </span>
+      </div>
 
       {rows.length === 0 ? (
-        <div className="board px-6 py-12 text-center">
-          <p className="sign text-xl">{q || cat ? "ไม่พบรายการ" : "ยังไม่มีรายการ"}</p>
-          <p className="mt-2 text-ink-2">
-            {q || cat ? <ThaiPhrases text="ไม่มีรายการที่ตรงกับคำค้น|หรือหมวดนี้ในเดือนนี้" /> : "เดือนนี้ยังไม่มีรายจ่าย"}
-          </p>
-          {q || cat ? (
-            <Link href={`/app/expenses?${new URLSearchParams({ month })}`} className="btn mt-5">
-              ล้างตัวกรอง
-            </Link>
-          ) : (
-            <Link href="/app/upload" className="btn-primary mt-5">
-              ส่งสลิป
-            </Link>
-          )}
+        <div className="board paper-texture relative overflow-hidden">
+          <div className="board-head">
+            <span>สมุดรายการ</span>
+            <span className="meta whitespace-nowrap">{q || cat ? "ตัวกรอง" : "ว่างอยู่"}</span>
+          </div>
+          <div className="relative overflow-hidden px-6 py-12 text-center">
+            <span aria-hidden className="blueprint-bay pointer-events-none absolute inset-0 z-0 opacity-75" />
+            <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.13]" />
+            <div className="relative z-10">
+              <p className="sign text-xl">{q || cat ? "ไม่พบรายการ" : "ยังไม่มีรายการ"}</p>
+              <p className="mt-2 text-ink-2">
+                {q || cat ? <ThaiPhrases text="ไม่มีรายการที่ตรงกับคำค้น|หรือหมวดนี้ในเดือนนี้" /> : "เดือนนี้ยังไม่มีรายจ่าย"}
+              </p>
+              {q || cat ? (
+                <Link href={`/app/expenses?${new URLSearchParams({ month })}`} className="btn mt-5">
+                  ล้างตัวกรอง
+                </Link>
+              ) : (
+                <Link href="/app/upload" className="btn-primary mt-5">
+                  ส่งสลิป
+                </Link>
+              )}
+            </div>
+          </div>
         </div>
       ) : (
         <div className="space-y-8">
           {groupByDay(rows).map((g) => (
-            <section key={g.key} aria-label={g.label} className="board overflow-hidden">
+            <section key={g.key} aria-label={g.label} className="board paper-texture overflow-hidden">
               <div className="board-head">
                 <h2>{g.label}</h2>
                 <span className="font-plate num text-lg font-semibold text-plate">{formatBaht(g.total, true)}</span>

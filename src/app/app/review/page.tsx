@@ -40,18 +40,30 @@ export default async function ReviewPage() {
       </header>
 
       {queue.length === 0 && (
-        <div className="board flex flex-col items-center px-6 py-12 text-center">
-          <CircleCheckBig className="size-10 text-ok" aria-hidden />
-          <p className="sign mt-3 text-xl">เรียบร้อยหมดแล้ว</p>
-          <Link href="/app/upload" className="btn mt-5">
-            ส่งสลิปเพิ่ม
-          </Link>
+        <div className="board paper-texture relative overflow-hidden">
+          <div className="board-head">
+            <span>คิวรอตรวจ</span>
+            <span className="meta whitespace-nowrap">ครบถ้วน</span>
+          </div>
+          <div className="relative overflow-hidden px-6 py-12 text-center">
+            <span aria-hidden className="blueprint-bay pointer-events-none absolute inset-0 z-0 opacity-75" />
+            <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.13]" />
+            <div className="relative z-10 flex flex-col items-center">
+              <span className="flex size-14 items-center justify-center rounded-2xl border border-ok/25 bg-white text-ok shadow-xs">
+                <CircleCheckBig className="size-8" aria-hidden />
+              </span>
+              <p className="sign mt-3 text-xl">เรียบร้อยหมดแล้ว</p>
+              <Link href="/app/upload" className="btn mt-5">
+                ส่งสลิปเพิ่ม
+              </Link>
+            </div>
+          </div>
         </div>
       )}
 
       <ul className="space-y-8">
         {queue.map(({ expense: e, hasImage }) => (
-          <li key={e.id} className="board overflow-x-clip" data-testid="review-item">
+          <li key={e.id} className="board paper-texture overflow-x-clip" data-testid="review-item">
             <div className="board-head">
               <h2 className="min-w-0 line-clamp-2 [overflow-wrap:anywhere]" title={e.payeeName || undefined}>
                 {e.payeeName || "ไม่ทราบผู้รับ"}
@@ -66,7 +78,7 @@ export default async function ReviewPage() {
                   href={`/api/slips/${e.id}/image`}
                   target="_blank"
                   rel="noopener"
-                  className="group relative block shrink-0 overflow-hidden border-b border-line bg-steel sm:w-56 sm:rounded-bl-2xl sm:border-r sm:border-b-0"
+                  className="steel-speckled group relative block shrink-0 overflow-hidden border-b border-line sm:w-56 sm:rounded-bl-[15px] sm:border-r sm:border-b-0"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element -- private per-user image route */}
                   <img

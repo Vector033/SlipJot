@@ -11,20 +11,28 @@ export const metadata: Metadata = { title: "เพิ่มรายการเ
 export default async function NewExpensePage() {
   const cats = await getCategories();
   return (
-    <div className="mx-auto max-w-xl space-y-5">
+    <div className="mx-auto max-w-xl space-y-8">
       <Link href="/app/expenses" className="inline-flex min-h-10 items-center gap-1 text-sm font-medium text-ink-2 hover:text-ink">
         <ChevronLeft className="size-4" aria-hidden /> กลับไปที่รายการ
       </Link>
-      <h1 className="text-2xl font-bold">เพิ่มรายการเอง</h1>
-      <p className="text-ink-2">สำหรับเงินสดหรือรายการที่ไม่มีสลิป</p>
-      <div className="board p-4 sm:p-5">
-        <ExpenseForm
-          action={createExpenseAction}
-          values={{ amount: null, occurredAt: toLocalInput(new Date()), payeeName: "", categoryId: null, memo: null }}
-          categories={cats.map((c) => ({ id: c.id, name: c.name, icon: c.icon, color: c.color, slug: c.slug }))}
-          submitLabel="เพิ่มรายการ"
-          stickyAction
-        />
+      <div>
+        <h1 className="text-2xl font-bold">เพิ่มรายการเอง</h1>
+        <p className="mt-1 text-ink-2">สำหรับเงินสดหรือรายการที่ไม่มีสลิป</p>
+      </div>
+      <div className="board paper-texture overflow-x-clip">
+        <div className="board-head">
+          <span>บันทึกรายการด้วยมือ</span>
+          <span className="meta whitespace-nowrap">เงินสด / อื่นๆ</span>
+        </div>
+        <div className="p-4 sm:p-5">
+          <ExpenseForm
+            action={createExpenseAction}
+            values={{ amount: null, occurredAt: toLocalInput(new Date()), payeeName: "", categoryId: null, memo: null }}
+            categories={cats.map((c) => ({ id: c.id, name: c.name, icon: c.icon, color: c.color, slug: c.slug }))}
+            submitLabel="เพิ่มรายการ"
+            stickyAction
+          />
+        </div>
       </div>
     </div>
   );

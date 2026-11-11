@@ -195,7 +195,7 @@ export function ExpenseForm({
       <div
         className={`flex flex-wrap items-center gap-2 ${
           stickyAction
-            ? "sticky bottom-[calc(4.75rem+env(safe-area-inset-bottom))] z-10 -mx-4 border-t border-line bg-white/95 px-4 py-3 backdrop-blur-xs sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:p-0 sm:pt-2"
+            ? "fluted-glass sticky bottom-[calc(4.75rem+env(safe-area-inset-bottom))] z-10 -mx-4 border-t border-line px-4 py-3 sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:bg-none sm:p-0 sm:pt-2 sm:backdrop-blur-none"
             : "pt-2"
         }`}
       >

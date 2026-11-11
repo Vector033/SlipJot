@@ -143,26 +143,35 @@ export function Uploader({ shared }: { shared: boolean }) {
           add([...e.dataTransfer.files]);
         }}
         // Once slips are in, the drop zone shrinks to one row so the slips being read stay on a phone screen.
-        className={`paper-texture flex items-center rounded-3xl border-[3px] border-dashed text-center transition-[background-color,border-color,box-shadow] duration-150 ${items.length ? "justify-between gap-3 px-4 py-3" : "flex-col gap-3 px-6 py-12"} ${dragging ? "border-red bg-red-soft ring-4 ring-red/15" : "border-chrome-dark bg-white hover:border-red/60"}`}
+        className={`paper-texture relative flex items-center overflow-hidden rounded-3xl border-[3px] border-dashed text-center transition-[background-color,border-color,box-shadow] duration-150 ${items.length ? "justify-between gap-3 px-4 py-3" : "flex-col gap-3 px-6 py-12"} ${dragging ? "border-red bg-red-soft ring-4 ring-red/15" : "border-chrome-dark bg-white hover:border-red/60"}`}
       >
+        <span aria-hidden className="blueprint-bay pointer-events-none absolute inset-0 z-0 opacity-75" />
+        <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.1]" />
         {items.length === 0 && (
-          <span className="flex size-16 items-center justify-center rounded-xl bg-red text-white shadow-[0_6px_14px_-8px_rgb(179_18_28/0.55)]">
-            <ImagePlus className="size-8" aria-hidden />
-          </span>
+          <>
+            {/* Optical viewfinder corner reticles */}
+            <span aria-hidden className="pointer-events-none absolute top-4 left-4 z-0 size-4 border-t-2 border-l-2 border-chrome-dark/70" />
+            <span aria-hidden className="pointer-events-none absolute top-4 right-4 z-0 size-4 border-t-2 border-r-2 border-chrome-dark/70" />
+            <span aria-hidden className="pointer-events-none absolute bottom-4 left-4 z-0 size-4 border-b-2 border-l-2 border-chrome-dark/70" />
+            <span aria-hidden className="pointer-events-none absolute right-4 bottom-4 z-0 size-4 border-r-2 border-b-2 border-chrome-dark/70" />
+            <span className="relative z-10 flex size-16 items-center justify-center rounded-xl bg-red text-white shadow-[0_6px_14px_-8px_rgb(179_18_28/0.55)]">
+              <ImagePlus className="size-8" aria-hidden />
+            </span>
+          </>
         )}
-        <p className={items.length ? "text-left font-bold" : "mt-1 text-lg font-bold"}>
+        <p className={`relative z-10 ${items.length ? "text-left font-bold" : "mt-1 text-lg font-bold"}`}>
           {items.length ? "เพิ่มสลิปอีก" : "เลือกรูปสลิปจากอัลบั้ม"}
         </p>
         {items.length === 0 && (
-          <p className="max-w-[38ch] text-sm text-ink-2">
+          <p className="relative z-10 max-w-[38ch] text-sm text-ink-2">
             <ThaiPhrases text="เลือกได้หลายรูปพร้อมกัน| หรือลากไฟล์มาวางตรงนี้| · JPG, PNG, WebP| ไม่เกิน 10 MB" />
           </p>
         )}
-        <button type="button" onClick={() => inputRef.current?.click()} className={items.length ? "btn" : "btn-plate mt-2"}>
+        <button type="button" onClick={() => inputRef.current?.click()} className={`relative z-10 ${items.length ? "btn" : "btn-plate mt-2"}`}>
           เลือกรูป
         </button>
         {items.length === 0 && (
-          <p className="mt-1 flex items-center justify-center gap-1.5 text-xs text-ink-2">
+          <p className="relative z-10 mt-1 flex items-center justify-center gap-1.5 text-xs text-ink-2">
             <ShieldCheck className="size-4 shrink-0 text-ok" aria-hidden />
             <span>
               <ThaiPhrases text="AI อ่านใน 2 วิ| · ใบไหนไม่แน่ใจถามคุณก่อนบันทึกเสมอ" />
@@ -274,15 +283,15 @@ export function Uploader({ shared }: { shared: boolean }) {
             })}
           </ul>
 
-          {/* Mobile bottom thumb-zone primary CTA after reading completes */}
+          {/* Mobile bottom thumb-zone primary CTA with fluted window glass backdrop */}
           {!busy && (review > 0 || done.length > 0) && (
-            <div className="sticky bottom-[calc(4.75rem+env(safe-area-inset-bottom))] z-10 pt-2 sm:hidden">
+            <div className="fluted-glass sticky bottom-[calc(4.75rem+env(safe-area-inset-bottom))] z-10 rounded-2xl border border-line p-2 shadow-lg sm:hidden">
               {review > 0 ? (
-                <Link href="/app/review" className="btn-plate w-full shadow-lg">
+                <Link href="/app/review" className="btn-plate w-full shadow-md">
                   ตรวจ {review} รายการ <ArrowRight className="size-4" aria-hidden />
                 </Link>
               ) : (
-                <Link href="/app/expenses" className="btn-primary w-full shadow-lg">
+                <Link href="/app/expenses" className="btn-primary w-full shadow-md">
                   ดูรายการที่บันทึก <ArrowRight className="size-4" aria-hidden />
                 </Link>
               )}

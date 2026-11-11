@@ -61,7 +61,7 @@ export function MobileNav({ reviewCount }: { reviewCount: number }) {
   const pathname = usePathname();
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur sm:hidden"
+      className="fluted-glass fixed inset-x-0 bottom-0 z-20 border-t border-line pb-[env(safe-area-inset-bottom)] sm:hidden"
       aria-label="เมนูหลัก"
     >
       <ul className="grid grid-cols-5">

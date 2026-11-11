@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, EyeOff, MessageCircleQuestion, ShieldCheck } from "lucide-react";
 import { Logo } from "@/components/logo";
+import { SongthaewContours } from "@/components/songthaew-contours";
 import { SongthaewShader } from "@/components/songthaew-shader";
 import { ThaiPhrases } from "@/components/thai-phrases";
 import { getOptionalUser } from "@/lib/auth";
@@ -94,47 +95,11 @@ export default async function Home({ searchParams }: PageProps<"/">) {
         </div>
 
         {/* #6 Single-Hue Landscape & #13 Contour Lines: clearly visible Chiang Mai mountain ridges & topographic lines. */}
-        <svg
-          aria-hidden="true"
-          viewBox="0 0 1440 200"
-          preserveAspectRatio="none"
-          className="pointer-events-none absolute inset-x-0 bottom-1 z-[1] h-36 w-full sm:h-48"
-        >
-          <path
-            d="M0 200V132C180 96 310 72 470 84C610 94 710 42 890 50C1050 58 1210 104 1440 80V200Z"
-            fill="var(--color-red-night)"
-            fillOpacity="0.28"
-          />
-          <path
-            d="M0 200V152C220 130 360 96 540 108C710 120 860 72 1050 82C1210 90 1330 124 1440 110V200Z"
-            fill="var(--color-red-night)"
-            fillOpacity="0.42"
-          />
-          <path
-            d="M0 108C210 68 360 44 540 60C710 76 840 22 1030 32C1200 40 1330 76 1440 56"
-            fill="none"
-            stroke="var(--color-on-red-2)"
-            strokeOpacity="0.2"
-            strokeWidth="1.35"
-            vectorEffect="non-scaling-stroke"
-          />
-          <path
-            d="M0 126C200 98 350 68 530 82C705 96 850 48 1045 58C1215 66 1335 94 1440 80"
-            fill="none"
-            stroke="var(--color-on-red-2)"
-            strokeOpacity="0.16"
-            strokeWidth="1.2"
-            vectorEffect="non-scaling-stroke"
-          />
-          <path
-            d="M0 146C220 124 360 92 540 104C710 116 860 70 1050 80C1210 88 1330 120 1440 106"
-            fill="none"
-            stroke="var(--color-red-night)"
-            strokeOpacity="0.5"
-            strokeWidth="1.4"
-            vectorEffect="non-scaling-stroke"
-          />
-        </svg>
+        <SongthaewContours
+          variant="hero"
+          density="rich"
+          className="absolute inset-x-0 bottom-1 z-[1] h-36 w-full sm:h-48"
+        />
 
         <div className="trim relative z-10" />
       </div>
@@ -150,10 +115,11 @@ export default async function Home({ searchParams }: PageProps<"/">) {
                 <ThaiPhrases text="ยอด วันเวลา| (แปลง พ.ศ. ให้)| ชื่อผู้รับ ธนาคาร| เลขบัญชี 4 ตัวท้าย| และบันทึกช่วยจำ| อ่านด้วย Gemini| และถ้าระบบ AI ล่ม|จะอ่านด้วย OCR ภาษาไทย|ในเซิร์ฟเวอร์แทน" />
               </p>
             </div>
-            <div className="board overflow-hidden">
-              <table className="w-full text-left">
+            <div className="board paper-texture relative overflow-hidden">
+              <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.1]" />
+              <table className="relative z-10 w-full text-left">
                 <caption className="sr-only">ความแม่นยำต่อธนาคาร</caption>
-                <thead className="bg-ink text-sm text-white">
+                <thead className="border-b-2 border-red bg-ink text-sm text-white">
                   <tr>
                     <th scope="col" className="px-4 py-2.5 font-medium">
                       ธนาคาร
@@ -189,25 +155,29 @@ export default async function Home({ searchParams }: PageProps<"/">) {
 
         <Stop name="ไม่แน่ใจ ถามก่อน" id="review">
           <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
-            <div className="board order-2 p-5 lg:order-1">
-              <p className="flex items-center gap-2 text-sm font-semibold">
-                <MessageCircleQuestion className="size-4 text-red" aria-hidden /> รอคุณตรวจ 1 รายการ
-              </p>
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                <div>
-                  <p className="label">ยอด (บาท)</p>
-                  <p className="input num">55.00</p>
+            <div className="board paper-texture relative order-2 overflow-hidden p-5 lg:order-1">
+              <span aria-hidden className="blueprint-bay pointer-events-none absolute inset-0 z-0 opacity-65" />
+              <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.1]" />
+              <div className="relative z-10">
+                <p className="flex items-center gap-2 text-sm font-semibold">
+                  <MessageCircleQuestion className="size-4 text-red" aria-hidden /> รอคุณตรวจ 1 รายการ
+                </p>
+                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <p className="label">ยอด (บาท)</p>
+                    <p className="input num">55.00</p>
+                  </div>
+                  <div>
+                    <p className="label">วันเวลา</p>
+                    <p className="input">4 พ.ย. 2569 11:12</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="label">วันเวลา</p>
-                  <p className="input">4 พ.ย. 2569 11:12</p>
-                </div>
+                <p className="label mt-3">ผู้รับ / ร้าน</p>
+                <p className="input border-plate-deep bg-plate-soft">ร้านข้าวมันไก่ป่าแดง</p>
+                <p className="mt-2 text-sm text-warn">
+                  <ThaiPhrases text="ไม่แน่ใจ: ชื่อผู้รับ| · ตัวอย่าง (ข้อมูลสมมติ)" />
+                </p>
               </div>
-              <p className="label mt-3">ผู้รับ / ร้าน</p>
-              <p className="input border-plate-deep bg-plate-soft">ร้านข้าวมันไก่ป่าแดง</p>
-              <p className="mt-2 text-sm text-warn">
-                <ThaiPhrases text="ไม่แน่ใจ: ชื่อผู้รับ| · ตัวอย่าง (ข้อมูลสมมติ)" />
-              </p>
             </div>
             <div className="order-1 lg:order-2">
               <h2 className="sign text-3xl sm:text-4xl">
@@ -242,13 +212,14 @@ export default async function Home({ searchParams }: PageProps<"/">) {
                 { who: "นาย ณัฐพล วงศ์คำ · “คืนเงินค่าตั๋ว”", how: "จากบันทึกช่วยจำ", where: "โอนให้คน" },
                 { who: "หอพักบ้านสวนนิมมาน", how: "จากชื่อร้าน", where: "ค่าหอ" },
               ].map((r) => (
-                <li key={r.who} className="board flex items-center gap-3 px-4 py-3">
-                  <span className="min-w-0 flex-1">
+                <li key={r.who} className="board paper-texture relative flex items-center gap-3 overflow-hidden px-4 py-3">
+                  <span aria-hidden className="led-matrix pointer-events-none absolute inset-0 z-0 opacity-[0.06]" />
+                  <span className="relative z-10 min-w-0 flex-1">
                     <span className="block truncate font-medium">{r.who}</span>
                     <span className="text-sm text-ink-3">{r.how}</span>
                   </span>
-                  <ArrowRight className="size-4 shrink-0 text-ink-3" aria-hidden />
-                  <span className="shrink-0 rounded-full bg-ink px-3 py-1 text-sm font-semibold whitespace-nowrap text-white">
+                  <ArrowRight className="relative z-10 size-4 shrink-0 text-ink-3" aria-hidden />
+                  <span className="relative z-10 shrink-0 rounded-full bg-ink px-3 py-1 text-sm font-semibold whitespace-nowrap text-white">
                     {r.where}
                   </span>
                 </li>
@@ -262,15 +233,17 @@ export default async function Home({ searchParams }: PageProps<"/">) {
         </Stop>
 
         <Stop name="ข้อมูลของคุณ" id="privacy">
-          <div className="overflow-hidden rounded-3xl bg-ink text-white">
-            <div className="px-6 pt-7 pb-5 sm:px-10 sm:pt-10">
+          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-ink text-white shadow-[0_24px_48px_-24px_rgb(0_0_0/0.6)]">
+            <span aria-hidden className="led-matrix-light pointer-events-none absolute inset-0 z-0 opacity-[0.1]" />
+            <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-on-red-2 opacity-[0.16]" />
+            <div className="relative z-10 px-6 pt-7 pb-5 sm:px-10 sm:pt-10">
               <h2 className="sign text-3xl sm:text-4xl">
                 <ThaiPhrases text="ข้อมูลของคุณ| เป็นของคุณ" />
               </h2>
             </div>
             {/* The promises read like the stops on a route board: one per row, chrome between.
                 "|" marks where a Thai title may wrap, between whole words. */}
-            <dl>
+            <dl className="relative z-10">
               {[
                 {
                   t: "รูปสลิป|ถูกลบ",
@@ -320,8 +293,8 @@ export default async function Home({ searchParams }: PageProps<"/">) {
                 </div>
               ))}
             </dl>
-            <div className="trim opacity-60" />
-            <p className="flex items-start gap-2 px-6 py-5 text-sm text-white/70 sm:items-center sm:px-10">
+            <div className="trim relative z-10 opacity-60" />
+            <p className="relative z-10 flex items-start gap-2 px-6 py-5 text-sm text-white/70 sm:items-center sm:px-10">
               <EyeOff className="mt-0.5 size-4 shrink-0 sm:mt-0" aria-hidden />
               <span>
                 <ThaiPhrases text="SlipJot แสดงสถิติของคุณเองเท่านั้น| ไม่ใช่คำแนะนำทางการเงิน" />
@@ -332,8 +305,14 @@ export default async function Home({ searchParams }: PageProps<"/">) {
       </RouteStops>
 
       <div className="on-red songthaew-enamel relative overflow-hidden text-white">
-        <div className="trim" />
-        <div className="mx-auto flex max-w-6xl flex-col items-start gap-6 px-4 py-14 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+        <SongthaewContours
+          variant="hero"
+          density="subtle"
+          className="absolute inset-x-0 bottom-0 z-0 h-32 w-full sm:h-40"
+        />
+        <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-on-red-2 opacity-[0.16]" />
+        <div className="trim relative z-10" />
+        <div className="relative z-10 mx-auto flex max-w-6xl flex-col items-start gap-6 px-4 py-14 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
           <h2 className="sign text-3xl sm:text-4xl">
             <ThaiPhrases text="ลองกับข้อมูลสมมติ|ก่อนก็ได้" />
           </h2>
@@ -347,7 +326,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
             )}
           </div>
         </div>
-        <footer className="mx-auto max-w-6xl px-4 pb-8 text-xs text-on-red-2 sm:px-6 lg:px-8">
+        <footer className="relative z-10 mx-auto max-w-6xl px-4 pb-8 text-xs text-on-red-2 sm:px-6 lg:px-8">
           <ThaiPhrases text="SlipJot เป็นโปรเจกต์ส่วนตัว| อ่านสลิปจากรูปเท่านั้น| ไม่ได้ยืนยันการโอนกับธนาคาร" />
         </footer>
       </div>
