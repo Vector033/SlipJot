@@ -14,6 +14,7 @@ export default async function AppLayout({ children }: LayoutProps<"/app">) {
   return (
     <div className="relative flex flex-1 flex-col overflow-x-clip">
       <header className="on-red songthaew-enamel sticky top-0 z-10 overflow-hidden text-white">
+        <SongthaewContours variant="header" className="absolute inset-0 z-0 size-full" />
         <div className="relative z-10 mx-auto flex h-14 max-w-5xl items-center gap-4 px-4 sm:h-16 sm:px-6">
           <Link href="/app" aria-label="SlipJot ภาพรวม">
             <Logo tone="white" />
