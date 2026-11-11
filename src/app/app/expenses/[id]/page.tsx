@@ -24,12 +24,12 @@ export default async function ExpensePage({ params }: PageProps<"/app/expenses/[
   const back = `/app/expenses?month=${monthKeyOf(e.occurredAt)}`;
 
   return (
-    <div className="mx-auto max-w-xl space-y-5">
+    <div className="mx-auto max-w-xl space-y-8">
       <Link href={back} className="inline-flex min-h-10 items-center gap-1 text-sm font-medium text-ink-2 hover:text-ink">
         <ChevronLeft className="size-4" aria-hidden /> กลับไปที่รายการ
       </Link>
       <h1 className="text-2xl font-bold">แก้ไขรายการ</h1>
-      <div className="board p-5">
+      <div className="board p-4 sm:p-5">
         <ExpenseForm
           action={saveExpenseAction}
           confirm={e.status === "review"}
@@ -42,8 +42,9 @@ export default async function ExpensePage({ params }: PageProps<"/app/expenses/[
             categoryId: e.categoryId,
             memo: e.memo,
           }}
-          categories={cats.map((c) => ({ id: c.id, name: c.name, icon: c.icon }))}
+          categories={cats.map((c) => ({ id: c.id, name: c.name, icon: c.icon, color: c.color, slug: c.slug }))}
           submitLabel={e.status === "review" ? "ยืนยันและบันทึก" : "บันทึก"}
+          stickyAction
         >
           <ConfirmDelete
             action={deleteExpenseAction}

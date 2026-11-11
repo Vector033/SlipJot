@@ -14,6 +14,7 @@ import {
   setKeepImagesAction,
 } from "../actions";
 import { CategoryRow } from "./category-row";
+import { SoundToggle } from "./sound-toggle";
 import { SettingsTabs } from "./tabs";
 
 export const metadata: Metadata = { title: "ตั้งค่า" };
@@ -33,7 +34,7 @@ export default async function SettingsPage({ searchParams }: PageProps<"/app/set
   const withoutLlm = (s.rule ?? 0) + (s.keyword ?? 0);
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
+    <div className="mx-auto max-w-3xl space-y-8">
       <h1 className="text-2xl font-bold">ตั้งค่า</h1>
       <SettingsTabs />
       {isDemoUser(user?.email) && (
@@ -69,10 +70,10 @@ export default async function SettingsPage({ searchParams }: PageProps<"/app/set
 
       <section className="board overflow-hidden">
         <div className="board-head">
-          <h2>รูปสลิป</h2>
+          <h2>รูปสลิปและเสียงแจ้งเตือน</h2>
         </div>
-        <div className="p-5">
-          <form action={setKeepImagesAction} className="mt-3 space-y-3">
+        <div className="space-y-5 p-5">
+          <form action={setKeepImagesAction} className="space-y-3">
             <label className="flex items-start gap-3">
               <input
                 type="checkbox"
@@ -89,6 +90,9 @@ export default async function SettingsPage({ searchParams }: PageProps<"/app/set
             </label>
             <button className="btn">บันทึก</button>
           </form>
+          <div className="border-t-2 border-line pt-4">
+            <SoundToggle />
+          </div>
         </div>
       </section>
 

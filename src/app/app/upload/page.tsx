@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "ส่งสลิป" };
 export default async function UploadPage({ searchParams }: PageProps<"/app/upload">) {
   const sp = await searchParams;
   return (
-    <div className="mx-auto max-w-2xl space-y-5">
+    <div className="mx-auto max-w-2xl space-y-8">
       <header>
         <h1 className="text-2xl font-bold">ส่งสลิป</h1>
         <p className="mt-1 leading-relaxed text-ink-2">

@@ -114,7 +114,7 @@ export default async function ExpensesPage({ searchParams }: PageProps<"/app/exp
           )}
         </div>
       ) : (
-        <div className="space-y-5">
+        <div className="space-y-8">
           {groupByDay(rows).map((g) => (
             <section key={g.key} aria-label={g.label} className="board overflow-hidden">
               <div className="board-head">

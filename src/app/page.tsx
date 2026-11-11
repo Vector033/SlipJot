@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, EyeOff, MessageCircleQuestion } from "lucide-react";
+import { ArrowRight, EyeOff, MessageCircleQuestion, ShieldCheck } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { SongthaewShader } from "@/components/songthaew-shader";
 import { ThaiPhrases } from "@/components/thai-phrases";
@@ -77,11 +77,18 @@ export default async function Home({ searchParams }: PageProps<"/">) {
                 </Link>
               )}
             </div>
-            {hasDemo && (
-              <p className="mt-3 text-sm text-on-red-2">
-                <ThaiPhrases text="บัญชีเดโมใช้ข้อมูลสมมติ| ไม่ต้องสมัคร" />
-              </p>
-            )}
+            <p className="mt-4 flex items-start gap-2 text-sm text-on-red-2">
+              <ShieldCheck className="mt-0.5 size-4 shrink-0 text-white" aria-hidden />
+              <span>
+                <ThaiPhrases text="AI อ่านใน 2 วิ| · ใบไหนไม่แน่ใจถามคุณก่อนบันทึกเสมอ" />
+                {hasDemo && (
+                  <>
+                    {" "}
+                    <span className="inline-block opacity-90">· บัญชีเดโมใช้ข้อมูลสมมติ ไม่ต้องสมัคร</span>
+                  </>
+                )}
+              </span>
+            </p>
           </div>
           <RouteBoardDemo />
         </div>

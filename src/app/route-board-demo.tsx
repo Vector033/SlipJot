@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { RollingNumber } from "@/components/rolling-number";
 import { ThaiPhrases } from "@/components/thai-phrases";
+import { playSplitFlapTick } from "@/lib/micro-sound";
 
 // The landing's signature moment: a fictional slip is read onto the route board.
 // The payee is written on like sign paint, the amount rolls onto the plate, and the stop
@@ -106,6 +107,7 @@ export function RouteBoardDemo() {
   }, [run, seen]);
 
   const next = () => {
+    playSplitFlapTick();
     setPhase("scan");
     setIdx((i) => (i + 1) % SAMPLES.length);
     setRun((r) => r + 1);

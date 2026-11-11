@@ -181,7 +181,61 @@ import { Dithering, GrainGradient } from '@paper-design/shaders-react';
 
 ---
 
-## 7. Token-Efficient Claude Prompts for SlipJot (Copy-Paste Ready)
+## 7. Synthesis of 6 UI/UX Masterclasses & 2026 Web Design Trends
+
+Synthesized directly from 6 masterclasses on high-converting UI/UX, typography, spacing, and 2026 web trends:
+
+### 7.1 Video-by-Video Technique Matrix (Apply Maximum Applicable Techniques)
+1. **50 Web Design Tips & Tricks ([youtu.be/rRFD6tENX2U](https://youtu.be/rRFD6tENX2U)):**
+   * **Layout & 3-Tier Hierarchy:** 12-column responsive grid; 3 importance tiers (1. Monthly odometer / Upload slip CTA -> 2. Category breakdown & route board -> 3. Bank reference & timestamp).
+   * **60-30-10 Color Discipline:** 60% Steel cabin (`#eef0f2`) & panel (`#ffffff`), 30% Body Red (`#b3121c`) & dark ink (`#1b1715`), 10% License Plate Yellow (`#f5c400`) dedicated to currency figures & primary CTAs.
+   * **80% Top-Fold Rule & Scroll-Backward Audit:** Landing Hero (`First viewport: the side of the truck`) + `RouteBoardDemo` must convey automatic Thai slip tracking in 50ms; audit `/app`, `/app/upload`, and `/app/review` bottom-to-top on real mobile devices.
+   * **Accessibility:** Never rely on red/green/route color alone in `charts.tsx` or `review`—always pair with `CategoryIcon` and explicit Thai labels.
+
+2. **Discovery & Transformation Messaging ([youtu.be/BfHuIgjLC5E](https://youtu.be/BfHuIgjLC5E)):**
+   * **Transformation > Features:** Lead with relief from tedious manual entry (*"สลิปในอัลบั้ม กลายเป็นรายจ่ายเอง ไม่ต้องนั่งพิมพ์ทีละบรรทัด"*) before technical OCR/LLM pipeline details.
+   * **Trust Over Over-Promising:** Admit AI limits honestly (*"ใบไหนไม่แน่ใจจะถามคุณก่อนบันทึก"*)—radical honesty builds deep user trust!
+
+3. **9 Web Design Hacks ([youtu.be/TeMtV8BaZt0](https://youtu.be/TeMtV8BaZt0)):**
+   * **Hack 1 — 50–75ch Text Chunking:** Keep descriptive copy concise (`max-w-[36ch]` to `60ch`); break every 2–3 sentences.
+   * **Hack 2 — Icon Bullet Points:** Present slip-to-expense pipeline steps with crisp icons.
+   * **Hack 3 — 8pt Grid + Double-Rule Spacing:** `8/16px` inside route-board/expense cards, at least **double (`32px`)** between form/chart groups, generous section separation.
+   * **Hack 4 — Line-Height Ratios (Thai-Safe):** Thai display signage `1.3` (protecting upper vowels & tone marks from clipping!); Body `1.6`.
+   * **Hack 5 — Letter Spacing by Role:** Thai body & signage `0` (never crush Thai vowels); Plate digits use `font-plate tabular-nums`; uppercase/CTA controls subtle tracking.
+   * **Hack 6 — Font Super Families:** Consistent UI (`--font-ui`), signage display (`--font-display`), and license plate digits (`--font-digits`) working harmoniously.
+   * **Hack 7 — CSS Overview Audit:** Verify `>= 4.5:1` contrast for `--color-on-red` on `#b3121c` and `--color-ink` on `#f5c400`.
+   * **Hack 8 — Radial Text Scrim:** Keep a subtle darkened/radial scrim behind Hero white copy if `songthaew-shader.tsx` animates behind it.
+   * **Hack 9 — The Squint Test:** Blur/squint at `/` and `/app`—Hero Headline, Route-Board Demo, Monthly Odometer (`rolling-number.tsx`), and "ส่งสลิป" CTA must dominate cleanly.
+
+4. **15 UI/UX Product Mistakes Fixed ([youtu.be/GGg61sdEjeI](https://youtu.be/GGg61sdEjeI)):**
+   * **Contrast Protection Over Bank Slips:** Icons/badges/close buttons floating over uploaded bright or dark bank slips in `/app/upload` & `/app/review` MUST sit inside crisp high-contrast pill containers.
+   * **Alignment Rails & Soft Hairlines:** Maintain strict `16px`/`24px` alignment rails across expense rows (`expenses/page.tsx`) and soften card divider borders (`--color-line`).
+   * **1-Tap Category Presets + Total in Action CTA + Sticky Mobile CTA:** On `/app/review` and `/app/upload`, co-locate the 1-tap Chiang Mai route category chips right above the save button, put the exact amount inside the CTA (`"บันทึก ฿120 · ค่าอาหาร"`), and keep the primary confirmation button sticky at thumb bottom on mobile PWAs!
+   * **Drop Redundant Labels:** Avoid `"จำนวนเงิน: ฿120"`; let yellow plate `฿120` speak cleanly.
+
+5. **Top 3 Conversion & Trust Redesigns ([youtu.be/zr37ibqXl1U](https://youtu.be/zr37ibqXl1U)):**
+   * **Core Law:** *"Every UI element asks the user a question. Easier question = faster action."*
+   * **Safety Net > Sales Pitch (Transparency Bias):** Emphasize zero-risk accuracy (*"AI อ่านยอด+หมวดใน 2 วิ · ใบไหนไม่แน่ใจถามคุณก่อนบันทึกเสมอ · แก้ไข/ลบได้ตลอด"*).
+   * **Specific Numbers & Evaluative Ease:** Show concrete single accuracy benchmarks (`"อ่านสลิปใน 2 วิ"`, exact budget remaining `"เหลือใช้ได้อีก ฿3,450"` rather than vague status bars).
+
+6. **Top 9 Web Design Trends of 2026 ([youtu.be/waHuVF3XuMA](https://youtu.be/waHuVF3XuMA)) & Workspace Background Rule:**
+   * **Hero vs Cabin Workspace Rule:** Bold `songthaew-enamel` + animated `GrainGradient` GPU shader + mountain contour curves stay **strictly on the Landing Hero (`src/app/page.tsx`)**. Inside the app (`/app`, `/app/charts`, `/app/expenses`, `/app/upload`), keep the calm `.steel-speckled` (`#eef0f2` at 3% graphite noise) and pure white route panels (`#ffffff`) so financial charts, OCR slip previews, and Thai numbers stay ultra-clear and battery-friendly!
+
+| 2026 Trend | Use in SlipJot? | Exact Application to SlipJot |
+|---|---|---|
+| **1. "Barely There" AI Hyper-Minimalism** | ⚠️ App Cabin | Keep `/app/expenses` and `/app/charts` clean white route-board panels over quiet steel cabin. |
+| **2. Maximalism with an Asterisk** | ✅ **Hero Fit** | Bold Thai signage headline + fearless Chiang Mai Body Red & License Plate Yellow focal pop. |
+| **3. Wabi-Sabi / Human Touch** | ✅ **Primary Fit** | Real Thai route-board vernacular, thermal receipt paper texture (`upload/page.tsx`), honest human microcopy. |
+| **4. Grade School Color Palettes** | ✅ **Primary Fit** | Grounded real Chiang Mai Songthaew route colors for expense categories instead of generic neon SaaS colors. |
+| **5. Spaceship Instruction Manual** | ⚠️ Lightly | Subtle technical scan telemetry during OCR laser scan only. |
+| **6. Democratized WebGL Shaders** | ✅ **Hero Only** | `songthaew-shader.tsx` (`GrainGradient`) behind Hero truck side + subtle `Dithering` inside route board frame. |
+| **7. Internet Nostalgia** | ✅ **Primary Fit** | Mechanical split-flap route board (`route-board-demo.tsx`), odometer rolling digits, halftone/dither accents. |
+| **8. Subtle Opt-In Micro-Sound** | ✅ **Optional** | Optional gentle mechanical split-flap click or scan chime (mute by default / toggle in settings). |
+| **9. Custom Non-Slop Gradients** | ✅ **Brand Red Only** | Painted metallic Body Red enamel gradient (`songthaew-enamel`)—never generic purple/blue AI gradients. |
+
+---
+
+## 8. Token-Efficient Claude Prompts for SlipJot (Copy-Paste Ready)
 
 ### Prompt 1: Landing Page & Route-Board Motion Design
 ```text
@@ -262,4 +316,25 @@ Steps to Follow:
    - Layer behind the Hero Songthaew region only (`pointer-events-none`, `aria-hidden="true"`) with a subtle contrast scrim so white Thai display headings (`--color-on-red`) never clip or lose contrast (>= 4.5:1).
    - Never apply animated shaders behind `charts.tsx` or `upload/page.tsx` OCR previews.
 4. Run `npm run build` / TypeScript check and verify mobile responsiveness without touching `@slipjot/slip-reader`, Drizzle, or Supabase logic.
+```
+
+### Prompt 5: Read Guide & Apply All 6 Masterclasses + 2026 Trends (SlipJot)
+```text
+Task: First, read `CLAUDE_DESIGN_GUIDE.md` thoroughly (especially Section 3 Anti-AI-Slop Rules, Section 6 GPU Shader Architecture, and Section 7 Synthesis of 6 UI/UX Masterclasses & 2026 Web Design Trends). Then audit and elevate SlipJot (`src/app/page.tsx`, `src/app/globals.css`, `src/app/route-board-demo.tsx`, `src/app/app/page.tsx`, `src/app/app/upload/page.tsx`, `src/app/app/review/**`, and `src/app/app/charts.tsx`).
+
+Apply Maximum Applicable Techniques & Best-Fit 2026 Trends (Zero AI Slop):
+1. Trends & Hero vs Cabin Separation:
+   - Emphasize #2 Maximalism with an Asterisk (Hero signage + Plate Yellow CTA), #3 Human Touch, #4 Authentic Songthaew Route Colors, and #7 Internet Nostalgia (split-flap route board & odometer).
+   - Keep `songthaew-shader.tsx` / `songthaew-enamel` strictly on the Hero (`src/app/page.tsx`); keep `/app`, `/app/charts`, and `/app/upload` on quiet `.steel-speckled` (`#eef0f2`) + clean white route panels (`#ffffff`) so Recharts and slip OCR previews remain razor-sharp.
+   - Optionally add a mute-by-default subtle micro-sound toggle in `/app/settings` for split-flap / OCR confirmation feedback.
+2. Product UX & Contrast Protection (`uxpeak` + `9 Web Design Hacks`):
+   - Contrast Protection over Bank Slips: ensure any floating badge, action button, or close icon over uploaded slip previews (`upload/page.tsx` & `review`) sits inside a crisp high-contrast pill container so it never disappears on white/light bank slips.
+   - Co-locate 1-tap Chiang Mai route category preset chips directly with the confirmation action, put the exact Baht total inside the CTA (`"บันทึก ฿120 · ค่าอาหาร"`), and keep the primary CTA sticky at mobile bottom thumb zone during review/upload.
+   - Enforce Thai line-height safety (`line-height: 1.3` headings, `1.6` body — zero vowel clipping), 8pt double-rule spacing (`16px` inside cards, `>= 32px` between groups), and never rely on color alone in `charts.tsx` (pair colors with `CategoryIcon`).
+3. Conversion & Trust Psychology (`zr37ibqXl1U`):
+   - Highlight the honest Safety-Net guarantee right beneath Hero & Upload CTAs (*"AI อ่านใน 2 วิ · ใบไหนไม่แน่ใจถามคุณก่อนบันทึกเสมอ"*).
+   - Replace vague budget status with single concrete remaining-Baht numbers (`"เหลือใช้ได้อีก ฿..."`) using `font-plate tabular-nums`.
+   - Pass the Squint Test on `/` and `/app/upload`.
+4. Verification:
+   - Run `npm run build` and existing unit tests (`npm test`); do not break `@slipjot/slip-reader`, OCR pipeline, Drizzle queries, or Supabase auth.
 ```

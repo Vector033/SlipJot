@@ -17,12 +17,13 @@ export default async function NewExpensePage() {
       </Link>
       <h1 className="text-2xl font-bold">เพิ่มรายการเอง</h1>
       <p className="text-ink-2">สำหรับเงินสดหรือรายการที่ไม่มีสลิป</p>
-      <div className="board p-5">
+      <div className="board p-4 sm:p-5">
         <ExpenseForm
           action={createExpenseAction}
           values={{ amount: null, occurredAt: toLocalInput(new Date()), payeeName: "", categoryId: null, memo: null }}
-          categories={cats.map((c) => ({ id: c.id, name: c.name, icon: c.icon }))}
+          categories={cats.map((c) => ({ id: c.id, name: c.name, icon: c.icon, color: c.color, slug: c.slug }))}
           submitLabel="เพิ่มรายการ"
+          stickyAction
         />
       </div>
     </div>

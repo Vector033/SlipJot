@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Check, CircleAlert, ImagePlus, RotateCcw, ScanLine } from "lucide-react";
+import { ArrowRight, Check, CircleAlert, ImagePlus, RotateCcw, ScanLine, ShieldCheck, X } from "lucide-react";
 import { RollingNumber } from "@/components/rolling-number";
 import { ThaiPhrases } from "@/components/thai-phrases";
 import type { IngestResult } from "@/lib/slips";
 import { formatDateTime } from "@/lib/core/format";
+import { playScanCompleteTone } from "@/lib/micro-sound";
 
 type Item = {
   key: string;
@@ -57,8 +58,13 @@ export function Uploader({ shared }: { shared: boolean }) {
       try {
         const res = await fetch("/api/slips", { method: "POST", body });
         const json = await res.json().catch(() => ({ error: "เซิร์ฟเวอร์ไม่ตอบ" }));
-        if (!res.ok) update(item.key, { state: "error", error: json.error ?? "ส่งสลิปนี้ไม่สำเร็จ" });
-        else update(item.key, { state: "done", result: json as IngestResult });
+        if (!res.ok) {
+          update(item.key, { state: "error", error: json.error ?? "ส่งสลิปนี้ไม่สำเร็จ" });
+        } else {
+          const result = json as IngestResult;
+          update(item.key, { state: "done", result });
+          playScanCompleteTone(result.status === "review" ? "review" : "ok");
+        }
       } catch {
         update(item.key, { state: "error", error: "เชื่อมต่อเซิร์ฟเวอร์ไม่ได้" });
       }
@@ -103,6 +109,15 @@ export function Uploader({ shared }: { shared: boolean }) {
     [pump, update],
   );
 
+  const remove = useCallback((key: string) => {
+    queue.current = queue.current.filter((x) => x.key !== key);
+    setItems((xs) => {
+      const target = xs.find((x) => x.key === key);
+      if (target) URL.revokeObjectURL(target.preview);
+      return xs.filter((x) => x.key !== key);
+    });
+  }, []);
+
   useEffect(() => {
     if (!shared) return;
     takeSharedFiles().then((files) => files.length && add(files));
@@ -115,7 +130,7 @@ export function Uploader({ shared }: { shared: boolean }) {
   const busy = items.some((i) => i.state === "waiting" || i.state === "reading");
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-8">
       <div
         onDragOver={(e) => {
           e.preventDefault();
@@ -146,6 +161,14 @@ export function Uploader({ shared }: { shared: boolean }) {
         <button type="button" onClick={() => inputRef.current?.click()} className={items.length ? "btn" : "btn-plate mt-2"}>
           เลือกรูป
         </button>
+        {items.length === 0 && (
+          <p className="mt-1 flex items-center justify-center gap-1.5 text-xs text-ink-2">
+            <ShieldCheck className="size-4 shrink-0 text-ok" aria-hidden />
+            <span>
+              <ThaiPhrases text="AI อ่านใน 2 วิ| · ใบไหนไม่แน่ใจถามคุณก่อนบันทึกเสมอ" />
+            </span>
+          </p>
+        )}
         <input
           ref={inputRef}
           type="file"
@@ -162,14 +185,14 @@ export function Uploader({ shared }: { shared: boolean }) {
       </div>
 
       {items.length > 0 && (
-        <section>
+        <section className="space-y-4">
           {/* One short summary for screen readers instead of re-reading every row. */}
           <p className="sr-only" role="status">
             {busy ? `กำลังอ่าน ${done.length} จาก ${items.length} สลิป` : `อ่านครบ ${items.length} สลิป`} · บันทึกแล้ว {saved} · รอตรวจ{" "}
             {review} · ซ้ำ {dupes}
             {items.some((i) => i.state === "error") ? ` · ไม่สำเร็จ ${items.filter((i) => i.state === "error").length}` : ""}
           </p>
-          <div className="mb-3 flex flex-wrap items-center gap-2 text-sm">
+          <div className="flex flex-wrap items-center gap-2 text-sm">
             <span className="chip">
               บันทึกแล้ว <span className="num font-bold text-ink">{saved}</span>
             </span>
@@ -180,31 +203,30 @@ export function Uploader({ shared }: { shared: boolean }) {
               ซ้ำ <span className="num font-bold text-ink">{dupes}</span>
             </span>
             {!busy && review > 0 && (
-              <Link href="/app/review" className="btn-primary ml-auto">
-                ตรวจ {review} รายการ
+              <Link href="/app/review" className="btn-primary ml-auto hidden sm:inline-flex">
+                ตรวจ {review} รายการ <ArrowRight className="size-4" aria-hidden />
               </Link>
             )}
             {!busy && review === 0 && done.length > 0 && (
-              <Link href="/app/expenses" className="btn ml-auto">
-                ดูรายการ
+              <Link href="/app/expenses" className="btn ml-auto hidden sm:inline-flex">
+                ดูรายการ <ArrowRight className="size-4" aria-hidden />
               </Link>
             )}
           </div>
-          <ul className="space-y-2.5">
+          <ul className="space-y-3">
             {items.map((it) => {
               const verified = it.state === "done" && it.result?.status === "saved";
               const unsure = it.state === "done" && it.result?.status === "review";
               return (
                 <li
                   key={it.key}
-                  className="board paper-texture flex items-center gap-3 p-3"
+                  className="board paper-texture flex items-center gap-3 p-4"
                   data-testid="upload-row"
                 >
-                  {/* Inner radius = outer (16px) - padding (12px) = 4px.
-                      Verified slips carry an edge-only #20 Iridescent Shape border; #12 Paper Texture overlays the slip preview. */}
+                  {/* Inner radius = outer (16px) - padding (16px) -> crisp 4px frame; floating badges/actions over white bank slips use dark high-contrast pills. */}
                   <div
                     className={`relative shrink-0 overflow-hidden rounded-[4px] bg-steel transition-[width,height] duration-300 ease-out motion-reduce:transition-none ${
-                      it.state === "reading" ? "h-36 w-26 border border-plate-deep" : "h-20 w-14"
+                      it.state === "reading" ? "h-36 w-26 border border-plate-deep" : "h-22 w-16"
                     } ${verified ? "iridescent-border" : unsure ? "border-2 border-plate-deep" : "border border-line"}`}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element -- local blob preview */}
@@ -212,9 +234,35 @@ export function Uploader({ shared }: { shared: boolean }) {
                     {/* #12 Paper Texture over the slip preview (baseFrequency=0.85, opacity 3.5%) */}
                     <span aria-hidden className="paper-overlay pointer-events-none absolute inset-0 z-10" />
                     {it.state === "reading" && (
-                      <span aria-hidden className="animate-laser pointer-events-none absolute inset-0 z-10 motion-reduce:hidden">
-                        <span className="block h-[3px] w-full rounded-full bg-plate shadow-[0_0_6px_1px_rgb(245_196_0/0.95),0_0_18px_4px_rgb(245_196_0/0.45)]" />
-                        <span className="block h-5 w-full bg-gradient-to-b from-plate/30 to-transparent" />
+                      <>
+                        <span aria-hidden className="animate-laser pointer-events-none absolute inset-0 z-10 motion-reduce:hidden">
+                          <span className="block h-[3px] w-full rounded-full bg-plate shadow-[0_0_6px_1px_rgb(245_196_0/0.95),0_0_18px_4px_rgb(245_196_0/0.45)]" />
+                          <span className="block h-5 w-full bg-gradient-to-b from-plate/30 to-transparent" />
+                        </span>
+                        <span
+                          aria-hidden
+                          className="pointer-events-none absolute right-1.5 bottom-1.5 z-20 inline-flex items-center rounded-full bg-ink/90 px-2 py-0.5 text-[0.65rem] font-semibold text-white ring-1 ring-white/25 backdrop-blur-xs"
+                        >
+                          สแกน…
+                        </span>
+                      </>
+                    )}
+                    {it.state !== "reading" && (
+                      <button
+                        type="button"
+                        onClick={() => remove(it.key)}
+                        aria-label="นำรูปนี้ออกจากรายการ"
+                        className="absolute top-1 right-1 z-20 inline-flex size-5 items-center justify-center rounded-full bg-ink/90 text-white shadow-sm ring-1 ring-white/30 transition-colors hover:bg-ink after:absolute after:-inset-3 after:content-['']"
+                      >
+                        <X className="size-3" strokeWidth={2.5} aria-hidden />
+                      </button>
+                    )}
+                    {verified && (
+                      <span
+                        aria-hidden
+                        className="pointer-events-none absolute bottom-1 left-1 z-20 inline-flex size-5 items-center justify-center rounded-full bg-ok text-white shadow-sm ring-2 ring-white"
+                      >
+                        <Check className="size-3" strokeWidth={2.75} />
                       </span>
                     )}
                   </div>
@@ -225,6 +273,21 @@ export function Uploader({ shared }: { shared: boolean }) {
               );
             })}
           </ul>
+
+          {/* Mobile bottom thumb-zone primary CTA after reading completes */}
+          {!busy && (review > 0 || done.length > 0) && (
+            <div className="sticky bottom-[calc(4.75rem+env(safe-area-inset-bottom))] z-10 pt-2 sm:hidden">
+              {review > 0 ? (
+                <Link href="/app/review" className="btn-plate w-full shadow-lg">
+                  ตรวจ {review} รายการ <ArrowRight className="size-4" aria-hidden />
+                </Link>
+              ) : (
+                <Link href="/app/expenses" className="btn-primary w-full shadow-lg">
+                  ดูรายการที่บันทึก <ArrowRight className="size-4" aria-hidden />
+                </Link>
+              )}
+            </div>
+          )}
         </section>
       )}
     </div>

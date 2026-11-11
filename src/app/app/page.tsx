@@ -25,49 +25,65 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
   const alerts = budgets.filter((c) => c.budget!.level !== "ok");
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-8">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold">ภาพรวม</h1>
         <MonthNav month={month} path="/app" />
       </header>
 
-      {sp.wiped && <p className="notice bg-steel-2">ลบข้อมูลทั้งหมดแล้ว</p>}
+      {(sp.wiped || s.reviewCount > 0 || alerts.length > 0) && (
+        <div className="space-y-3">
+          {sp.wiped && <p className="notice bg-steel-2">ลบข้อมูลทั้งหมดแล้ว</p>}
 
-      {s.reviewCount > 0 && (
-        <Link
-          href="/app/review"
-          className="flex min-h-14 items-center gap-3 rounded-2xl border-2 border-ink bg-plate px-4 font-semibold transition-colors hover:bg-plate-deep"
-        >
-          <ClipboardCheck className="size-5 shrink-0" aria-hidden />
-          <span className="flex-1">
-            <ThaiPhrases text={`มี ${s.reviewCount} รายการ|รอให้คุณตรวจ`} />
-          </span>
-          <ArrowRight className="size-5" aria-hidden />
-        </Link>
+          {s.reviewCount > 0 && (
+            <Link
+              href="/app/review"
+              className="flex min-h-14 items-center gap-3 rounded-2xl border-2 border-ink bg-plate px-4 font-semibold transition-colors hover:bg-plate-deep"
+            >
+              <ClipboardCheck className="size-5 shrink-0" aria-hidden />
+              <span className="flex-1">
+                <ThaiPhrases text={`มี ${s.reviewCount} รายการ|รอให้คุณตรวจ`} />
+              </span>
+              <ArrowRight className="size-5" aria-hidden />
+            </Link>
+          )}
+
+          {alerts.map((c) => {
+            const over = c.budget!.level === "over";
+            const remaining = Math.max(0, c.budget!.budget - c.total);
+            return (
+              <p
+                key={c.name}
+                role="status"
+                className={`notice flex items-start gap-3 ${over ? "bg-red-soft text-red-deep" : "bg-plate-soft text-ink"}`}
+              >
+                <AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden />
+                <span className="flex flex-wrap items-baseline gap-x-1.5">
+                  <span className="font-semibold">{c.name}:</span>
+                  {over ? (
+                    <span>
+                      เกินงบแล้ว{" "}
+                      <span className="font-plate num font-semibold">{formatMoney(c.total - c.budget!.budget)}</span>
+                    </span>
+                  ) : (
+                    <span>
+                      เหลือใช้ได้อีก{" "}
+                      <span className="font-plate num font-semibold">{formatMoney(remaining)}</span>
+                      {c.budget!.ratio < 0.8 && (
+                        <span className="text-ink-2">
+                          {" "}
+                          · ใช้ต่ออัตรานี้สิ้นเดือนคาดว่า{" "}
+                          <span className="font-plate num">{formatMoney(c.budget!.projected)}</span>
+                        </span>
+                      )}
+                    </span>
+                  )}
+                </span>
+              </p>
+            );
+          })}
+        </div>
       )}
-
-      {alerts.map((c) => {
-        const over = c.budget!.level === "over";
-        return (
-          <p
-            key={c.name}
-            role="status"
-            className={`notice flex items-start gap-3 ${over ? "bg-red-soft text-red-deep" : "bg-plate-soft text-ink"}`}
-          >
-            <AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden />
-            <span>
-              <span className="font-semibold">{c.name}</span>:{" "}
-              {over ? (
-                <ThaiPhrases text={`เกินงบแล้ว| ${formatMoney(c.total - c.budget!.budget)}`} />
-              ) : c.budget!.ratio >= 0.8 ? (
-                <ThaiPhrases text={`ใช้ไป ${Math.round(c.budget!.ratio * 100)}% ของงบ`} />
-              ) : (
-                <ThaiPhrases text={`ถ้าใช้เท่านี้ต่อไป| สิ้นเดือนจะเกินงบ| (คาดว่า ${formatMoney(c.budget!.projected)})`} />
-              )}
-            </span>
-          </p>
-        );
-      })}
 
       <section className="board overflow-hidden" aria-labelledby="month-head">
         <div className="board-head">
@@ -75,10 +91,10 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
           <span className="meta whitespace-nowrap">{monthLabel(month)}</span>
         </div>
         <div className="relative overflow-hidden">
-          {/* #18 Square-Dot Grid / #22 ASCII & Pixels LED matrix (6% opacity) + #8 Halftone corner accents */}
+          {/* #18 Square-Dot Grid / #22 ASCII & Pixels LED matrix (6%+ opacity) + #8 Halftone corner accents */}
           <span aria-hidden className="led-matrix pointer-events-none absolute inset-0 z-0" />
           <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.12]" />
-          <div className="relative z-10 flex flex-wrap items-end justify-between gap-4 p-5 pb-3">
+          <div className="relative z-10 flex flex-wrap items-end justify-between gap-4 p-4 pb-3 sm:p-5 sm:pb-3">
             <div>
               <p data-testid="month-total">
                 <span className="plate text-[clamp(1.75rem,9vw,2.4rem)] sm:text-5xl">
@@ -124,13 +140,13 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
           </Link>
         </section>
       ) : (
-        <div className="grid gap-5 lg:grid-cols-[3fr_2fr]">
+        <div className="grid gap-8 lg:grid-cols-[3fr_2fr]">
           <section className="board overflow-hidden" aria-labelledby="by-cat">
             <div className="board-head">
               <h2 id="by-cat">ตามหมวด</h2>
               <span className="meta whitespace-nowrap">กดเพื่อดูรายการ</span>
             </div>
-            <div className="flex flex-col items-center gap-6 p-5 sm:flex-row sm:items-start">
+            <div className="flex flex-col items-center gap-6 p-4 sm:flex-row sm:items-start sm:p-5">
               <CategoryDonut data={s.byCategory} />
               <ul className="rows w-full min-w-0 sm:flex-1">
                 {s.byCategory
@@ -151,7 +167,12 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
                             </span>
                           </span>
                           {c.budget && (
-                            <BudgetBar ratio={c.budget.ratio} level={c.budget.level} budget={c.budget.budget} />
+                            <BudgetBar
+                              spent={c.total}
+                              ratio={c.budget.ratio}
+                              level={c.budget.level}
+                              budget={c.budget.budget}
+                            />
                           )}
                         </span>
                       </Link>
@@ -166,7 +187,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
               <h2 id="top-payees">จ่ายบ่อยสุด</h2>
               <span className="meta whitespace-nowrap">5 อันดับ</span>
             </div>
-            <ol className="rows px-5">
+            <ol className="rows px-4 sm:px-5">
               {s.topPayees.map((p, i) => (
                 <li key={p.name + i} className="flex items-center gap-3 py-3">
                   <span className="num flex size-7 shrink-0 items-center justify-center rounded-full bg-steel text-sm font-semibold text-ink-2">
@@ -181,7 +202,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
               ))}
             </ol>
             {budgets.length === 0 && (
-              <p className="steel-speckled m-5 mt-1 rounded-lg p-3 text-sm text-ink-2">
+              <p className="steel-speckled m-4 mt-1 rounded-lg p-3 text-sm text-ink-2 sm:m-5 sm:mt-1">
                 <span className="inline-block">
                   ตั้งงบรายเดือนให้แต่ละหมวดได้ใน{" "}
                   <Link href="/app/settings#categories" className="font-semibold text-red underline">
@@ -201,12 +222,23 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
   );
 }
 
-function BudgetBar({ ratio, level, budget }: { ratio: number; level: "ok" | "near" | "over"; budget: number }) {
+function BudgetBar({
+  spent,
+  ratio,
+  level,
+  budget,
+}: {
+  spent: number;
+  ratio: number;
+  level: "ok" | "near" | "over";
+  budget: number;
+}) {
   const color = level === "over" ? "bg-red" : level === "near" ? "bg-plate-deep" : "bg-ink";
+  const remaining = budget - spent;
   return (
-    <span className="mt-1.5 flex items-center gap-2">
+    <span className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1">
       <span
-        className="h-2 flex-1 overflow-hidden rounded-full bg-steel-2"
+        className="h-2 min-w-16 flex-1 overflow-hidden rounded-full bg-steel-2"
         role="progressbar"
         aria-valuemin={0}
         aria-valuemax={100}
@@ -215,7 +247,17 @@ function BudgetBar({ ratio, level, budget }: { ratio: number; level: "ok" | "nea
       >
         <span className={`block h-full rounded-full ${color}`} style={{ width: `${Math.min(ratio, 1) * 100}%` }} />
       </span>
-      <span className="font-plate num text-xs whitespace-nowrap text-ink-3">งบ {formatMoney(budget)}</span>
+      <span className="text-xs whitespace-nowrap text-ink-2">
+        {remaining >= 0 ? (
+          <>
+            เหลือใช้ได้อีก <span className="font-plate num font-semibold text-ink">{formatMoney(remaining)}</span>
+          </>
+        ) : (
+          <span className="font-semibold text-red-deep">
+            เกินงบ <span className="font-plate num">{formatMoney(Math.abs(remaining))}</span>
+          </span>
+        )}
+      </span>
     </span>
   );
 }
