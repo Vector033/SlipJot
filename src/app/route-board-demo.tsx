@@ -159,7 +159,7 @@ export function RouteBoardDemo() {
           <div className="relative space-y-2.5 px-3 pt-3 pb-3.5 [perspective:600px]">
             {/* #18 Square-Dot Grid / #22 ASCII & Pixels LED matrix (6% opacity) + #8 Halftone corner accents */}
             <span aria-hidden className="led-matrix-light pointer-events-none absolute inset-0 z-0" />
-            <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-on-red-2 opacity-[0.2]" />
+            <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-on-red-2 opacity-[0.1]" />
 
             <div
               className="relative z-10 origin-top rounded-[4px] bg-black/20 px-2.5 py-2 shadow-[inset_0_1px_0_rgb(255_255_255/0.08),inset_0_-1px_0_rgb(0_0_0/0.45)]"

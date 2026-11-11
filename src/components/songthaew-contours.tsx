@@ -22,36 +22,27 @@ export function SongthaewContours({
         <path
           d="M0 220V148C170 116 320 92 490 104C645 115 760 66 945 76C1120 86 1255 128 1440 102V220Z"
           fill="var(--color-chrome)"
-          fillOpacity="0.34"
+          fillOpacity="0.28"
         />
         <path
           d="M0 220V172C210 146 375 118 555 130C735 142 895 96 1080 106C1240 115 1345 144 1440 130V220Z"
           fill="var(--color-steel-2)"
-          fillOpacity="0.65"
+          fillOpacity="0.62"
         />
         <path
-          d="M0 112C205 74 355 48 535 64C710 80 845 26 1035 36C1205 45 1335 80 1440 60"
+          d="M0 118C205 80 355 54 535 70C710 86 845 32 1035 42C1205 51 1335 86 1440 66"
           fill="none"
           stroke="var(--color-ink)"
-          strokeOpacity="0.075"
+          strokeOpacity="0.06"
           strokeWidth="1.2"
-          vectorEffect="non-scaling-stroke"
-        />
-        <path
-          d="M0 136C205 104 355 76 535 90C710 104 855 56 1050 66C1215 75 1335 104 1440 88"
-          fill="none"
-          stroke="var(--color-ink)"
-          strokeOpacity="0.09"
-          strokeWidth="1.25"
-          strokeDasharray="6 6"
           vectorEffect="non-scaling-stroke"
         />
         <path
           d="M0 162C220 138 360 106 540 118C710 130 860 84 1050 94C1210 102 1330 132 1440 118"
           fill="none"
           stroke="var(--color-red)"
-          strokeOpacity="0.11"
-          strokeWidth="1.35"
+          strokeOpacity="0.09"
+          strokeWidth="1.25"
           vectorEffect="non-scaling-stroke"
         />
       </svg>

@@ -1,9 +1,10 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { CircleCheckBig, ZoomIn } from "lucide-react";
+import { ZoomIn } from "lucide-react";
 import { BANK_NAMES_TH, type BankCode } from "@slipjot/slip-reader";
 import { ConfirmDelete } from "@/components/confirm-delete";
 import { ExpenseForm } from "@/components/expense-form";
+import { SongthaewIllo } from "@/components/songthaew-art";
 import { ThaiPhrases } from "@/components/thai-phrases";
 import { formatBaht, toLocalInput } from "@/lib/core/format";
 import { getCategories, getReviewQueue } from "@/lib/data";
@@ -40,23 +41,17 @@ export default async function ReviewPage() {
       </header>
 
       {queue.length === 0 && (
-        <div className="board paper-texture relative overflow-hidden">
+        <div className="board paper-texture overflow-hidden">
           <div className="board-head">
             <span>คิวรอตรวจ</span>
             <span className="meta whitespace-nowrap">ครบถ้วน</span>
           </div>
-          <div className="relative overflow-hidden px-6 py-12 text-center">
-            <span aria-hidden className="blueprint-bay pointer-events-none absolute inset-0 z-0 opacity-75" />
-            <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.13]" />
-            <div className="relative z-10 flex flex-col items-center">
-              <span className="flex size-14 items-center justify-center rounded-2xl border border-ok/25 bg-white text-ok shadow-xs">
-                <CircleCheckBig className="size-8" aria-hidden />
-              </span>
-              <p className="sign mt-3 text-xl">เรียบร้อยหมดแล้ว</p>
-              <Link href="/app/upload" className="btn mt-5">
-                ส่งสลิปเพิ่ม
-              </Link>
-            </div>
+          <div className="flex flex-col items-center px-6 py-10 text-center sm:py-12">
+            <SongthaewIllo variant="cleared" className="mb-2 h-24 w-52" />
+            <p className="sign text-xl">เรียบร้อยหมดแล้ว</p>
+            <Link href="/app/upload" className="btn mt-5">
+              ส่งสลิปเพิ่ม
+            </Link>
           </div>
         </div>
       )}

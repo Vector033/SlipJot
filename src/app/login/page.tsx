@@ -15,8 +15,6 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   return (
     <main className="flex flex-1 flex-col lg:flex-row">
       <div className="on-red songthaew-enamel relative overflow-hidden text-white lg:flex lg:w-[44%] lg:flex-col lg:justify-between">
-        <span aria-hidden className="led-matrix-light pointer-events-none absolute inset-0 z-0 opacity-[0.11]" />
-        <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-on-red-2 opacity-[0.22]" />
         <span
           aria-hidden
           className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-black/10 via-transparent to-black/30"
@@ -68,12 +66,11 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
           className="absolute inset-x-0 bottom-0 z-0 h-36 w-full opacity-75 lg:h-44"
         />
         <div className="board paper-texture relative z-10 w-full max-w-md overflow-hidden">
-          <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.09]" />
-          <div className="board-head relative z-10">
+          <div className="board-head">
             <span className="text-sm font-semibold">ประตูขึ้นรถ · SlipJot</span>
             <span className="meta whitespace-nowrap">ลบรูปหลังตรวจ</span>
           </div>
-          <div className="relative z-10 p-5 sm:p-7">
+          <div className="p-5 sm:p-7">
             <h1 className="text-2xl font-bold">ยินดีต้อนรับ</h1>
             <p className="mt-1 mb-6 text-ink-2">
               {googleEnabled() ? (

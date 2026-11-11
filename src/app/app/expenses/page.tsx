@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Plus, Search } from "lucide-react";
 import { CategoryIcon } from "@/components/category-icon";
 import { MonthNav } from "@/components/month-nav";
+import { SongthaewIllo } from "@/components/songthaew-art";
 import { ThaiPhrases } from "@/components/thai-phrases";
 import { formatBaht, formatDayLabel, formatTime, toLocalInput } from "@/lib/core/format";
 import { isMonthKey, monthKeyOf } from "@/lib/core/month";
@@ -92,39 +93,35 @@ export default async function ExpensesPage({ searchParams }: PageProps<"/app/exp
         </Link>
       </nav>
 
-      <div className="paper-texture relative flex items-center justify-between gap-3 overflow-hidden rounded-xl border border-line bg-white/90 px-4 py-2.5 text-sm text-ink-2 shadow-xs">
-        <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.07]" />
-        <span className="num relative z-10 font-medium">{rows.length} รายการ</span>
-        <span className="relative z-10 flex items-center gap-2">
+      <div className="paper-texture flex items-center justify-between gap-3 rounded-xl border border-line bg-white/90 px-4 py-2.5 text-sm text-ink-2 shadow-xs">
+        <span className="num font-medium">{rows.length} รายการ</span>
+        <span className="flex items-center gap-2">
           <span>รวม</span>
           <span className="plate-sm text-base font-semibold text-ink">{formatBaht(total, true)}</span>
         </span>
       </div>
 
       {rows.length === 0 ? (
-        <div className="board paper-texture relative overflow-hidden">
+        <div className="board paper-texture overflow-hidden">
           <div className="board-head">
             <span>สมุดรายการ</span>
             <span className="meta whitespace-nowrap">{q || cat ? "ตัวกรอง" : "ว่างอยู่"}</span>
           </div>
-          <div className="relative overflow-hidden px-6 py-12 text-center">
-            <span aria-hidden className="blueprint-bay pointer-events-none absolute inset-0 z-0 opacity-75" />
-            <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.13]" />
-            <div className="relative z-10">
-              <p className="sign text-xl">{q || cat ? "ไม่พบรายการ" : "ยังไม่มีรายการ"}</p>
-              <p className="mt-2 text-ink-2">
-                {q || cat ? <ThaiPhrases text="ไม่มีรายการที่ตรงกับคำค้น|หรือหมวดนี้ในเดือนนี้" /> : "เดือนนี้ยังไม่มีรายจ่าย"}
-              </p>
-              {q || cat ? (
-                <Link href={`/app/expenses?${new URLSearchParams({ month })}`} className="btn mt-5">
-                  ล้างตัวกรอง
-                </Link>
-              ) : (
-                <Link href="/app/upload" className="btn-primary mt-5">
-                  ส่งสลิป
-                </Link>
-              )}
-            </div>
+          <div className="px-6 py-10 text-center sm:py-12">
+            <SongthaewIllo variant="ledger" className="mx-auto mb-2 h-24 w-52" />
+            <p className="sign text-xl">{q || cat ? "ไม่พบรายการ" : "ยังไม่มีรายการ"}</p>
+            <p className="mt-2 text-ink-2">
+              {q || cat ? <ThaiPhrases text="ไม่มีรายการที่ตรงกับคำค้น|หรือหมวดนี้ในเดือนนี้" /> : "เดือนนี้ยังไม่มีรายจ่าย"}
+            </p>
+            {q || cat ? (
+              <Link href={`/app/expenses?${new URLSearchParams({ month })}`} className="btn mt-5">
+                ล้างตัวกรอง
+              </Link>
+            ) : (
+              <Link href="/app/upload" className="btn-primary mt-5">
+                ส่งสลิป
+              </Link>
+            )}
           </div>
         </div>
       ) : (

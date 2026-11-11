@@ -65,13 +65,12 @@ export default async function ExpensePage({ params }: PageProps<"/app/expenses/[
         </div>
       </div>
 
-      <section className="board paper-texture relative overflow-hidden" aria-label="ข้อมูลจากสลิป">
-        <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.08]" />
-        <div className="board-head relative z-10">
+      <section className="board paper-texture overflow-hidden" aria-label="ข้อมูลจากสลิป">
+        <div className="board-head">
           <span>ข้อมูลสลิปและธนาคาร</span>
           <span className="meta whitespace-nowrap">อ้างอิง</span>
         </div>
-        <dl className="relative z-10 grid grid-cols-[auto_1fr] gap-x-5 gap-y-2.5 p-5 text-sm">
+        <dl className="grid grid-cols-[auto_1fr] gap-x-5 gap-y-2.5 p-5 text-sm">
           <dt className="text-ink-3">ธนาคารผู้รับ</dt>
           <dd>{[bank(e.payeeBank), e.payeeLast4 && `••${e.payeeLast4}`].filter(Boolean).join(" ") || "–"}</dd>
           <dt className="text-ink-3">จากบัญชี</dt>

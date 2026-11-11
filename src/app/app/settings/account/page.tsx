@@ -51,12 +51,11 @@ export default async function AccountPage({ searchParams }: PageProps<"/app/sett
         </p>
       )}
 
-      <section className="board paper-texture relative overflow-hidden" aria-labelledby="account-h">
-        <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.08]" />
-        <div className="board-head relative z-10">
+      <section className="board paper-texture overflow-hidden" aria-labelledby="account-h">
+        <div className="board-head">
           <h2 id="account-h">บัญชี</h2>
         </div>
-        <dl className="rows relative z-10 px-5">
+        <dl className="rows px-5">
           <Row label="อีเมล">
             <span className="break-all">{account.email}</span>
           </Row>
@@ -65,12 +64,11 @@ export default async function AccountPage({ searchParams }: PageProps<"/app/sett
         </dl>
       </section>
 
-      <section className="board paper-texture relative overflow-hidden" aria-labelledby="methods-h">
-        <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.08]" />
-        <div className="board-head relative z-10">
+      <section className="board paper-texture overflow-hidden" aria-labelledby="methods-h">
+        <div className="board-head">
           <h2 id="methods-h">วิธีเข้าสู่ระบบ</h2>
         </div>
-        <ul className="rows relative z-10 px-5">
+        <ul className="rows px-5">
           <li className="flex flex-wrap items-center gap-3 py-4">
             <span className="grid size-10 place-items-center rounded-xl bg-steel" aria-hidden>
               <Mail className="size-5" />
@@ -109,13 +107,12 @@ export default async function AccountPage({ searchParams }: PageProps<"/app/sett
         </ul>
       </section>
 
-      <section id="password" className="board paper-texture relative scroll-mt-24 overflow-hidden" aria-labelledby="password-h">
-        <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.08]" />
-        <div className="board-head relative z-10">
+      <section id="password" className="board paper-texture scroll-mt-24 overflow-hidden" aria-labelledby="password-h">
+        <div className="board-head">
           <h2 id="password-h">{account.hasPassword ? "เปลี่ยนรหัสผ่าน" : "ตั้งรหัสผ่าน"}</h2>
           <KeyRound className="size-4 text-on-red-2" aria-hidden />
         </div>
-        <div className="relative z-10 p-5">
+        <div className="p-5">
           {!account.hasPassword && (
             <p className="mb-4 text-sm text-ink-2">
               <ThaiPhrases text="บัญชีนี้เข้าด้วย Google อย่างเดียว| ตั้งรหัสผ่านไว้เผื่อเข้า Google ไม่ได้" />
@@ -125,13 +122,12 @@ export default async function AccountPage({ searchParams }: PageProps<"/app/sett
         </div>
       </section>
 
-      <section id="devices" className="board paper-texture relative overflow-hidden" aria-labelledby="devices-h">
-        <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.08]" />
-        <div className="board-head relative z-10">
+      <section id="devices" className="board paper-texture overflow-hidden" aria-labelledby="devices-h">
+        <div className="board-head">
           <h2 id="devices-h">อุปกรณ์ที่เข้าสู่ระบบ</h2>
           {sessions && sessions.length > 0 && <span className="meta num">{sessions.length} เครื่อง</span>}
         </div>
-        <div className="relative z-10 p-5">
+        <div className="p-5">
           {account.demo ? (
             <p className="text-sm text-ink-2">
               <ThaiPhrases text="บัญชีเดโมไม่แสดงรายการอุปกรณ์| เพราะเป็นเครื่องของคนอื่น" />
@@ -181,12 +177,11 @@ export default async function AccountPage({ searchParams }: PageProps<"/app/sett
       </section>
 
       {!account.demo && (
-        <section id="delete" className="board danger-stripe relative overflow-hidden border-red/25" aria-labelledby="delete-h">
-          <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-red opacity-[0.08]" />
-          <div className="board-head relative z-10">
+        <section id="delete" className="board danger-stripe overflow-hidden border-red/25" aria-labelledby="delete-h">
+          <div className="board-head">
             <h2 id="delete-h">ลบบัญชี</h2>
           </div>
-          <form action={deleteAccountAction} className="relative z-10 space-y-2 p-5">
+          <form action={deleteAccountAction} className="space-y-2 p-5">
             <p className="text-sm text-ink-2">
               <ThaiPhrases text="ลบบัญชีและข้อมูลทั้งหมดถาวร| ทั้งรายการ หมวด กฎ| และรูปสลิปที่ยังเก็บไว้| ย้อนกลับไม่ได้" />
             </p>

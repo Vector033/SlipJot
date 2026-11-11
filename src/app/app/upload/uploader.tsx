@@ -145,15 +145,13 @@ export function Uploader({ shared }: { shared: boolean }) {
         // Once slips are in, the drop zone shrinks to one row so the slips being read stay on a phone screen.
         className={`paper-texture relative flex items-center overflow-hidden rounded-3xl border-[3px] border-dashed text-center transition-[background-color,border-color,box-shadow] duration-150 ${items.length ? "justify-between gap-3 px-4 py-3" : "flex-col gap-3 px-6 py-12"} ${dragging ? "border-red bg-red-soft ring-4 ring-red/15" : "border-chrome-dark bg-white hover:border-red/60"}`}
       >
-        <span aria-hidden className="blueprint-bay pointer-events-none absolute inset-0 z-0 opacity-75" />
-        <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.1]" />
         {items.length === 0 && (
           <>
             {/* Optical viewfinder corner reticles */}
-            <span aria-hidden className="pointer-events-none absolute top-4 left-4 z-0 size-4 border-t-2 border-l-2 border-chrome-dark/70" />
-            <span aria-hidden className="pointer-events-none absolute top-4 right-4 z-0 size-4 border-t-2 border-r-2 border-chrome-dark/70" />
-            <span aria-hidden className="pointer-events-none absolute bottom-4 left-4 z-0 size-4 border-b-2 border-l-2 border-chrome-dark/70" />
-            <span aria-hidden className="pointer-events-none absolute right-4 bottom-4 z-0 size-4 border-r-2 border-b-2 border-chrome-dark/70" />
+            <span aria-hidden className="pointer-events-none absolute top-4 left-4 z-0 size-3.5 border-t-2 border-l-2 border-chrome-dark/55" />
+            <span aria-hidden className="pointer-events-none absolute top-4 right-4 z-0 size-3.5 border-t-2 border-r-2 border-chrome-dark/55" />
+            <span aria-hidden className="pointer-events-none absolute bottom-4 left-4 z-0 size-3.5 border-b-2 border-l-2 border-chrome-dark/55" />
+            <span aria-hidden className="pointer-events-none absolute right-4 bottom-4 z-0 size-3.5 border-r-2 border-b-2 border-chrome-dark/55" />
             <span className="relative z-10 flex size-16 items-center justify-center rounded-xl bg-red text-white shadow-[0_6px_14px_-8px_rgb(179_18_28/0.55)]">
               <ImagePlus className="size-8" aria-hidden />
             </span>

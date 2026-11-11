@@ -43,12 +43,11 @@ export default async function SettingsPage({ searchParams }: PageProps<"/app/set
         </p>
       )}
 
-      <section id="categories" className="board paper-texture relative overflow-hidden">
-        <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.08]" />
-        <div className="board-head relative z-10">
+      <section id="categories" className="board paper-texture overflow-hidden">
+        <div className="board-head">
           <h2>หมวดและงบรายเดือน</h2>
         </div>
-        <div className="relative z-10 p-5">
+        <div className="p-5">
           <p className="text-sm text-ink-2">
             <ThaiPhrases text="ตั้งงบแล้วจะเตือนที่หน้าภาพรวม|เมื่อใช้ถึง 80%| หรือเมื่อคาดว่าจะเกิน|ภายในสิ้นเดือน" />
           </p>
@@ -69,12 +68,11 @@ export default async function SettingsPage({ searchParams }: PageProps<"/app/set
         </div>
       </section>
 
-      <section className="board paper-texture relative overflow-hidden">
-        <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.08]" />
-        <div className="board-head relative z-10">
+      <section className="board paper-texture overflow-hidden">
+        <div className="board-head">
           <h2>รูปสลิปและเสียงแจ้งเตือน</h2>
         </div>
-        <div className="relative z-10 space-y-5 p-5">
+        <div className="space-y-5 p-5">
           <form action={setKeepImagesAction} className="space-y-3">
             <label className="flex items-start gap-3">
               <input
@@ -98,12 +96,11 @@ export default async function SettingsPage({ searchParams }: PageProps<"/app/set
         </div>
       </section>
 
-      <section className="board paper-texture relative overflow-hidden">
-        <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.08]" />
-        <div className="board-head relative z-10">
+      <section className="board paper-texture overflow-hidden">
+        <div className="board-head">
           <h2>ระบบอ่านและจัดหมวด</h2>
         </div>
-        <div className="relative z-10 p-5">
+        <div className="p-5">
           <dl className="mt-3 grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
             <Stat label="สลิปที่อ่านแล้ว" value={String(insights.slips)} />
             <Stat label="จัดหมวดโดยไม่ใช้ AI" value={pct(withoutLlm, categorised)} />
@@ -125,12 +122,11 @@ export default async function SettingsPage({ searchParams }: PageProps<"/app/set
         </div>
       </section>
 
-      <section id="danger" className="board paper-texture relative overflow-hidden">
-        <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.08]" />
-        <div className="board-head relative z-10">
+      <section id="danger" className="board paper-texture overflow-hidden">
+        <div className="board-head">
           <h2>ข้อมูลของคุณ</h2>
         </div>
-        <div className="relative z-10 p-5">
+        <div className="p-5">
           <div className="mt-3 flex flex-wrap gap-2">
             <a href="/api/export" className="btn">
               <Download className="size-4" aria-hidden /> ดาวน์โหลด CSV
@@ -169,10 +165,9 @@ export default async function SettingsPage({ searchParams }: PageProps<"/app/set
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="steel-speckled relative overflow-hidden rounded-xl border border-line/80 p-3 shadow-[inset_0_1px_0_rgb(255_255_255/0.8)]">
-      <span aria-hidden className="led-matrix pointer-events-none absolute inset-0 z-0 opacity-[0.09]" />
-      <dt className="relative z-10 text-ink-3">{label}</dt>
-      <dd className="font-plate num relative z-10 mt-1 text-xl font-bold">{value}</dd>
+    <div className="steel-speckled rounded-xl border border-line/80 p-3 shadow-[inset_0_1px_0_rgb(255_255_255/0.8)]">
+      <dt className="text-ink-3">{label}</dt>
+      <dd className="font-plate num mt-1 text-xl font-bold">{value}</dd>
     </div>
   );
 }

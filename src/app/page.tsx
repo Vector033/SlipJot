@@ -115,9 +115,8 @@ export default async function Home({ searchParams }: PageProps<"/">) {
                 <ThaiPhrases text="ยอด วันเวลา| (แปลง พ.ศ. ให้)| ชื่อผู้รับ ธนาคาร| เลขบัญชี 4 ตัวท้าย| และบันทึกช่วยจำ| อ่านด้วย Gemini| และถ้าระบบ AI ล่ม|จะอ่านด้วย OCR ภาษาไทย|ในเซิร์ฟเวอร์แทน" />
               </p>
             </div>
-            <div className="board paper-texture relative overflow-hidden">
-              <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.1]" />
-              <table className="relative z-10 w-full text-left">
+            <div className="board paper-texture overflow-hidden">
+              <table className="w-full text-left">
                 <caption className="sr-only">ความแม่นยำต่อธนาคาร</caption>
                 <thead className="border-b-2 border-red bg-ink text-sm text-white">
                   <tr>
@@ -155,29 +154,25 @@ export default async function Home({ searchParams }: PageProps<"/">) {
 
         <Stop name="ไม่แน่ใจ ถามก่อน" id="review">
           <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
-            <div className="board paper-texture relative order-2 overflow-hidden p-5 lg:order-1">
-              <span aria-hidden className="blueprint-bay pointer-events-none absolute inset-0 z-0 opacity-65" />
-              <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-ink opacity-[0.1]" />
-              <div className="relative z-10">
-                <p className="flex items-center gap-2 text-sm font-semibold">
-                  <MessageCircleQuestion className="size-4 text-red" aria-hidden /> รอคุณตรวจ 1 รายการ
-                </p>
-                <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  <div>
-                    <p className="label">ยอด (บาท)</p>
-                    <p className="input num">55.00</p>
-                  </div>
-                  <div>
-                    <p className="label">วันเวลา</p>
-                    <p className="input">4 พ.ย. 2569 11:12</p>
-                  </div>
+            <div className="board paper-texture order-2 overflow-hidden p-5 lg:order-1">
+              <p className="flex items-center gap-2 text-sm font-semibold">
+                <MessageCircleQuestion className="size-4 text-red" aria-hidden /> รอคุณตรวจ 1 รายการ
+              </p>
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                <div>
+                  <p className="label">ยอด (บาท)</p>
+                  <p className="input num">55.00</p>
                 </div>
-                <p className="label mt-3">ผู้รับ / ร้าน</p>
-                <p className="input border-plate-deep bg-plate-soft">ร้านข้าวมันไก่ป่าแดง</p>
-                <p className="mt-2 text-sm text-warn">
-                  <ThaiPhrases text="ไม่แน่ใจ: ชื่อผู้รับ| · ตัวอย่าง (ข้อมูลสมมติ)" />
-                </p>
+                <div>
+                  <p className="label">วันเวลา</p>
+                  <p className="input">4 พ.ย. 2569 11:12</p>
+                </div>
               </div>
+              <p className="label mt-3">ผู้รับ / ร้าน</p>
+              <p className="input border-plate-deep bg-plate-soft">ร้านข้าวมันไก่ป่าแดง</p>
+              <p className="mt-2 text-sm text-warn">
+                <ThaiPhrases text="ไม่แน่ใจ: ชื่อผู้รับ| · ตัวอย่าง (ข้อมูลสมมติ)" />
+              </p>
             </div>
             <div className="order-1 lg:order-2">
               <h2 className="sign text-3xl sm:text-4xl">
@@ -212,14 +207,13 @@ export default async function Home({ searchParams }: PageProps<"/">) {
                 { who: "นาย ณัฐพล วงศ์คำ · “คืนเงินค่าตั๋ว”", how: "จากบันทึกช่วยจำ", where: "โอนให้คน" },
                 { who: "หอพักบ้านสวนนิมมาน", how: "จากชื่อร้าน", where: "ค่าหอ" },
               ].map((r) => (
-                <li key={r.who} className="board paper-texture relative flex items-center gap-3 overflow-hidden px-4 py-3">
-                  <span aria-hidden className="led-matrix pointer-events-none absolute inset-0 z-0 opacity-[0.06]" />
-                  <span className="relative z-10 min-w-0 flex-1">
+                <li key={r.who} className="board paper-texture flex items-center gap-3 px-4 py-3">
+                  <span className="min-w-0 flex-1">
                     <span className="block truncate font-medium">{r.who}</span>
                     <span className="text-sm text-ink-3">{r.how}</span>
                   </span>
-                  <ArrowRight className="relative z-10 size-4 shrink-0 text-ink-3" aria-hidden />
-                  <span className="relative z-10 shrink-0 rounded-full bg-ink px-3 py-1 text-sm font-semibold whitespace-nowrap text-white">
+                  <ArrowRight className="size-4 shrink-0 text-ink-3" aria-hidden />
+                  <span className="shrink-0 rounded-full bg-ink px-3 py-1 text-sm font-semibold whitespace-nowrap text-white">
                     {r.where}
                   </span>
                 </li>
@@ -234,8 +228,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
 
         <Stop name="ข้อมูลของคุณ" id="privacy">
           <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-ink text-white shadow-[0_24px_48px_-24px_rgb(0_0_0/0.6)]">
-            <span aria-hidden className="led-matrix-light pointer-events-none absolute inset-0 z-0 opacity-[0.1]" />
-            <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-on-red-2 opacity-[0.16]" />
+            <span aria-hidden className="led-matrix-light pointer-events-none absolute inset-0 z-0 opacity-[0.045]" />
             <div className="relative z-10 px-6 pt-7 pb-5 sm:px-10 sm:pt-10">
               <h2 className="sign text-3xl sm:text-4xl">
                 <ThaiPhrases text="ข้อมูลของคุณ| เป็นของคุณ" />
@@ -310,7 +303,6 @@ export default async function Home({ searchParams }: PageProps<"/">) {
           density="subtle"
           className="absolute inset-x-0 bottom-0 z-0 h-32 w-full sm:h-40"
         />
-        <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-on-red-2 opacity-[0.16]" />
         <div className="trim relative z-10" />
         <div className="relative z-10 mx-auto flex max-w-6xl flex-col items-start gap-6 px-4 py-14 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
           <h2 className="sign text-3xl sm:text-4xl">

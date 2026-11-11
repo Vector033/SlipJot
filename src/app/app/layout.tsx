@@ -14,8 +14,6 @@ export default async function AppLayout({ children }: LayoutProps<"/app">) {
   return (
     <div className="relative flex flex-1 flex-col overflow-x-clip">
       <header className="on-red songthaew-enamel sticky top-0 z-10 overflow-hidden text-white">
-        <span aria-hidden className="led-matrix-light pointer-events-none absolute inset-0 z-0 opacity-[0.1]" />
-        <span aria-hidden className="halftone-corners pointer-events-none absolute inset-0 z-0 text-on-red-2 opacity-[0.18]" />
         <div className="relative z-10 mx-auto flex h-14 max-w-5xl items-center gap-4 px-4 sm:h-16 sm:px-6">
           <Link href="/app" aria-label="SlipJot ภาพรวม">
             <Logo tone="white" />
@@ -31,7 +29,7 @@ export default async function AppLayout({ children }: LayoutProps<"/app">) {
           <ThaiPhrases text="บัญชีเดโม:| ข้อมูลทั้งหมดเป็นข้อมูลสมมติ| และคนอื่นก็เห็นสิ่งที่คุณเพิ่ม" />
         </aside>
       )}
-      <SongthaewContours variant="cabin" className="fixed inset-x-0 bottom-0 z-0 h-44 w-full opacity-90 sm:h-52" />
+      <SongthaewContours variant="cabin" className="fixed inset-x-0 bottom-0 z-0 h-44 w-full opacity-80 sm:h-52" />
       <main className="relative z-[1] mx-auto w-full max-w-5xl flex-1 px-4 pt-6 pb-32 sm:px-6 sm:pb-14">{children}</main>
       <MobileNav reviewCount={pending} />
     </div>
