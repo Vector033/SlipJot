@@ -172,7 +172,7 @@ export function Uploader({ shared }: { shared: boolean }) {
           <p className="relative z-10 mt-1 flex items-center justify-center gap-1.5 text-xs text-ink-2">
             <ShieldCheck className="size-4 shrink-0 text-ok" aria-hidden />
             <span>
-              <ThaiPhrases text="AI อ่านใน 2 วิ| · ใบไหนไม่แน่ใจถามคุณก่อนบันทึกเสมอ" />
+              <ThaiPhrases text="อ่านจากรูปเท่านั้น| ไม่เชื่อมบัญชีธนาคาร" />
             </span>
           </p>
         )}

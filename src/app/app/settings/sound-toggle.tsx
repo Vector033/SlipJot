@@ -31,7 +31,7 @@ export function SoundToggle() {
         type="checkbox"
         checked={enabled}
         onChange={(e) => toggle(e.target.checked)}
-        className="mt-1 size-5 accent-red"
+        className="mt-1 size-5 shrink-0 accent-red"
       />
       <span className="flex-1">
         <span className="flex items-center gap-2 font-medium">

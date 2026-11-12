@@ -130,7 +130,7 @@ export function ChangePasswordForm({ hasPassword, email, disabled }: { hasPasswo
           )}
         </div>
         <label className="flex items-start gap-2.5 text-sm text-ink-2">
-          <input type="checkbox" name="signOutOthers" defaultChecked className="mt-0.5 size-5 accent-red" />
+          <input type="checkbox" name="signOutOthers" defaultChecked className="mt-0.5 size-5 shrink-0 accent-red" />
           ออกจากระบบในเครื่องอื่นด้วย
         </label>
         <button className="btn-primary">

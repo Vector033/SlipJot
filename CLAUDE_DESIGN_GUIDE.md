@@ -235,7 +235,89 @@ Synthesized directly from 6 masterclasses on high-converting UI/UX, typography, 
 
 ---
 
-## 8. Token-Efficient Claude Prompts for SlipJot (Copy-Paste Ready)
+## 8. Claude Code Design Skills, 21st.dev & The $10,000 Website Workflow (Metics Media)
+
+> **Source:** [Build a $10,000 website with Claude Code (Ultimate Guide) — Metics Media](https://www.youtube.com/watch?v=VMvZuhcDdnw)  
+> **Key Insight:** Move beyond vague requests like "design a modern expense tracker". Instead, equip Claude with Anthropic's **frontend-design** and **ui-ux-pro-max** skills, draw copy-pasteable design-engineer components from **21st.dev** (interactive bento grids, tactile spring sheets, split-flap tickers, dynamic bottom docks), and audit against the 8-pillar checklist to transform SlipJot into an executive-grade Chiang Mai Songthaew vernacular fintech tool.
+
+### 8.1 The Claude Code Design Skills Stack
+
+| Tool / Skill | Repository / URL | Purpose & How Claude Uses It |
+|---|---|---|
+| **Frontend Design Skill** *(by Anthropic)* | [github.com/anthropics/skills/.../frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design) | Anthropic's official skill to avoid AI slop. Teaches Claude to craft intentional local signage visual rhythm, distinctive enamel metal textures, mechanical micro-interactions, and reject generic SaaS templates. |
+| **UI/UX Pro Max Skill** *(by NextLevelBuilder)* | [github.com/nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | Principal Product Designer heuristics: strict mathematical radii (`r_in = r_out - p`), 60-30-10 color balance, WCAG AA contrast (>=4.5:1), 8pt spacing rhythm, micro-haptic feedback (`active:scale-[0.98]`), and mobile touch ergonomics (>=44-48px). |
+| **21st.dev Component Library** | [21st.dev](https://21st.dev) | The "npm for design engineers" (shadcn/ui + Tailwind + Framer Motion). Supplies interactive bento expense grids, tactile upload dropzones, mechanical split-flap tickers, and dynamic mobile bottom docks. |
+| **Curated Design References** | Dribbble, Awwwards, Pinterest | Real design anchors: Pentagram (authoritative signage typography), Stripe (clear transaction hierarchy & interactive demo), Framer (mechanical tactile spring motion), Linear (hairline precision). |
+| **The 8-Pillar $10,000 Checklist** | [Google Drive PDF Download](https://drive.google.com/file/d/1CCRCvSbJ1tNXmd2YDnUNr1XkTAguYG7v/view?usp=drive_link) | The definitive audit rubric ensuring SlipJot delivers a \$10k executive-grade slip management experience. |
+
+---
+
+### 8.2 The 8-Pillar $10,000 Website Framework (Applied to SlipJot)
+
+1. **Pillar 1: Distinctive Brand Identity & Aesthetic Tension:**
+   - Chiang Mai Red Songthaew Identity: Body Red enamel (`#b3121c`), License Plate Yellow focal pop (`#f5c400`), Steel Cabin surface (`#eef0f2`), and White Route Panels (`#ffffff`). Never generic purple/blue gradients.
+2. **Pillar 2: Intentional Hierarchy & Grid:**
+   - 8pt spacing rhythm: 16px intra-card gap, >=32px inter-section gap. Tabular numbers for amounts (`tabular-nums font-plate`). Thai headings `1.2–1.3` line-height with generous top/bottom clearance (zero vowel mark clipping), body `1.6`.
+3. **Pillar 3: Micro-Interactions & Tactile Feedback:**
+   - Mechanical split-flap flip animation on the route board ticker (`route-board-demo.tsx`).
+   - Active button compression `active:scale-[0.98]` and golden laser beam sweep on slip upload (`animate-laser`).
+4. **Pillar 4: Rich Visual Texture Without AI Slop (Hero vs Cabin Rule):**
+   - Landing Hero: Rich `songthaew-enamel` red gradient + subtle `songthaew-shader.tsx`.
+   - Cabin Workspace (`/app`, `/app/charts`, `/app/upload`): Calm `.steel-speckled` (`#eef0f2`) surface + clean white route panels (`#ffffff`). Strictly NO animated shaders behind Recharts or OCR preview zones.
+5. **Pillar 5: Trust Architecture & Frictionless Proof:**
+   - Concrete value proposition: *"จดค่าใช้จ่ายจากสลิปโอนเงิน อัตโนมัติใน 2 วินาที — AI อ่านสลิปแม่นยำ ไม่ต้องพิมพ์เอง"*.
+   - Live interactive route-board demo + slip laser scan demonstration right in the hero viewport.
+6. **Pillar 6: Conversion & Frictionless Action:**
+   - Primary CTA with embedded Baht total: `"บันทึก ฿120 · ค่าอาหาร"`. Honest safety net microcopy: *"AI อ่านใน 2 วิ · ใบไหนไม่แน่ใจถามคุณก่อนบันทึกเสมอ"*.
+7. **Pillar 7: Mobile-First Thumb Ergonomics:**
+   - Mobile PWA ergonomics: Sticky bottom confirmation bar during slip review; all route category chips and buttons >= 48x48px for one-handed operation. Zero scrolljacking.
+8. **Pillar 8: Disciplined 4-Pass Polish Workflow:**
+   - **Pass 1 (Structure):** Slip OCR data models, Supabase auth, Drizzle schema.
+   - **Pass 2 (Visual Polish):** Songthaew route colors, license plate font, embossed metal borders.
+   - **Pass 3 (Motion & 21st.dev Components):** 21st.dev upload drawer, split-flap ticker, laser beam animation.
+   - **Pass 4 (Quality & Build Audit):** Bank slip thumbnail contrast protection, WCAG AA compliance, `npm run build` & unit tests.
+
+---
+
+### 8.3 How to Install & Use These Skills in Claude Code (วิธีติดตั้งและเรียกใช้)
+
+มี 3 วิธีหลักในการนำทักษะ (Design Skills) ไปใช้กับ Claude Code:
+
+1. **วิธีที่ 1: ติดตั้งเป็น Skill ในโปรเจกต์ (`.claude/skills/`):**
+   - สร้างโฟลเดอร์ `.claude/skills/` ใน root ของโฟลเดอร์โปรเจกต์
+   - โคลนหรือดาวน์โหลดไฟล์ `SKILL.md` จาก GitHub:
+     - **Frontend Design:** นำไฟล์จาก [anthropics/skills/tree/main/skills/frontend-design](https://github.com/anthropics/skills/tree/main/skills/frontend-design) ไปวางที่ `.claude/skills/frontend-design/SKILL.md`
+     - **UI/UX Pro Max:** นำไฟล์จาก [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) ไปวางที่ `.claude/skills/ui-ux-pro-max/SKILL.md`
+   - เมื่อเปิดรัน Claude Code ตัวระบบจะตรวจจับและโหลด Skill เหล่านี้เข้ามาใน Context ทันที (หรือเรียกใช้ผ่าน `/frontend-design` และ `/ui-ux-pro-max`)
+
+2. **วิธีที่ 2: ตั้งค่าให้อ่านอัตโนมัติผ่าน `CLAUDE.md` (Zero-Config Auto-Load):**
+   - Claude Code จะอ่านไฟล์ `CLAUDE.md` ใน root ของโปรเจกต์เสมอเมื่อเริ่มทำงาน
+   - เพิ่มคำสั่งลงใน `CLAUDE.md` ของโปรเจกต์:
+     ```markdown
+     ## Design Standards
+     - Before writing or modifying any UI/UX or styles, strictly follow `CLAUDE_DESIGN_GUIDE.md`.
+     - Adopt the Anthropic Frontend Design Skill rules (Chiang Mai vernacular, anti-AI-slop) and UI/UX Pro Max heuristics (60-30-10, r_in = r_out - p, tactile springs).
+     - Source component implementation patterns from 21st.dev (shadcn + Tailwind + Framer Motion).
+     ```
+
+3. **วิธีที่ 3: สั่งตรงผ่าน Prompt (Prompt Injection):**
+   - หากไม่ได้ติดตั้งโฟลเดอร์ skill สามารถใช้ **Prompt 6** ในคู่มือนี้ ซึ่งมีบล็อก `Step 0 — Load Skills & Reference Repositories` กำชับบทบาท กฎเกณฑ์ 20 ข้อ และพฤติกรรมของทั้ง 2 skills ให้ Claude ปฏิบัติตามทันที
+
+---
+
+### 8.4 The "Make It Feel Alive" Triad: Motion.dev, Anime.js & Shadcn Charts (Applied to SlipJot)
+
+> *"Claude can build a website fast. Making it feel alive is harder. That part lives in the details: how things move, how charts look. Motion.dev handles the transitions. Anime.js handles the custom motion. Shadcn charts handle the data. Like giving Claude a better toolbox. Same builder, better finish. Keep all three open next build."*
+
+| Tool & Resource | Core Role | Exact Application to SlipJot |
+|---|---|---|
+| **[Motion.dev](https://motion.dev)** *(formerly Framer Motion)* | **State & Layout Transitions** | • Upload dropzone state transitions (idle -> scanning -> preview -> review).<br>• Monthly overview tab transitions in `/app/charts` with smooth axis crossfading.<br>• Mobile action confirmation drawer transitions during receipt verification. |
+| **[Anime.js](https://animejs.com)** | **Custom Motion & Micro-Timelines** | • Mechanical split-flap ticker animation (`route-board-demo.tsx`) with 3D flap rotation physics.<br>• Golden laser scan sweep animation (`animate-laser`) over uploaded bank slip images.<br>• Rolling odometer digit reel timeline in `rolling-number.tsx` with physical deceleration curve. |
+| **[Shadcn Charts](https://ui.shadcn.com/docs/components/chart)** | **Accessible Data Visualization** | • Upgraded financial expense breakdown in `charts.tsx` (Area Chart for daily spending trends, Donut Chart for category breakdown).<br>• Custom category palettes mapped directly to Chiang Mai Songthaew route color tokens (White, Yellow, Green, Blue, Orange, Red routes).<br>• Accessible tooltips formatted in Thai Baht (`฿...`) with `font-plate tabular-nums`. |
+
+---
+
+## 9. Token-Efficient Claude Prompts for SlipJot (Copy-Paste Ready)
 
 ### Prompt 1: Landing Page & Route-Board Motion Design
 ```text
@@ -337,4 +419,40 @@ Apply Maximum Applicable Techniques & Best-Fit 2026 Trends (Zero AI Slop):
    - Pass the Squint Test on `/` and `/app/upload`.
 4. Verification:
    - Run `npm run build` and existing unit tests (`npm test`); do not break `@slipjot/slip-reader`, OCR pipeline, Drizzle queries, or Supabase auth.
+```
+
+### Prompt 6: Complete $10,000 Website Polish with Claude Skills & 21st.dev (SlipJot)
+```text
+Task: Elevate SlipJot (`src/app/page.tsx`, `src/app/globals.css`, and `src/app/app/**`) to an executive $10,000 custom web application standard, following the Metics Media ultimate workflow.
+
+Step 0 — Load Skills & Reference Repositories:
+You MUST adopt the specialized persona, heuristics, and execution standards from:
+1. Anthropic Frontend Design Skill (github.com/anthropics/skills/tree/main/skills/frontend-design): Focus on high aesthetic intentionality, bespoke local Chiang Mai vernacular typography, avoiding generic fintech templates, and crafting rich mechanical tactile feedback.
+2. UI/UX Pro Max Skill (github.com/nextlevelbuilder/ui-ux-pro-max-skill): Enforce strict mathematical radii (r_in = r_out - p), 60-30-10 color balance, WCAG AA contrast (>= 4.5:1), 8pt spacing rhythm, and tactile micro-interactions (active:scale-[0.98]).
+3. 21st.dev Component Patterns (21st.dev): Adapt design-engineer primitives (interactive bento expense grid, tactile dropzone, split-flap tickers, dynamic bottom navigation dock) using Tailwind CSS and Framer Motion.
+4. Design Reference Anchors: Pentagram (bold signage typography & clear iconography), Stripe (transactional clarity & interactive demo), Framer (mechanical tactile spring motion), Linear (hairline precision).
+
+Execute the 4-Pass $10,000 Polish Method:
+
+Pass 1: Information Architecture & Brand Vernacular (Anti-AI-Slop)
+- Replace generic placeholder headings with high-conversion Thai proposition: "จดค่าใช้จ่ายจากสลิปโอนเงิน อัตโนมัติใน 2 วินาที — AI อ่านสลิปแม่นยำ ไม่ต้องพิมพ์เอง".
+- Eliminate all filler badges and generic centered cards. Present an interactive route-board demo with split-flap tickers right in the hero viewport.
+- Maintain clear visual distinction between Hero landing, OCR upload workflow (`upload/page.tsx`), and the financial overview dashboard (`charts.tsx`).
+
+Pass 2: Visual Style, Hierarchy & Non-Flat Depth (Hero vs Cabin Rule)
+- Enforce the Chiang Mai Songthaew system: Body Red (`--color-red: #b3121c`), License Plate Yellow (`--color-plate: #f5c400`), Steel Cabin surface (`--color-steel: #eef0f2`), and White Route Panels (`--color-panel: #ffffff`).
+- Hero vs Cabin Rule: Rich `songthaew-enamel` red gradient and subtle shader on the landing Hero only. Inside `/app` and `/upload`, keep clean white route panels over calm steel cabin surface. Strictly NO animated shaders behind Recharts or OCR preview zones.
+- Contrast Protection over Bank Slips: Ensure floating close icons or category badges over uploaded slip thumbnails sit inside a frosted dark pill with >= 4.5:1 contrast.
+- Typography: Kanit display with IBM Plex Sans Thai / Anuphan body; line-heights 1.2–1.3 headings with generous padding to prevent Thai vowel mark clipping. Inner radius = outer radius - padding.
+
+Pass 3: Micro-Interactions, Motion & 21st.dev Primitives
+- 21st.dev Split-Flap Ticker: Implement a mechanical rotating flap animation for the route-board demo (`route-board-demo.tsx`).
+- Laser Scan Feedback: Golden laser beam sweep animation (`animate-laser`) and plate-yellow category chips popping in on slip upload.
+- Rolling Number Odometer: Smooth roll-up animation for monthly totals in `charts.tsx` with `tabular-nums font-plate`.
+- Button press physics: Apply `active:scale-[0.98]` on all interactive buttons.
+
+Pass 4: Mobile Ergonomics & Production QA
+- Mobile PWA thumb ergonomics: Sticky bottom confirmation bar during slip review; all route category chips and buttons >= 48x48px for one-handed operation.
+- Safety net microcopy: Transparent guarantee right beneath the primary CTA ("AI อ่านใน 2 วิ · ใบไหนไม่แน่ใจถามคุณก่อนบันทึกเสมอ").
+- Production safety: Strictly preserve `@slipjot/slip-reader` OCR parsing, Drizzle queries, and Supabase auth logic. Run `npm run build` and `npm test` with zero errors.
 ```

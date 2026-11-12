@@ -79,7 +79,7 @@ export default async function SettingsPage({ searchParams }: PageProps<"/app/set
                 type="checkbox"
                 name="keep"
                 defaultChecked={settings.keepImages}
-                className="mt-1 size-5 accent-red"
+                className="mt-1 size-5 shrink-0 accent-red"
               />
               <span>
                 <span className="font-medium">เก็บรูปสลิปไว้</span>

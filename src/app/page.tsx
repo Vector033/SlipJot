@@ -81,7 +81,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
             <p className="mt-4 flex items-start gap-2 text-sm text-on-red-2">
               <ShieldCheck className="mt-0.5 size-4 shrink-0 text-white" aria-hidden />
               <span>
-                <ThaiPhrases text="AI อ่านใน 2 วิ| · ใบไหนไม่แน่ใจถามคุณก่อนบันทึกเสมอ" />
+                <ThaiPhrases text="อ่านจากรูปเท่านั้น| ไม่เชื่อมบัญชีธนาคาร" />
                 {hasDemo && (
                   <>
                     {" "}

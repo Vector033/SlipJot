@@ -7,7 +7,7 @@ import { ExpenseForm } from "@/components/expense-form";
 import { SongthaewIllo } from "@/components/songthaew-art";
 import { ThaiPhrases } from "@/components/thai-phrases";
 import { formatBaht, toLocalInput } from "@/lib/core/format";
-import { getCategories, getReviewQueue } from "@/lib/data";
+import { getCategories, getReviewQueue, getSettings } from "@/lib/data";
 import { deleteExpenseAction, saveExpenseAction } from "../actions";
 
 export const metadata: Metadata = { title: "รอตรวจ" };
@@ -22,7 +22,7 @@ function lowFieldsFrom(issues: string[]) {
 }
 
 export default async function ReviewPage() {
-  const [queue, cats] = await Promise.all([getReviewQueue(), getCategories()]);
+  const [queue, cats, settings] = await Promise.all([getReviewQueue(), getCategories(), getSettings()]);
   const options = cats.map((c) => ({ id: c.id, name: c.name, icon: c.icon, color: c.color, slug: c.slug }));
 
   return (
@@ -32,7 +32,7 @@ export default async function ReviewPage() {
         <p className="mt-1 text-ink-2">
           {queue.length ? (
             <ThaiPhrases
-              text={`${queue.length} รายการที่ระบบไม่แน่ใจ| ช่องสีเหลืองคือที่ควรดู| ตรวจแล้วกดยืนยัน| รูปสลิปจะถูกลบทันที`}
+              text={`${queue.length} รายการที่ระบบไม่แน่ใจ| ช่องสีเหลืองคือที่ควรดู| ตรวจแล้วกดยืนยัน| ${settings.keepImages ? "รูปสลิปจะเก็บไว้ตามที่คุณตั้งค่า" : "รูปสลิปจะถูกลบทันที"}`}
             />
           ) : (
             "ไม่มีรายการค้างตรวจ"
