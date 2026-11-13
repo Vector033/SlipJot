@@ -15,6 +15,8 @@ the month at a glance on a phone.
 | Landing | Dashboard | Expenses |
 |---|---|---|
 | ![Landing](docs/screenshots/mobile-landing.png) | ![Dashboard](docs/screenshots/mobile-dashboard.png) | ![Expenses](docs/screenshots/mobile-expenses.png) |
+| **Reading slips** | **Unsure → review** | **Saved and sorted** |
+| ![Two slips being read](docs/screenshots/mobile-flow-reading.png) | ![An unsure read waiting in the review queue](docs/screenshots/mobile-flow-review.png) | ![Read results with amounts and categories](docs/screenshots/mobile-flow-saved.png) |
 
 ## What it does
 
