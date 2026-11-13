@@ -12,9 +12,10 @@ const out = process.argv[3] ?? fileURLToPath(new URL("../docs/screenshots/", imp
 await mkdir(out, { recursive: true });
 
 const browser = await chromium.launch();
+// Desktop first: the mobile flow at the end uploads slips that would otherwise show up in the desktop shots.
 for (const [kind, opts] of [
-  ["mobile", { ...devices["Pixel 7"] }],
   ["desktop", { viewport: { width: 1440, height: 900 } }],
+  ["mobile", { ...devices["Pixel 7"] }],
 ] as const) {
   const ctx = await browser.newContext({ ...opts, locale: "th-TH", timezoneId: "Asia/Bangkok" });
   const page = await ctx.newPage();
