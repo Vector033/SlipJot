@@ -36,7 +36,7 @@ export function DesktopNav({ reviewCount }: { reviewCount: number }) {
         const active = isActive(pathname, it.href);
         if (it.primary) {
           return (
-            <Link key={it.href} href={it.href} aria-current={active ? "page" : undefined} className="btn-plate ml-2 min-h-10 px-4 py-2 text-sm">
+            <Link key={it.href} href={it.href} aria-current={active ? "page" : undefined} className="btn-plate ml-2 min-h-11 px-4 py-2 text-sm">
               <it.icon className="size-4" aria-hidden /> {it.label}
             </Link>
           );
@@ -46,7 +46,7 @@ export function DesktopNav({ reviewCount }: { reviewCount: number }) {
             key={it.href}
             href={it.href}
             aria-current={active ? "page" : undefined}
-            className={`relative inline-flex min-h-10 items-center gap-2 rounded-lg px-3 text-sm font-semibold whitespace-nowrap transition-colors ${active ? "bg-red-deep text-white" : "text-on-red-2 hover:bg-red-deep/60 hover:text-white"}`}
+            className={`relative inline-flex min-h-11 items-center gap-2 rounded-lg px-3 text-sm font-semibold whitespace-nowrap transition-colors ${active ? "bg-red-deep text-white" : "text-on-red-2 hover:bg-red-deep/60 hover:text-white"}`}
           >
             {it.label}
             {it.href === "/app/review" && reviewCount > 0 && <Count n={reviewCount} onRed />}
@@ -72,7 +72,7 @@ export function MobileNav({ reviewCount }: { reviewCount: number }) {
               <Link
                 href={it.href}
                 aria-current={active ? "page" : undefined}
-                className={`relative flex min-h-16 flex-col items-center justify-center gap-1 text-[0.72rem] ${active ? "font-semibold text-red" : "text-ink-3"}`}
+                className={`relative flex min-h-16 flex-col items-center justify-center gap-1 text-xs ${active ? "font-semibold text-red" : "text-ink-3"}`}
               >
                 {it.primary ? (
                   <span className="-mt-6 flex size-14 items-center justify-center rounded-2xl border-2 border-ink bg-plate text-ink shadow-[0_6px_14px_-8px_rgb(27_23_21/0.5)]">

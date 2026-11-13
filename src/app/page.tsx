@@ -269,7 +269,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
               ].map(({ t, d, mark }) => (
                 <div
                   key={t}
-                  className="trim-top grid gap-x-8 gap-y-1 px-6 pt-6 pb-5 sm:grid-cols-[16rem_1fr_auto] sm:items-center sm:px-10"
+                  className="trim-top grid gap-x-8 gap-y-1 px-6 pt-6 pb-5 sm:grid-cols-[11rem_1fr_auto] sm:items-center sm:px-10 lg:grid-cols-[16rem_1fr_auto]"
                 >
                   <dt className="sign text-xl text-white">
                     {t.split("|").map((w, i) => (

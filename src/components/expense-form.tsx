@@ -154,7 +154,7 @@ export function ExpenseForm({
       {categories.length > 0 && (
         <div className="space-y-2 pt-2">
           <p className="text-xs font-medium text-ink-3">เลือกสายหมวดด่วน (แตะครั้งเดียว)</p>
-          <div className="flex flex-wrap gap-1.5" role="group" aria-label="เลือกสายหมวดด่วน">
+          <div className="flex flex-wrap gap-2" role="group" aria-label="เลือกสายหมวดด่วน">
             {categories.map((c) => {
               const selected = categoryId === c.id;
               return (
@@ -199,14 +199,14 @@ export function ExpenseForm({
             : "pt-2"
         }`}
       >
-        <button disabled={pending} className="btn-primary flex-1 sm:flex-initial">
+        <button disabled={pending} className="btn-primary min-w-0 flex-1 sm:flex-initial">
           {pending ? (
             "กำลังบันทึก…"
           ) : (
             <>
-              <span>{submitLabel}</span>
+              <span className="shrink-0 whitespace-nowrap">{submitLabel}</span>
               {ctaBaht && <span className="font-plate num">฿{ctaBaht}</span>}
-              {selectedCategory && <span className="truncate">· {selectedCategory.name}</span>}
+              {selectedCategory && <span className="min-w-0 truncate">· {selectedCategory.name}</span>}
             </>
           )}
         </button>

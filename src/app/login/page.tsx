@@ -20,7 +20,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
           className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-black/10 via-transparent to-black/30"
         />
         <div className="relative z-10 mx-auto w-full max-w-md px-5 pt-5 pb-12 lg:mx-0 lg:max-w-none lg:px-12 lg:pt-10 lg:pb-24">
-          <Link href="/" aria-label="SlipJot หน้าแรก" className="inline-flex">
+          <Link href="/" aria-label="SlipJot หน้าแรก" className="inline-flex min-h-11 items-center">
             <Logo tone="white" />
           </Link>
           <p className="sign mt-8 text-[2rem] sm:text-[2.6rem] lg:mt-24 lg:text-[3.2rem]">

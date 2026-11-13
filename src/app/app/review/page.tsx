@@ -97,7 +97,7 @@ export default async function ReviewPage() {
                     ))}
                   </ul>
                 )}
-                <p className="text-sm text-ink-3">
+                <p className="num text-sm text-ink-3">
                   <span className="inline-block">
                     {e.readSource === "gemini"
                       ? "อ่านด้วย Gemini"

@@ -78,7 +78,7 @@ export function CategoryDonut({ data }: { data: DonutDatum[] }) {
               innerRadius="60%"
               outerRadius="100%"
               paddingAngle={1.5}
-              stroke="#ffffff"
+              stroke="var(--color-panel)"
               strokeWidth={2}
               animationDuration={700}
               animationEasing="ease-out"
@@ -105,12 +105,12 @@ export function DailyBars({ data, today }: { data: { day: number; total: number 
     <div className="h-36 w-full" role="img" aria-label={dailySummary(data)}>
       <ResponsiveContainer>
         <BarChart accessibilityLayer={false} data={data} margin={{ top: 4, right: 4, bottom: 0, left: 4 }}>
-          <XAxis dataKey="day" tickLine={false} axisLine={false} interval={4} tick={{ fontSize: 11, fill: "#6e6762" }} />
+          <XAxis dataKey="day" tickLine={false} axisLine={false} interval={4} tick={{ fontSize: 12, fill: "var(--color-ink-3)" }} />
           <YAxis hide />
-          <Tooltip content={<DayTip today={today} />} cursor={{ fill: "#eef0f2" }} />
+          <Tooltip content={<DayTip today={today} />} cursor={{ fill: "var(--color-steel)" }} />
           <Bar dataKey="total" radius={[4, 4, 0, 0]} animationDuration={600} animationEasing="ease-out">
             {data.map((d) => (
-              <Cell key={d.day} fill={today !== null && d.day > today ? "#dfe3e7" : d.day === today ? "#1b1715" : "#b3121c"} />
+              <Cell key={d.day} fill={today !== null && d.day > today ? "var(--color-steel-2)" : d.day === today ? "var(--color-ink)" : "var(--color-red)"} />
             ))}
           </Bar>
         </BarChart>

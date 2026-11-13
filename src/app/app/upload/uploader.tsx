@@ -241,18 +241,9 @@ export function Uploader({ shared }: { shared: boolean }) {
                     {/* #12 Paper Texture over the slip preview (baseFrequency=0.85, opacity 3.5%) */}
                     <span aria-hidden className="paper-overlay pointer-events-none absolute inset-0 z-10" />
                     {it.state === "reading" && (
-                      <>
-                        <span aria-hidden className="animate-laser pointer-events-none absolute inset-0 z-10 motion-reduce:hidden">
-                          <span className="block h-[3px] w-full rounded-full bg-plate shadow-[0_0_6px_1px_rgb(245_196_0/0.95),0_0_18px_4px_rgb(245_196_0/0.45)]" />
-                          <span className="block h-5 w-full bg-gradient-to-b from-plate/30 to-transparent" />
-                        </span>
-                        <span
-                          aria-hidden
-                          className="pointer-events-none absolute right-1.5 bottom-1.5 z-20 inline-flex items-center rounded-full bg-ink/90 px-2 py-0.5 text-[0.65rem] font-semibold text-white ring-1 ring-white/25 backdrop-blur-xs"
-                        >
-                          สแกน…
-                        </span>
-                      </>
+                      <span aria-hidden className="animate-laser pointer-events-none absolute inset-0 z-10 motion-reduce:hidden">
+                        <span className="block h-2 w-full bg-plate/80" />
+                      </span>
                     )}
                     {it.state !== "reading" && (
                       <button
@@ -323,7 +314,7 @@ function Row({ item, onRetry }: { item: Item; onRetry: () => void }) {
         <p className="flex min-w-0 flex-1 items-start gap-2 text-red-deep">
           <CircleAlert className="mt-0.5 size-4 shrink-0" aria-hidden /> {item.error}
         </p>
-        <button type="button" onClick={onRetry} className="btn min-h-9 px-3">
+        <button type="button" onClick={onRetry} className="btn px-3">
           <RotateCcw className="size-4" aria-hidden /> ลองอีกครั้ง
         </button>
       </div>
@@ -356,7 +347,7 @@ function Row({ item, onRetry }: { item: Item; onRetry: () => void }) {
         {r.status === "review" ? (
           <Link
             href="/app/review"
-            className="animate-pop-chip ml-auto inline-flex min-h-6 items-center gap-1 rounded-full bg-plate-soft px-2 text-xs font-semibold text-warn underline"
+            className="animate-pop-chip relative ml-auto inline-flex min-h-6 items-center gap-1 rounded-full bg-plate-soft px-2 text-xs font-semibold text-warn underline after:absolute after:inset-x-0 after:-inset-y-2.5"
             style={{ animationDelay: "100ms" }}
           >
             <CircleAlert className="size-3.5" aria-hidden /> รอตรวจ

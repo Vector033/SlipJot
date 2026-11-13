@@ -19,7 +19,7 @@ export function LoginForm({ initialMode = "signin" }: { initialMode?: "signin" |
             type="button"
             aria-pressed={mode === m}
             onClick={() => setMode(m)}
-            className={`min-h-10 rounded-lg font-semibold transition-colors ${mode === m ? "bg-white text-ink shadow-sm" : "text-ink-2 hover:text-ink"}`}
+            className={`min-h-11 rounded-lg font-semibold transition-colors ${mode === m ? "bg-white text-ink shadow-sm" : "text-ink-2 hover:text-ink"}`}
           >
             {m === "signin" ? "เข้าสู่ระบบ" : "สมัครใช้งาน"}
           </button>

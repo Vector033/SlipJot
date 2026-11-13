@@ -25,7 +25,7 @@ export default async function ExpensePage({ params }: PageProps<"/app/expenses/[
 
   return (
     <div className="mx-auto max-w-xl space-y-8">
-      <Link href={back} className="inline-flex min-h-10 items-center gap-1 text-sm font-medium text-ink-2 hover:text-ink">
+      <Link href={back} className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-ink-2 hover:text-ink">
         <ChevronLeft className="size-4" aria-hidden /> กลับไปที่รายการ
       </Link>
       <h1 className="text-2xl font-bold">แก้ไขรายการ</h1>
@@ -78,7 +78,7 @@ export default async function ExpensePage({ params }: PageProps<"/app/expenses/[
           <dt className="text-ink-3">เลขอ้างอิง</dt>
           <dd className="num break-all">{e.reference ?? "–"}</dd>
           <dt className="text-ink-3">อ่านโดย</dt>
-          <dd>
+          <dd className="num">
             {e.readSource === "gemini" ? "Gemini" : e.readSource === "ocr" ? "OCR" : e.readSource === "local-llm" ? "LLM ในเครื่อง" : "เพิ่มเอง"}
             {e.confidence !== null && ` · มั่นใจ ${Math.round(e.confidence * 100)}%`}
           </dd>

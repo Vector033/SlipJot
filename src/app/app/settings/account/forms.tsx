@@ -55,7 +55,7 @@ export function GoogleUnlinkButton({ blockedReason }: { blockedReason?: string }
           <summary className="btn-danger cursor-pointer list-none [&::-webkit-details-marker]:hidden">ยกเลิกการเชื่อม</summary>
           <div className="mt-2 flex flex-wrap items-center gap-2 rounded-xl bg-red-soft p-2.5 text-sm text-red-deep">
             <p className="min-w-0 flex-1 basis-48">จากนี้ต้องเข้าสู่ระบบด้วยอีเมลและรหัสผ่าน</p>
-            <button disabled={pending} className="btn-primary min-h-10 px-4 text-sm">
+            <button disabled={pending} className="btn-primary px-4 text-sm">
               {pending ? "กำลังยกเลิก…" : "ยกเลิกการเชื่อม Google"}
             </button>
           </div>
@@ -129,8 +129,8 @@ export function ChangePasswordForm({ hasPassword, email, disabled }: { hasPasswo
             </p>
           )}
         </div>
-        <label className="flex items-start gap-2.5 text-sm text-ink-2">
-          <input type="checkbox" name="signOutOthers" defaultChecked className="mt-0.5 size-5 shrink-0 accent-red" />
+        <label className="flex min-h-11 items-center gap-2.5 text-sm text-ink-2">
+          <input type="checkbox" name="signOutOthers" defaultChecked className="size-5 shrink-0 accent-red" />
           ออกจากระบบในเครื่องอื่นด้วย
         </label>
         <button className="btn-primary">

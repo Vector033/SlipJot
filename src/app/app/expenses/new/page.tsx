@@ -12,7 +12,7 @@ export default async function NewExpensePage() {
   const cats = await getCategories();
   return (
     <div className="mx-auto max-w-xl space-y-8">
-      <Link href="/app/expenses" className="inline-flex min-h-10 items-center gap-1 text-sm font-medium text-ink-2 hover:text-ink">
+      <Link href="/app/expenses" className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-ink-2 hover:text-ink">
         <ChevronLeft className="size-4" aria-hidden /> กลับไปที่รายการ
       </Link>
       <div>

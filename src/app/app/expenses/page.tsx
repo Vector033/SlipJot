@@ -69,7 +69,7 @@ export default async function ExpensesPage({ searchParams }: PageProps<"/app/exp
         />
       </form>
 
-      <nav className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0" aria-label="กรองตามหมวด">
+      <nav className="-mx-4 flex gap-2 overflow-x-auto px-4 py-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0" aria-label="กรองตามหมวด">
         <Link href={chipHref()} aria-current={!cat ? "page" : undefined} className={`chip ${!cat ? "chip-on" : ""}`}>
           ทั้งหมด
         </Link>

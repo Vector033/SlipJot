@@ -22,7 +22,7 @@ export function ConfirmDelete({
   return (
     <details className={`group ${className}`}>
       <summary
-        className={`btn-danger cursor-pointer list-none [&::-webkit-details-marker]:hidden ${iconOnly ? "px-2.5" : ""}`}
+        className={`btn-danger cursor-pointer list-none [&::-webkit-details-marker]:hidden ${iconOnly ? "min-w-11 px-2.5" : ""}`}
         aria-label={iconOnly ? label : undefined}
       >
         <Trash2 className="size-4" aria-hidden />
@@ -30,7 +30,7 @@ export function ConfirmDelete({
       </summary>
       <div className="mt-2 flex flex-wrap items-center gap-2 rounded-xl bg-red-soft p-2.5 text-sm text-red-deep">
         {note && <p className="min-w-0 flex-1 basis-48">{note}</p>}
-        <button formAction={action} formNoValidate className="btn-primary min-h-10 px-4 text-sm">
+        <button formAction={action} formNoValidate className="btn-primary px-4 text-sm">
           {confirmLabel}
         </button>
       </div>

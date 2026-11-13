@@ -45,9 +45,10 @@ body {
   /* #5 Speckled Graphite matte cabin enamel + soft #14 skylight wash (calm, zero dizzying grid lines) */
   background-image:
     radial-gradient(100% 55% at 50% 0%, rgb(255 255 255 / 0.72) 0%, transparent 72%),
-    radial-gradient(120% 80% at 50% 100%, rgb(27 23 21 / 0.035) 0%, transparent 60%),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='s'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23s)' opacity='0.032'/%3E%3C/svg%3E");
-  background-size: 100% 100%, 100% 100%, 160px 160px;
+  /* html is viewport-tall: the skylight must not tile, or it leaves a seam every screen. */
+  background-size: 100% 100vh, 160px 160px;
+  background-repeat: no-repeat, repeat;
   color: var(--color-ink);
   font-family: var(--font-sans);
   line-height: 1.6;
@@ -355,8 +356,14 @@ html {
   .btn-danger {
     @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-danger hover:bg-red-soft disabled:opacity-60;
   }
+  /* 36px tall to the eye, 44px to the thumb. */
+  .chip::after {
+    content: "";
+    position: absolute;
+    inset: -4px 0;
+  }
   .chip {
-    @apply inline-flex min-h-9 items-center gap-1.5 rounded-full border-2 border-line bg-white px-3 text-sm font-medium whitespace-nowrap text-ink-2 transition-[background-color,border-color,color] hover:border-ink-3;
+    @apply relative inline-flex min-h-9 items-center gap-1.5 rounded-full border-2 border-line bg-white px-3 text-sm font-medium whitespace-nowrap text-ink-2 transition-[background-color,border-color,color] hover:border-ink-3;
   }
   /* The lit stop: plate yellow, like the stop the route board is announcing. */
   .chip-on {

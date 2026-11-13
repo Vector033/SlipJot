@@ -48,7 +48,7 @@ export default async function SettingsPage({ searchParams }: PageProps<"/app/set
           <h2>หมวดและงบรายเดือน</h2>
         </div>
         <div className="p-5">
-          <p className="text-sm text-ink-2">
+          <p className="num text-sm text-ink-2">
             <ThaiPhrases text="ตั้งงบแล้วจะเตือนที่หน้าภาพรวม|เมื่อใช้ถึง 80%| หรือเมื่อคาดว่าจะเกิน|ภายในสิ้นเดือน" />
           </p>
           <div className="rows">
