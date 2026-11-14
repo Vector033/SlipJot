@@ -166,17 +166,6 @@ html {
     backdrop-filter: blur(12px) saturate(1.08);
   }
 
-  /* #7 Blueprint Grid overlay (ultra-light & edge-masked so center content stays calm). */
-  .blueprint-bay {
-    pointer-events: none;
-    background-image:
-      linear-gradient(to right, rgb(27 23 21 / 0.025) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(27 23 21 / 0.025) 1px, transparent 1px);
-    background-size: 32px 32px;
-    -webkit-mask-image: radial-gradient(ellipse 85% 85% at 50% 50%, transparent 25%, #000 100%);
-    mask-image: radial-gradient(ellipse 85% 85% at 50% 50%, transparent 25%, #000 100%);
-  }
-
   /* #3 Thermal Gradient fills strictly for high-usage budget bars (zero purple). */
   .thermal-budget-near {
     background-image: linear-gradient(90deg, var(--color-plate-deep) 0%, #c96a00 100%);

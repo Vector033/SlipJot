@@ -87,7 +87,7 @@ export default async function ReviewPage() {
                   </span>
                 </a>
               )}
-              <div className="flex-1 space-y-4 p-4 sm:p-5">
+              <div className="min-w-0 flex-1 space-y-4 p-4 sm:p-5">
                 {e.issues.length > 0 && (
                   <ul className="flex flex-wrap gap-1.5" aria-label="สิ่งที่ระบบไม่แน่ใจ">
                     {e.issues.map((issue) => (

@@ -31,7 +31,7 @@ export default async function AppLayout({ children }: LayoutProps<"/app">) {
         </aside>
       )}
       <SongthaewContours variant="cabin" className="fixed inset-x-0 bottom-0 z-0 h-44 w-full opacity-80 sm:h-52" />
-      <main className="relative z-[1] mx-auto w-full max-w-5xl flex-1 px-4 pt-6 pb-32 sm:px-6 sm:pb-14">{children}</main>
+      <main className="relative z-[1] mx-auto w-full max-w-5xl flex-1 px-4 pt-6 pb-32 sm:px-6 md:pb-14">{children}</main>
       <MobileNav reviewCount={pending} />
     </div>
   );

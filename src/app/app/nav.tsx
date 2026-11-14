@@ -31,7 +31,7 @@ function Count({ n, onRed = false }: { n: number; onRed?: boolean }) {
 export function DesktopNav({ reviewCount }: { reviewCount: number }) {
   const pathname = usePathname();
   return (
-    <nav className="hidden items-center gap-1 sm:flex" aria-label="เมนูหลัก">
+    <nav className="hidden items-center gap-1 md:flex" aria-label="เมนูหลัก">
       {items.map((it) => {
         const active = isActive(pathname, it.href);
         if (it.primary) {
@@ -61,7 +61,7 @@ export function MobileNav({ reviewCount }: { reviewCount: number }) {
   const pathname = usePathname();
   return (
     <nav
-      className="fluted-glass fixed inset-x-0 bottom-0 z-20 border-t border-line pb-[env(safe-area-inset-bottom)] sm:hidden"
+      className="fluted-glass fixed inset-x-0 bottom-0 z-20 border-t border-line pb-[env(safe-area-inset-bottom)] md:hidden"
       aria-label="เมนูหลัก"
     >
       <ul className="grid grid-cols-5">

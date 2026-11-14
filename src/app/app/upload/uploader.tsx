@@ -210,12 +210,12 @@ export function Uploader({ shared }: { shared: boolean }) {
               ซ้ำ <span className="num font-bold text-ink">{dupes}</span>
             </span>
             {!busy && review > 0 && (
-              <Link href="/app/review" className="btn-primary ml-auto hidden sm:inline-flex">
+              <Link href="/app/review" className="btn-primary ml-auto hidden md:inline-flex">
                 ตรวจ {review} รายการ <ArrowRight className="size-4" aria-hidden />
               </Link>
             )}
             {!busy && review === 0 && done.length > 0 && (
-              <Link href="/app/expenses" className="btn ml-auto hidden sm:inline-flex">
+              <Link href="/app/expenses" className="btn ml-auto hidden md:inline-flex">
                 ดูรายการ <ArrowRight className="size-4" aria-hidden />
               </Link>
             )}
@@ -274,7 +274,7 @@ export function Uploader({ shared }: { shared: boolean }) {
 
           {/* Mobile bottom thumb-zone primary CTA with fluted window glass backdrop */}
           {!busy && (review > 0 || done.length > 0) && (
-            <div className="fluted-glass sticky bottom-[calc(4.75rem+env(safe-area-inset-bottom))] z-10 rounded-2xl border border-line p-2 shadow-lg sm:hidden">
+            <div className="fluted-glass sticky bottom-[calc(4.75rem+env(safe-area-inset-bottom))] z-10 rounded-2xl border border-line p-2 shadow-lg md:hidden">
               {review > 0 ? (
                 <Link href="/app/review" className="btn-plate w-full shadow-md">
                   ตรวจ {review} รายการ <ArrowRight className="size-4" aria-hidden />

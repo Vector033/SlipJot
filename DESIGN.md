@@ -258,7 +258,7 @@ A transit palette: one saturated body red, one plate yellow, warm ink, and cool 
 
 Mobile first. Landing bands are full-bleed with content in a 72rem (max-w-6xl) container; landing sections sit in a 64rem container on a steel ground, 64px to 80px tall padding, two-column grids at the lg breakpoint (1024px) with 40px to 64px gaps, alternating text and evidence sides. A vertical chrome route line runs down the landing's left edge; each section is a stop whose dot fills plate yellow as it arrives.
 
-The app is a 64rem column on steel with 16px (mobile) / 24px gutters and 20px gaps between boards; dashboards split 3fr/2fr at lg. The red header is sticky, 56px mobile / 64px from 640px, with chrome trim beneath. Below 640px the nav moves to a fixed white bottom bar of five 64px cells with a raised 56px plate button in the centre; content reserves 128px at the bottom for it. Touch targets are 44px minimum (36px for chips).
+The app is a 64rem column on steel with 16px (mobile) / 24px gutters and 20px gaps between boards; dashboards split 3fr/2fr at lg. The red header is sticky, 56px mobile / 64px from 640px, with chrome trim beneath. Below 768px the nav moves to a fixed white bottom bar of five 64px cells with a raised 56px plate button in the centre; content reserves 128px at the bottom for it. Touch targets are 44px minimum (36px for chips).
 
 ## Elevation & Depth
 
@@ -268,6 +268,21 @@ Depth is mostly material, not shadow: red regions, white boards on steel, ink st
 - **Board rest** (`box-shadow: 0 1px 0 #dde1e6, 0 8px 24px -16px rgb(27 23 21 / 0.25)`): every route-board panel.
 - **Plate lift** (`box-shadow: 0 6px 14px -8px rgb(27 23 21 / 0.45)`): the plate button and the raised mobile upload button.
 - **Showpiece** (`box-shadow: 0 24px 48px -20px rgb(0 0 0 / 0.7)`): the landing's demo route board on red only.
+
+### Surfaces
+Flat fills get a material, kept faint (3 to 6% opacity, `pointer-events: none`) so text contrast never changes. Each one has one place:
+- **Enamel** (`.songthaew-enamel`): body red with a soft sheen and paint grain, on every red region (landing bands, login half, app header).
+- **Shader** (`SongthaewShader`, WebGL): a slow red enamel wave behind the landing hero only, over the enamel fill as its static fallback. It stops under reduced motion, when the hero is off screen or the tab is hidden, and if the context is lost. Never inside the app.
+- **Contours** (`SongthaewContours`): thin Doi Suthep ridge lines at the foot of red bands, in the app header, and along the bottom of the cabin.
+- **Cabin steel** (body background, `.steel-speckled`): steel with graphite speckle and a skylight wash at the top of the screen; the wash does not repeat down long pages.
+- **Paper** (`.paper-texture`, `.paper-overlay`): receipt-paper fibre on boards and over slip thumbnails.
+- **LED matrix** (`.led-matrix`, `.led-matrix-light`, `.halftone-corners`): a square-dot grid behind the route board, the month total and the odometer digits.
+- **Fluted glass** (`.fluted-glass`): ribbed window glass on the bars that stay over content on phones: the bottom nav and the sticky confirm bar.
+- **Iridescent edge** (`.iridescent-border`): a thin conic sheen around an upload thumbnail once its slip is saved. It is the only place a gradient touches the slip.
+- **Thermal bars** (`.thermal-budget-near`, `.thermal-budget-over`): budget bars past 80% and over budget.
+- **Danger hatch** (`.danger-stripe`): diagonal blush hatching behind destructive sections (wipe data, delete account).
+
+Empty states carry a small line illustration of the songthaew (`SongthaewIllo`: truck, ledger, cleared). New textures need a job none of these does.
 
 ### Named Rules
 **The Bolted-On Rule.** Shadows sit tight under their object with negative spread; nothing glows and nothing floats in a halo. The one exception is the landing demo's scan laser.
@@ -305,7 +320,7 @@ Tactile and solid; press moves the button down 1px.
 - **Unsure:** a field the reader was not sure about gets a plate-wash fill with a plate-deep border, and a warn-coloured note below.
 
 ### Navigation
-- **Desktop (640px and up):** in the red header, Anuphan 600 links at 0.875rem in rose; active and hover fill pressed red with white text; upload is a compact plate button. The review count is a small plate badge, because it is work left to do.
+- **Desktop (768px and up):** in the red header, Anuphan 600 links at 0.875rem in rose; active and hover fill pressed red with white text; upload is a compact plate button. The review count is a small plate badge, because it is work left to do.
 - **Mobile:** a fixed white bottom bar with icon over label; active is body red with a 3px red tab at the top edge; upload is a raised 56px plate tile with an ink border.
 
 ### Plate (signature)
@@ -321,10 +336,11 @@ A 4px strip: 2px chrome over a 1px chrome-dark hairline. It closes every red ban
 All moves come from the route board and the slip reader:
 - **Write-on:** the payee line writes on left to right (clip-path).
 - **Roll:** plate digits roll (700ms plus 90ms per digit, cubic-bezier(0.16, 1, 0.3, 1)).
-- **Stop lights:** the destination stop fills plate yellow.
+- **Stop lights:** the destination stop fills plate yellow. On the landing route line, a reached stop's dot fills plate yellow, turns its ring ink and grows to 110%.
 - **Split-flap (landing demo only):** "สลิปถัดไป" turns each board row over from its top edge (rotateX, 380ms, 70ms stagger) onto the next sample, then the read plays. Only on tap; the board never cycles by itself.
 - **Scan band:** while a slip is read, a flat plate-yellow band passes over upload thumbnails (no glow) back and forth until the read ends. On the landing demo it is a laser instead: a 3px plate-yellow line with a plate glow, sweeping down and back up the slip every 2.2s for as long as the demo is on screen, starting only once the board has scrolled into view (`.laser`, `@keyframes laser-scan`, transform only). Both are hidden under reduced motion. An upload thumbnail grows to 104px by 144px while it is read. Once slips are added, the upload drop zone shrinks to a one-row "เพิ่มสลิปอีก" bar so the slips being read stay on a phone screen.
 - **Settle:** when a read lands, the amount plate and the saved/review badge settle in (scale from 0.82, slight overshoot, 320ms).
+- **Sound (opt-in):** a soft split-flap tick when the demo board flips or a category chip is tapped, and a short tone when a slip finishes reading or is confirmed. Off by default; switched on in Settings.
 Boards may rise 14px into place. Nothing else moves; reduced motion collapses all of it to an instant state, and every element is visible without animation. No scroll-jacking: lists and pages scroll natively.
 
 Chart tooltips are small plates: the label in ink-2 over the amount on a plate.

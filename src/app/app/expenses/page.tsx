@@ -42,7 +42,7 @@ export default async function ExpensesPage({ searchParams }: PageProps<"/app/exp
     <div className="space-y-6">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold">รายการ</h1>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <MonthNav month={month} path="/app/expenses" params={base} />
           <Link href="/app/expenses/new" className="btn" aria-label="เพิ่มรายการเอง">
             <Plus className="size-4" aria-hidden /> <span className="hidden sm:inline">เพิ่มเอง</span>
@@ -93,7 +93,7 @@ export default async function ExpensesPage({ searchParams }: PageProps<"/app/exp
         </Link>
       </nav>
 
-      <div className="paper-texture flex items-center justify-between gap-3 rounded-xl border border-line bg-white/90 px-4 py-2.5 text-sm text-ink-2 shadow-xs">
+      <div className="paper-texture flex flex-wrap items-center justify-between gap-3 rounded-xl border border-line bg-white/90 px-4 py-2.5 text-sm text-ink-2 shadow-xs">
         <span className="num font-medium">{rows.length} รายการ</span>
         <span className="flex items-center gap-2">
           <span>รวม</span>

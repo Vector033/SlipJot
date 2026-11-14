@@ -91,7 +91,7 @@ export function ExpenseForm({
       {values.id && <input type="hidden" name="id" value={values.id} />}
       {confirm && <input type="hidden" name="intent" value="confirm" />}
       {redirectTo && <input type="hidden" name="redirectTo" value={redirectTo} />}
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <label className="block">
           <span className="label">ยอด (บาท){unsure("amount")}</span>
           <input
@@ -127,7 +127,7 @@ export function ExpenseForm({
         <span className="label">ผู้รับ / ร้าน{unsure("payeeName")}</span>
         <input name="payeeName" defaultValue={values.payeeName} maxLength={200} className={`input ${mark("payeeName")}`} />
       </label>
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <label className="block">
           <span className="label">หมวด</span>
           <select
@@ -166,7 +166,7 @@ export function ExpenseForm({
                     playSplitFlapTick();
                     setCategoryId(selected ? "" : c.id);
                   }}
-                  className={`chip ${selected ? "chip-on" : ""}`}
+                  className={`chip max-w-full whitespace-normal ${selected ? "chip-on" : ""}`}
                 >
                   {c.color ? (
                     <CategoryIcon icon={c.icon} slug={c.slug} color={c.color} size="sm" />
@@ -195,11 +195,11 @@ export function ExpenseForm({
       <div
         className={`flex flex-wrap items-center gap-2 ${
           stickyAction
-            ? "fluted-glass sticky bottom-[calc(4.75rem+env(safe-area-inset-bottom))] z-10 -mx-4 border-t border-line px-4 py-3 sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:bg-none sm:p-0 sm:pt-2 sm:backdrop-blur-none"
+            ? "fluted-glass sticky bottom-[calc(4.75rem+env(safe-area-inset-bottom))] z-10 -mx-4 border-t border-line px-4 py-3 sm:-mx-5 sm:px-5 md:static md:mx-0 md:border-0 md:bg-transparent md:bg-none md:p-0 md:pt-2 md:backdrop-blur-none"
             : "pt-2"
         }`}
       >
-        <button disabled={pending} className="btn-primary min-w-0 flex-1 sm:flex-initial">
+        <button disabled={pending} className="btn-primary min-w-0 flex-1 md:flex-initial">
           {pending ? (
             "กำลังบันทึก…"
           ) : (

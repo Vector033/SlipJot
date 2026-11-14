@@ -21,7 +21,8 @@ the month at a glance on a phone.
 ## What it does
 
 1. **Upload slips:** pick several images at once, or share them straight from a banking app. The installed PWA registers
-   as a share target, and the service worker hands the files to the upload page.
+   as a share target, and the service worker hands the files to the upload page. Sharing in works on Android (Chrome);
+   iOS Safari has no Web Share Target support, so on an iPhone you pick the slips from the album instead.
 2. **Read them:** amount, date and time (Buddhist-era years converted), payee, bank, last 4 account digits, reference and
    memo, each with a confidence score. Low-confidence or implausible reads go to a **review queue** with the slip image
    and the doubtful fields highlighted. Nothing is saved silently wrong.
