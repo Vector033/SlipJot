@@ -88,16 +88,23 @@ export default async function AccountPage({ searchParams }: PageProps<"/app/sett
               <span className="grid size-10 place-items-center rounded-xl bg-steel" aria-hidden>
                 <GoogleMark />
               </span>
-              <span className="min-w-0 flex-1">
+              {/* min width keeps the email readable; the button or note wraps under it instead */}
+              <span className="min-w-48 flex-1">
                 <span className="block font-semibold">Google</span>
-                <span className="text-sm break-all text-ink-3">
+                <span className="text-sm [overflow-wrap:anywhere] text-ink-3">
                   {account.google ? `เชื่อมแล้ว · ${account.google.email ?? "บัญชี Google"}` : "ยังไม่ได้เชื่อม"}
                 </span>
               </span>
               {!account.demo &&
                 (account.google ? (
                   <GoogleUnlinkButton
-                    blockedReason={!account.hasPassword ? "ตั้งรหัสผ่านก่อน| จึงจะยกเลิกการเชื่อม Google ได้" : undefined}
+                    blockedReason={
+                      !account.hasPassword
+                        ? "ตั้งรหัสผ่านก่อน| จึงจะยกเลิกการเชื่อม Google ได้"
+                        : account.identityCount < 2
+                          ? "Google เป็นทางเข้าเดียวที่ผูกกับบัญชีนี้| จึงยกเลิกการเชื่อมไม่ได้| แต่ใช้รหัสผ่านเข้าสู่ระบบได้ด้วย"
+                          : undefined
+                    }
                   />
                 ) : (
                   <GoogleLinkButton />

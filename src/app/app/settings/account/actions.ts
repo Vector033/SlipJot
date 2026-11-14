@@ -57,7 +57,12 @@ export async function changePasswordAction(_prev: AccountState, fd: FormData): P
 
   const supabase = await createClient();
   const { error } = await supabase.auth.updateUser({ password: next });
-  if (error) return { error: "บันทึกรหัสผ่านใหม่ไม่สำเร็จ ลองใหม่ในอีกสักครู่" };
+  if (error) {
+    // The account may already have this password (set from another app on the same Supabase project).
+    if (error.code === "same_password") return { error: "รหัสผ่านนี้ตั้งไว้แล้ว ใช้เข้าสู่ระบบได้เลย หรือเลือกรหัสใหม่" };
+    console.error("updateUser password failed", error.code ?? error.message);
+    return { error: "บันทึกรหัสผ่านใหม่ไม่สำเร็จ ลองใหม่ในอีกสักครู่" };
+  }
   if (fd.get("signOutOthers") === "on") await supabase.auth.signOut({ scope: "others" });
   revalidatePath("/app/settings/account");
   return {
@@ -112,9 +117,9 @@ export async function unlinkGoogleAction(): Promise<AccountState> {
   if (account.demo) return { error: DEMO };
   if (!account.google) return {};
   // Never remove the last way in.
-  if (account.identityCount < 2 || !account.hasPassword) {
-    return { error: "ตั้งรหัสผ่านก่อน จะได้ยังเข้าสู่ระบบได้โดยไม่ต้องใช้ Google" };
-  }
+  if (!account.hasPassword) return { error: "ตั้งรหัสผ่านก่อน จะได้ยังเข้าสู่ระบบได้โดยไม่ต้องใช้ Google" };
+  // Supabase refuses to unlink a user's last identity; a password alone adds none.
+  if (account.identityCount < 2) return { error: "Google เป็นทางเข้าเดียวที่ผูกกับบัญชีนี้ จึงยกเลิกการเชื่อมไม่ได้" };
   const supabase = await createClient();
   const { data } = await supabase.auth.getUserIdentities();
   const identity = data?.identities.find((i) => i.provider === "google");

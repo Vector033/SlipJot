@@ -20,15 +20,17 @@ export function PasswordInput({ className = "", ...props }: InputHTMLAttributes<
         autoCorrect="off"
         className={`input pr-12 ${className}`}
       />
+      {/* Pointer (not mouse) down keeps the field focused on touch, so the iOS keyboard does not
+          close and move the button mid-tap. The icon shows the current state; the label, the action. */}
       <button
         type="button"
-        onMouseDown={(e) => e.preventDefault()}
+        onPointerDown={(e) => e.preventDefault()}
         onClick={() => setShown((s) => !s)}
         aria-label={shown ? "ซ่อนรหัสผ่าน" : "แสดงรหัสผ่าน"}
         aria-pressed={shown}
-        className="absolute inset-y-0 right-0 grid w-12 place-items-center rounded-r-xl text-ink-3 hover:text-ink"
+        className="absolute inset-y-0 right-0 grid w-12 touch-manipulation place-items-center rounded-r-xl text-ink-3 hover:text-ink"
       >
-        {shown ? <EyeOff className="size-5" aria-hidden /> : <Eye className="size-5" aria-hidden />}
+        {shown ? <Eye className="size-5" aria-hidden /> : <EyeOff className="size-5" aria-hidden />}
       </button>
     </span>
   );

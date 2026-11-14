@@ -32,7 +32,7 @@ export const getAccount = cache(async (): Promise<Account> => {
     email: user.email ?? "",
     createdAt: user.created_at ?? null,
     lastSignInAt: user.last_sign_in_at ?? null,
-    hasPassword: identities.some((i) => i.provider === "email"),
+    hasPassword: identities.some((i) => i.provider === "email") || (await passwordSet(user.id)),
     google: google
       ? { email: (google.identity_data?.email as string | undefined) ?? null, identityId: google.identity_id }
       : null,
@@ -41,6 +41,22 @@ export const getAccount = cache(async (): Promise<Account> => {
     demo: isDemoUser(user.email),
   };
 });
+
+/**
+ * A Google user who sets a password gets no "email" identity, so the identities list
+ * alone says "no password" forever. auth.users is the source of truth; if the database
+ * role cannot read it, fall back to the identities answer.
+ */
+async function passwordSet(userId: string): Promise<boolean> {
+  try {
+    const [row] = await sql<{ set: boolean }[]>`
+      select coalesce(encrypted_password, '') <> '' as set from auth.users where id = ${userId}`;
+    return row?.set ?? false;
+  } catch (e) {
+    console.error("passwordSet failed", e instanceof Error ? e.message : e);
+    return false;
+  }
+}
 
 export type DeviceSession = {
   id: string;
