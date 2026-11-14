@@ -56,9 +56,12 @@ export async function changePasswordAction(_prev: AccountState, fd: FormData): P
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.updateUser({ password: next });
+  // Send the current password too: Supabase demands it (when the project setting "Require current
+  // password" is on) for accounts that already have one, and ignores it otherwise.
+  const { error } = await supabase.auth.updateUser({ password: next, ...(current && { current_password: current }) });
   if (error) {
     // The account may already have this password (set from another app on the same Supabase project).
+    if (error.code?.startsWith("current_password")) return { error: "รหัสผ่านปัจจุบันไม่ถูกต้อง" };
     if (error.code === "same_password") return { error: "รหัสผ่านนี้ตั้งไว้แล้ว ใช้เข้าสู่ระบบได้เลย หรือเลือกรหัสใหม่" };
     console.error("updateUser password failed", error.code ?? error.message);
     return { error: "บันทึกรหัสผ่านใหม่ไม่สำเร็จ ลองใหม่ในอีกสักครู่" };
