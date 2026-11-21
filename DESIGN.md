@@ -2,27 +2,28 @@
 name: SlipJot
 description: Thai slip-to-expense tracker dressed as a Chiang Mai red songthaew.
 colors:
-  red: "#b3121c"
-  red-deep: "#8e0e16"
-  red-night: "#5e0a10"
-  red-soft: "#fbe9ea"
+  red: "#d92d20"
+  red-deep: "#b42318"
+  red-night: "#7a1310"
+  red-soft: "#fef2f2"
   on-red: "#ffffff"
-  on-red-2: "#ffd9db"
-  plate: "#f5c400"
-  plate-deep: "#d9ab00"
-  plate-soft: "#fff4c2"
-  ink: "#1b1715"
-  ink-2: "#4a4440"
-  ink-3: "#6e6762"
-  steel: "#eef0f2"
-  steel-2: "#dfe3e7"
-  chrome: "#c8cdd3"
-  chrome-dark: "#8f969e"
+  on-red-2: "#fff5f5"
+  on-red-accent: "#fde68a"
+  plate: "#f59e0b"
+  plate-deep: "#d97706"
+  plate-soft: "#fef3c7"
+  ink: "#1e293b"
+  ink-2: "#475569"
+  ink-3: "#64748b"
+  steel: "#f8fafc"
+  steel-2: "#e2e8f0"
+  chrome: "#cbd5e1"
+  chrome-dark: "#94a3b8"
   panel: "#ffffff"
-  line: "#dde1e6"
-  ok: "#1f7a4a"
-  warn: "#9a5b00"
-  danger: "#b3121c"
+  line: "#e2e8f0"
+  ok: "#15803d"
+  warn: "#b45309"
+  danger: "#b42318"
   route-food: "#e3730b"
   route-transport: "#b3121c"
   route-shopping: "#1f5fbf"
@@ -150,13 +151,13 @@ components:
     textColor: "{colors.ink}"
     rounded: "{rounded.full}"
   plate:
-    backgroundColor: "{colors.plate}"
+    backgroundColor: "{colors.plate-soft}"
     textColor: "{colors.ink}"
     typography: "{typography.plate}"
     rounded: "{rounded.plate}"
     padding: "0 0.45em"
   plate-sm:
-    backgroundColor: "{colors.plate}"
+    backgroundColor: "{colors.plate-soft}"
     textColor: "{colors.ink}"
     rounded: "{rounded.sm}"
     padding: "0 6px"
@@ -165,8 +166,8 @@ components:
     textColor: "{colors.ink}"
     rounded: "{rounded.lg}"
   board-head:
-    backgroundColor: "{colors.ink}"
-    textColor: "{colors.on-red}"
+    backgroundColor: "{colors.panel}"
+    textColor: "{colors.ink}"
     padding: "10px 20px"
     height: "48px"
   notice:
@@ -195,9 +196,9 @@ Light theme only. There is no dark mode yet; every token here is a light-theme v
 
 **Key Characteristics:**
 - Body red owns whole regions; it is a surface, not a sprinkle.
-- Plate yellow with a warm ink border carries every headline amount, in condensed tabular digits.
+- A soft amber plate (amber wash, 1px amber hairline) carries every headline amount, in condensed tabular digits.
 - Double chrome trim (light line over a dark hairline) divides regions and board rows.
-- Route boards: white panels with an ink title strip; no nested cards.
+- Route boards: white panels with a white title row over a 1px hairline; no nested cards. No solid black bands anywhere in the app.
 - Category colours are Chiang Mai's songthaew route colours.
 - Thai never clips: headings at line-height 1.25 or more, body at 1.6.
 - Motion is the route board's own: payee writes on, plate digits roll, the stop lights, rows flip over like a split-flap sign. Everything is visible by default.
@@ -227,9 +228,9 @@ A transit palette: one saturated body red, one plate yellow, warm ink, and cool 
 ### Named Rules
 **The Red Owns Regions Rule.** Red is painted as whole regions (full-bleed bands, the header strip, a login half) or as the single primary action. It is not used as a scattered accent on app screens.
 
-**The Tinted-On-Red Rule.** Text on red is white or rose (on-red-2). Never grey on red.
+**The Tinted-On-Red Rule.** Text on red is white or rose (on-red-2). Never grey on red. Amber accents and focus on red use on-red-accent (#fde68a): plate amber is only 2.3:1 there.
 
-**The Plate Rule.** A headline amount or total sits on plate yellow with an ink border. Yellow is reserved for amounts, the lit stop, the plate action and focus; it is not a generic highlight.
+**The Plate Rule.** A headline amount or total sits on a soft amber plate (plate-soft fill, 1px plate-deep hairline, no ink border). Yellow is reserved for amounts, the lit stop, the plate action and focus; it is not a generic highlight.
 
 ## Typography
 
@@ -289,7 +290,7 @@ Empty states carry a small line illustration of the songthaew (`SongthaewIllo`: 
 
 ## Shapes
 
-Friendly, pressed-metal corners. Controls and inputs use 12px; boards and notices 16px; the landing's privacy band 24px; chips and the category badge are full pills. Plates use a radius proportional to their size (0.4em) and a double border: a 2px ink stroke, a plate-yellow gap, then an inner ink ring (inset 2px plate, inset 3.5px ink), the way a real plate is framed. Strokes are 2px everywhere on light grounds (inputs, secondary buttons, chips), and focus is a 3px outline at 2px offset: warm ink on the light cabin (plate yellow is only ~1.5:1 on white and steel), plate yellow on red and ink grounds.
+Friendly, pressed-metal corners. Controls and inputs use 12px; boards and notices 16px; the landing's privacy band 24px; chips and the category badge are full pills. Plates are 12px-radius soft amber badges with a 1px amber hairline and a faint warm shadow; the old ink double border is gone. Strokes are 2px everywhere on light grounds (inputs, secondary buttons, chips), and focus is a 3px outline at 2px offset: ink on the light cabin, on-red-accent on red, plate amber on ink and night-red grounds.
 
 ## Components
 
@@ -310,7 +311,7 @@ Tactile and solid; press moves the button down 1px.
 - **Corner Style:** 16px.
 - **Background:** panel white on steel.
 - **Shadow Strategy:** board rest.
-- **Title strip:** a 48px ink band with white Anuphan 700 title and rose meta text at right, like the board on the truck.
+- **Title row:** 48px, white fading to #fafafa, ink Anuphan 700 title and ink-3 meta at right, a 1px hairline beneath. Amounts in it are ink, not amber.
 - **Rows:** separated by a 2px chrome trim (light over dark hairline), not grey rules.
 - **Internal Padding:** 20px. Boards are never nested inside boards.
 
@@ -324,7 +325,7 @@ Tactile and solid; press moves the button down 1px.
 - **Mobile:** a fixed white bottom bar with icon over label; active is body red with a 3px red tab at the top edge; upload is a raised 56px plate tile with an ink border.
 
 ### Plate (signature)
-The licence plate holding an amount: plate yellow, ink double border, Barlow Semi Condensed 600 tabular. The small plate (6px radius, no border) carries percentages and badges. When a total changes, digits roll like an odometer, each in a fixed-width column, rightmost settling last; separators and the baht sign stay still and screen readers get the plain value.
+The licence plate holding an amount: soft amber wash, 1px amber hairline, Barlow Semi Condensed 600 tabular. The small plate (6px radius, no border) carries percentages and badges. When a total changes, digits roll like an odometer, each in a fixed-width column, rightmost settling last; separators and the baht sign stay still and screen readers get the plain value.
 
 ### Chrome Trim (signature)
 A 4px strip: 2px chrome over a 1px chrome-dark hairline. It closes every red band (landing hero, app header) and divides board rows.
@@ -343,7 +344,7 @@ All moves come from the route board and the slip reader:
 - **Sound (opt-in):** a soft split-flap tick when the demo board flips or a category chip is tapped, and a short tone when a slip finishes reading or is confirmed. Off by default; switched on in Settings.
 Boards may rise 14px into place. Nothing else moves; reduced motion collapses all of it to an instant state, and every element is visible without animation. No scroll-jacking: lists and pages scroll natively.
 
-Chart tooltips are small plates: the label in ink-2 over the amount on a plate.
+Chart tooltips are small white cards with a 1px hairline: the label in ink-3 over the amount in ink. The daily bar chart has dashed horizontal gridlines, a baht Y axis on round steps (฿0, ฿500, ฿1k…), a hairline X baseline; past days are body red, today is plate amber (never ink), days still to come are steel-2.
 
 ### Imagery and Rasters
 SlipJot ships no photography. Its rasters and their provenance:
@@ -358,9 +359,9 @@ Icons are one stroke family (lucide), never emoji.
 
 ### Do:
 - **Do** paint red as whole regions (full-bleed bands, the header strip) and close each red band with chrome trim.
-- **Do** put every headline amount on a plate: plate yellow, ink double border, Barlow Semi Condensed 600, tabular.
-- **Do** use white or rose (#ffd9db) for text on red.
-- **Do** title route boards with the ink strip and separate their rows with chrome trim.
+- **Do** put every headline amount on a plate: soft amber wash, 1px amber hairline, Barlow Semi Condensed 600, tabular.
+- **Do** use white or rose (#fff5f5) for text on red, and #fde68a for amber on red.
+- **Do** title route boards with the white title row and separate their rows with chrome trim.
 - **Do** keep Thai headings at line-height 1.25 or more and body at 1.6, with letter-spacing 0.
 - **Do** break Thai display lines by hand between whole words with nowrap spans and `<wbr>`.
 - **Do** mark unsure fields with plate wash and a plate-deep border, and label sample data as ข้อมูลสมมติ.

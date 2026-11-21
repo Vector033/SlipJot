@@ -75,7 +75,7 @@ export function MobileNav({ reviewCount }: { reviewCount: number }) {
                 className={`relative flex min-h-16 flex-col items-center justify-center gap-1 text-xs ${active ? "font-semibold text-red" : "text-ink-3"}`}
               >
                 {it.primary ? (
-                  <span className="-mt-6 flex size-14 items-center justify-center rounded-2xl border-2 border-ink bg-plate text-ink shadow-[0_6px_14px_-8px_rgb(27_23_21/0.5)]">
+                  <span className="-mt-6 flex size-14 items-center justify-center rounded-2xl border border-plate-deep/40 bg-plate text-ink shadow-[0_6px_16px_-4px_rgb(245_158_11/0.5)]">
                     <it.icon className="size-6" strokeWidth={2.5} aria-hidden />
                   </span>
                 ) : (

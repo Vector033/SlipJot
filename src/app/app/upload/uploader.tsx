@@ -203,7 +203,7 @@ export function Uploader({ shared }: { shared: boolean }) {
             <span className="chip">
               บันทึกแล้ว <span className="num font-bold text-ink">{saved}</span>
             </span>
-            <span className={`chip ${review ? "border-ink bg-plate text-ink" : ""}`}>
+            <span className={`chip ${review ? "chip-on" : ""}`}>
               รอตรวจ <span className="num font-bold">{review}</span>
             </span>
             <span className="chip">

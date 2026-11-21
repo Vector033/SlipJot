@@ -63,7 +63,7 @@ export default async function ReviewPage() {
               <h2 className="min-w-0 line-clamp-2 [overflow-wrap:anywhere]" title={e.payeeName || undefined}>
                 {e.payeeName || "ไม่ทราบผู้รับ"}
               </h2>
-              <span className="font-plate num shrink-0 text-lg font-semibold whitespace-nowrap text-plate">
+              <span className="font-plate num shrink-0 text-base font-semibold whitespace-nowrap text-ink">
                 {e.amount > 0 ? formatBaht(e.amount, true) : "฿ –"}
               </span>
             </div>

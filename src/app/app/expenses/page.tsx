@@ -130,7 +130,7 @@ export default async function ExpensesPage({ searchParams }: PageProps<"/app/exp
             <section key={g.key} aria-label={g.label} className="board paper-texture overflow-hidden">
               <div className="board-head">
                 <h2>{g.label}</h2>
-                <span className="font-plate num text-lg font-semibold text-plate">{formatBaht(g.total, true)}</span>
+                <span className="font-plate num text-base font-semibold text-ink">{formatBaht(g.total, true)}</span>
               </div>
               <ul className="rows">
                 {g.rows.map((r) => {

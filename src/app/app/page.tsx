@@ -39,7 +39,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
           {s.reviewCount > 0 && (
             <Link
               href="/app/review"
-              className="flex min-h-14 items-center gap-3 rounded-2xl border-2 border-ink bg-plate px-4 font-semibold transition-colors hover:bg-plate-deep"
+              className="flex min-h-14 items-center gap-3 rounded-2xl border border-plate-deep/30 bg-plate-soft px-4 font-semibold text-ink transition-colors hover:bg-plate/25 shadow-xs"
             >
               <ClipboardCheck className="size-5 shrink-0" aria-hidden />
               <span className="flex-1">
@@ -240,7 +240,7 @@ function BudgetBar({
   level: "ok" | "near" | "over";
   budget: number;
 }) {
-  const color = level === "over" ? "thermal-budget-over" : level === "near" ? "thermal-budget-near" : "bg-ink";
+  const color = level === "over" ? "thermal-budget-over" : level === "near" ? "thermal-budget-near" : "bg-ok";
   const remaining = budget - spent;
   return (
     <span className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1">
