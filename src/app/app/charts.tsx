@@ -178,8 +178,9 @@ export function CategoryDonut({
           .map((d) => `${d.name} ${Math.round((d.total / sum) * 100)}%`)
           .join(", ")}`}
       >
-        <ResponsiveContainer>
-          <PieChart accessibilityLayer={false}>
+        <div className="relative z-10 h-full w-full">
+          <ResponsiveContainer>
+            <PieChart accessibilityLayer={false}>
             <Pie
               data={shown}
               dataKey="total"
@@ -240,9 +241,10 @@ export function CategoryDonut({
                 <Cell key={d.name} fill={d.color} />
               ))}
             </Pie>
-            <Tooltip content={<CategoryTip sum={sum} />} />
-          </PieChart>
-        </ResponsiveContainer>
+              <Tooltip wrapperStyle={{ zIndex: 30 }} content={<CategoryTip sum={sum} />} />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
 
         {focusedItem && !hoveredName && (
           <div className="pointer-events-none absolute -top-2 left-1/2 z-20 -translate-x-1/2 -translate-y-full whitespace-nowrap">
@@ -258,7 +260,7 @@ export function CategoryDonut({
         )}
 
         {/* Center icon + count/share anchor so donut never relies on colour alone */}
-        <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-1">
+        <div className="pointer-events-none absolute inset-0 z-0 flex flex-col items-center justify-center gap-1">
           <CategoryIcon icon={centerItem.icon} slug={centerItem.slug} color={centerItem.color} size="sm" />
           <span className="font-plate num text-xs font-semibold text-ink-2">
             {centerPct !== null ? `${centerPct}%` : `${shown.length} หมวด`}
