@@ -161,9 +161,14 @@ export function Uploader({ shared }: { shared: boolean }) {
           {items.length ? "เพิ่มสลิปอีก" : "เลือกรูปสลิปจากอัลบั้ม"}
         </p>
         {items.length === 0 && (
-          <p className="relative z-10 max-w-[38ch] text-sm text-ink-2">
-            <ThaiPhrases text="เลือกได้หลายรูปพร้อมกัน| หรือลากไฟล์มาวางตรงนี้| · JPG, PNG, WebP| ไม่เกิน 10 MB" />
-          </p>
+          <div className="relative z-10 max-w-[38ch] space-y-1 text-sm text-ink-2">
+            <p>
+              <ThaiPhrases text="เลือกได้หลายรูปพร้อมกัน| หรือลากไฟล์มาวางตรงนี้" />
+            </p>
+            <p className="text-xs text-ink-3">
+              <ThaiPhrases text="รองรับ JPG, PNG, WebP| (ไม่เกิน 10 MB)" />
+            </p>
+          </div>
         )}
         <button type="button" onClick={() => inputRef.current?.click()} className={`relative z-10 ${items.length ? "btn" : "btn-plate mt-2"}`}>
           เลือกรูป
@@ -179,7 +184,7 @@ export function Uploader({ shared }: { shared: boolean }) {
         <input
           ref={inputRef}
           type="file"
-          accept="image/*"
+          accept="image/jpeg,image/png,image/webp"
           multiple
           className="sr-only"
           aria-label="เลือกรูปสลิป"

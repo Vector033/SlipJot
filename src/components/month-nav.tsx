@@ -16,7 +16,14 @@ export function MonthNav({ month, path, params = {} }: { month: MonthKey; path: 
         {monthLabel(month)}
       </span>
       {isCurrent ? (
-        <span className={`${arrow} invisible`} aria-hidden />
+        <button
+          type="button"
+          disabled
+          aria-label="เดือนถัดไป"
+          className="inline-flex size-11 cursor-not-allowed items-center justify-center rounded-xl border-2 border-line bg-white/70 text-chrome-dark opacity-60"
+        >
+          <ChevronRight className="size-5" aria-hidden />
+        </button>
       ) : (
         <Link href={href(shiftMonth(month, 1))} className={arrow} aria-label="เดือนถัดไป">
           <ChevronRight className="size-5" aria-hidden />

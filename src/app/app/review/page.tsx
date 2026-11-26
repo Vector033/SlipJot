@@ -6,11 +6,35 @@ import { ConfirmDelete } from "@/components/confirm-delete";
 import { ExpenseForm } from "@/components/expense-form";
 import { SongthaewIllo } from "@/components/songthaew-art";
 import { ThaiPhrases } from "@/components/thai-phrases";
+import { requireUser } from "@/lib/auth";
 import { formatBaht, toLocalInput } from "@/lib/core/format";
 import { getCategories, getReviewQueue, getSettings } from "@/lib/data";
+import { isDemoUser } from "@/lib/supabase/admin";
 import { deleteExpenseAction, saveExpenseAction } from "../actions";
 
 export const metadata: Metadata = { title: "รอตรวจ" };
+
+const DEMO_SLIPS = [
+  "/demo/slip-sample.jpg",
+  "/demo/slip-transport.jpg",
+  "/demo/slip-shopping.jpg",
+  "/demo/slip-housing.jpg",
+] as const;
+
+function demoSlipFor(payeeBank: string | null, index: number): string {
+  switch (payeeBank) {
+    case "KBANK":
+      return "/demo/slip-sample.jpg";
+    case "SCB":
+      return "/demo/slip-transport.jpg";
+    case "KTB":
+      return "/demo/slip-shopping.jpg";
+    case "BAY":
+      return "/demo/slip-housing.jpg";
+    default:
+      return DEMO_SLIPS[index % DEMO_SLIPS.length];
+  }
+}
 
 function lowFieldsFrom(issues: string[]) {
   const text = issues.join(" ");
@@ -22,7 +46,8 @@ function lowFieldsFrom(issues: string[]) {
 }
 
 export default async function ReviewPage() {
-  const [queue, cats, settings] = await Promise.all([getReviewQueue(), getCategories(), getSettings()]);
+  const [user, queue, cats, settings] = await Promise.all([requireUser(), getReviewQueue(), getCategories(), getSettings()]);
+  const isDemo = isDemoUser(user.email) || user.email.toLowerCase() === "demo@slipjot.app";
   const options = cats.map((c) => ({ id: c.id, name: c.name, icon: c.icon, color: c.color, slug: c.slug }));
 
   return (
@@ -57,36 +82,47 @@ export default async function ReviewPage() {
       )}
 
       <ul className="space-y-8">
-        {queue.map(({ expense: e, hasImage }) => (
-          <li key={e.id} className="board paper-texture overflow-x-clip" data-testid="review-item">
-            <div className="board-head">
-              <h2 className="min-w-0 line-clamp-2 [overflow-wrap:anywhere]" title={e.payeeName || undefined}>
-                {e.payeeName || "ไม่ทราบผู้รับ"}
-              </h2>
-              <span className="font-plate num shrink-0 text-base font-semibold whitespace-nowrap text-ink">
-                {e.amount > 0 ? formatBaht(e.amount, true) : "฿ –"}
-              </span>
-            </div>
-            <div className="flex flex-col sm:flex-row">
-              {hasImage && (
-                <a
-                  href={`/api/slips/${e.id}/image`}
-                  target="_blank"
-                  rel="noopener"
-                  className="steel-speckled group relative block shrink-0 overflow-hidden border-b border-line sm:w-56 sm:rounded-bl-[15px] sm:border-r sm:border-b-0"
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element -- private per-user image route */}
-                  <img
-                    src={`/api/slips/${e.id}/image`}
-                    alt="เปิดรูปสลิปขนาดเต็ม"
-                    className="mx-auto max-h-72 w-full object-contain object-top sm:max-h-none"
-                  />
-                  {/* High-contrast pill over light/white bank slips */}
-                  <span className="pointer-events-none absolute right-2.5 bottom-2.5 inline-flex items-center gap-1.5 rounded-full bg-ink/90 px-3 py-1 text-xs font-semibold text-white shadow-sm ring-1 ring-white/25 backdrop-blur-xs transition-transform group-hover:scale-105">
-                    <ZoomIn className="size-3.5" aria-hidden /> ขยายดูรูป
-                  </span>
-                </a>
-              )}
+        {queue.map(({ expense: e, hasImage }, idx) => {
+          const isDemoFallback = !hasImage && (isDemo || e.readSource === "fake");
+          const imageSrc = hasImage ? `/api/slips/${e.id}/image` : isDemoFallback ? demoSlipFor(e.payeeBank, idx) : null;
+          return (
+            <li key={e.id} className="board paper-texture overflow-x-clip" data-testid="review-item">
+              <div className="board-head">
+                <h2 className="min-w-0 line-clamp-2 [overflow-wrap:anywhere]" title={e.payeeName || undefined}>
+                  {e.payeeName || "ไม่ทราบผู้รับ"}
+                </h2>
+                <span className="font-plate num shrink-0 text-base font-semibold whitespace-nowrap text-ink">
+                  {e.amount > 0 ? formatBaht(e.amount, true) : "฿ –"}
+                </span>
+              </div>
+              <div className="flex flex-col sm:flex-row">
+                {imageSrc && (
+                  <figure className="steel-speckled flex shrink-0 flex-col overflow-hidden border-b border-line sm:w-56 sm:rounded-bl-[15px] sm:border-r sm:border-b-0">
+                    <a
+                      href={imageSrc}
+                      target="_blank"
+                      rel="noopener"
+                      className="group relative block flex-1 overflow-hidden"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element -- private per-user image route or synthetic demo slip */}
+                      <img
+                        src={imageSrc}
+                        alt={isDemoFallback ? "ข้อมูลสมมติ (ตัวอย่างสลิป)" : "เปิดรูปสลิปขนาดเต็ม"}
+                        className="mx-auto max-h-72 w-full object-contain object-top sm:max-h-none"
+                      />
+                      {isDemoFallback && <span aria-hidden className="paper-overlay pointer-events-none absolute inset-0" />}
+                      {/* High-contrast pill over light/white bank slips */}
+                      <span className="pointer-events-none absolute right-2.5 bottom-2.5 inline-flex items-center gap-1.5 rounded-full bg-ink/90 px-3 py-1 text-xs font-semibold text-white shadow-sm ring-1 ring-white/25 backdrop-blur-xs transition-transform group-hover:scale-105">
+                        <ZoomIn className="size-3.5" aria-hidden /> ขยายดูรูป
+                      </span>
+                    </a>
+                    {isDemoFallback && (
+                      <figcaption className="border-t border-line bg-white/90 px-3 py-1.5 text-center text-xs font-medium text-ink-2">
+                        ข้อมูลสมมติ (ตัวอย่างสลิป)
+                      </figcaption>
+                    )}
+                  </figure>
+                )}
               <div className="min-w-0 flex-1 space-y-4 p-4 sm:p-5">
                 {e.issues.length > 0 && (
                   <ul className="flex flex-wrap gap-1.5" aria-label="สิ่งที่ระบบไม่แน่ใจ">
@@ -142,7 +178,8 @@ export default async function ReviewPage() {
               </div>
             </div>
           </li>
-        ))}
+          );
+        })}
       </ul>
     </div>
   );

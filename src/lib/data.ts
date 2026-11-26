@@ -240,7 +240,7 @@ export interface MonthSummary {
   count: number;
   previousTotal: number;
   byCategory: CategoryTotal[];
-  byDay: { day: number; total: number }[];
+  byDay: { day: number; total: number; count: number }[];
   topPayees: { name: string; total: number; count: number }[];
   reviewCount: number;
 }
@@ -262,6 +262,7 @@ export async function getMonthSummary(month: MonthKey, now = new Date()): Promis
       .select({
         day: sql<number>`extract(day from ${expenses.occurredAt} at time zone 'Asia/Bangkok')::int`,
         total: sql<string>`sum(${expenses.amount})`,
+        count: sql<number>`count(*)::int`,
       })
       .from(expenses)
       .where(inMonth)
@@ -307,14 +308,17 @@ export async function getMonthSummary(month: MonthKey, now = new Date()): Promis
     byCategory.push({ categoryId: null, slug: null, name: "ยังไม่จัดหมวด", icon: "", color: "#8f969e", ...uncategorised, budget: null });
   }
 
-  const dayMap = new Map(dayRows.map((r) => [r.day, Number(r.total)]));
+  const dayMap = new Map(dayRows.map((r) => [r.day, { total: Number(r.total), count: r.count }]));
   return {
     month,
     total: byCategory.reduce((a, c) => a + c.total, 0),
     count: byCategory.reduce((a, c) => a + c.count, 0),
     previousTotal: Number(prevRow?.total ?? 0),
     byCategory: byCategory.sort((a, b) => b.total - a.total),
-    byDay: Array.from({ length: dim }, (_, i) => ({ day: i + 1, total: dayMap.get(i + 1) ?? 0 })),
+    byDay: Array.from({ length: dim }, (_, i) => {
+      const entry = dayMap.get(i + 1);
+      return { day: i + 1, total: entry?.total ?? 0, count: entry?.count ?? 0 };
+    }),
     topPayees: payeeRows.map((r) => ({ name: r.name, total: Number(r.total), count: r.count })),
     reviewCount: review,
   };

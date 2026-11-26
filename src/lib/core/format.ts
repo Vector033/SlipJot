@@ -28,8 +28,9 @@ export function formatDate(d: Date | string): string {
 }
 
 /** Value for <input type="datetime-local"> in Bangkok time. */
-export function toLocalInput(d: Date): string {
-  return new Date(d.getTime() + 7 * 3600_000).toISOString().slice(0, 16);
+export function toLocalInput(d: Date | string): string {
+  const date = typeof d === "string" ? new Date(d) : d;
+  return new Date(date.getTime() + 7 * 3600_000).toISOString().slice(0, 16);
 }
 
 /** Inverse of toLocalInput. */

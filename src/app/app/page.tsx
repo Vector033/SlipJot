@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { AlertTriangle, ArrowRight, ClipboardCheck, TrendingDown, TrendingUp } from "lucide-react";
-import { CategoryIcon } from "@/components/category-icon";
 import { MonthNav } from "@/components/month-nav";
 import { RollingNumber } from "@/components/rolling-number";
 import { SongthaewIllo } from "@/components/songthaew-art";
@@ -9,7 +8,7 @@ import { ThaiPhrases } from "@/components/thai-phrases";
 import { formatMoney } from "@/lib/core/format";
 import { bangkokDay, isMonthKey, monthKeyOf, monthLabel, type MonthKey } from "@/lib/core/month";
 import { getMonthSummary } from "@/lib/data";
-import { CategoryDonut, DailyBars } from "./charts";
+import { CategoryBreakdown, DailyBars } from "./charts";
 
 export const metadata: Metadata = { title: "ภาพรวม" };
 
@@ -123,7 +122,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
           </div>
           {s.total > 0 && (
             <div className="relative z-10 px-3 pb-3">
-              <DailyBars data={s.byDay} today={isCurrent ? bangkokDay(now) : null} />
+              <DailyBars data={s.byDay} today={isCurrent ? bangkokDay(now) : null} month={month} />
             </div>
           )}
         </div>
@@ -153,40 +152,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
               <h2 id="by-cat">ตามหมวด</h2>
               <span className="meta whitespace-nowrap">กดเพื่อดูรายการ</span>
             </div>
-            <div className="flex flex-col items-center gap-6 p-4 sm:flex-row sm:items-start sm:p-5">
-              <CategoryDonut data={s.byCategory} />
-              <ul className="rows w-full min-w-0 sm:flex-1">
-                {s.byCategory
-                  .filter((c) => c.total > 0 || c.budget)
-                  .map((c) => (
-                    <li key={c.name}>
-                      <Link
-                        href={`/app/expenses?${new URLSearchParams({ month, cat: c.categoryId ?? "none" })}`}
-                        className="-mx-2 flex items-center gap-3 rounded-xl px-2 py-2.5 transition-colors hover:bg-steel"
-                      >
-                        <CategoryIcon icon={c.icon} slug={c.slug} color={c.color} size="sm" />
-                        <span className="min-w-0 flex-1">
-                          <span className="flex items-baseline gap-2">
-                            <span className="min-w-0 flex-1 truncate">{c.name}</span>
-                            <span className="font-plate num shrink-0 text-[1.05rem] font-semibold">{formatMoney(c.total)}</span>
-                            <span className="num w-10 text-right text-sm text-ink-3">
-                              {s.total ? Math.round((c.total / s.total) * 100) : 0}%
-                            </span>
-                          </span>
-                          {c.budget && (
-                            <BudgetBar
-                              spent={c.total}
-                              ratio={c.budget.ratio}
-                              level={c.budget.level}
-                              budget={c.budget.budget}
-                            />
-                          )}
-                        </span>
-                      </Link>
-                    </li>
-                  ))}
-              </ul>
-            </div>
+            <CategoryBreakdown categories={s.byCategory} total={s.total} month={month} />
           </section>
 
           <section className="board paper-texture overflow-hidden" aria-labelledby="top-payees">
@@ -226,45 +192,5 @@ export default async function DashboardPage({ searchParams }: PageProps<"/app">)
         <ThaiPhrases text="ตัวเลขทั้งหมดมาจากรายการของคุณเอง| ไม่ใช่คำแนะนำทางการเงิน" />
       </p>
     </div>
-  );
-}
-
-function BudgetBar({
-  spent,
-  ratio,
-  level,
-  budget,
-}: {
-  spent: number;
-  ratio: number;
-  level: "ok" | "near" | "over";
-  budget: number;
-}) {
-  const color = level === "over" ? "thermal-budget-over" : level === "near" ? "thermal-budget-near" : "bg-ok";
-  const remaining = budget - spent;
-  return (
-    <span className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1">
-      <span
-        className="h-2 min-w-16 flex-1 overflow-hidden rounded-full bg-steel-2"
-        role="progressbar"
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-valuenow={Math.round(Math.min(ratio, 1) * 100)}
-        aria-label="ใช้ไปเทียบกับงบ"
-      >
-        <span className={`block h-full rounded-full ${color}`} style={{ width: `${Math.min(ratio, 1) * 100}%` }} />
-      </span>
-      <span className="text-xs whitespace-nowrap text-ink-2">
-        {remaining >= 0 ? (
-          <>
-            เหลือใช้ได้อีก <span className="font-plate num font-semibold text-ink">{formatMoney(remaining)}</span>
-          </>
-        ) : (
-          <span className="font-semibold text-red-deep">
-            เกินงบ <span className="font-plate num">{formatMoney(Math.abs(remaining))}</span>
-          </span>
-        )}
-      </span>
-    </span>
   );
 }

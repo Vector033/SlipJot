@@ -86,8 +86,9 @@ const flip = (run: number, row: number) =>
 export function RouteBoardDemo() {
   const [run, setRun] = useState(0);
   const [idx, setIdx] = useState(0);
-  const [phase, setPhase] = useState<"scan" | "read">("scan");
-  // On phones the board sits below the fold: hold the first read until it is on screen.
+  // Start settled in "read" so SSR and initial hydration never flash "กำลังอ่าน…" or "฿0.00".
+  const [phase, setPhase] = useState<"scan" | "read">("read");
+  // On phones the board sits below the fold: hold the laser until it is on screen.
   const [seen, setSeen] = useState(false);
   const ref = useRef<HTMLElement>(null);
   const slip = SAMPLES[idx];
@@ -99,12 +100,16 @@ export function RouteBoardDemo() {
   }, []);
 
   useEffect(() => {
-    if (!seen) return;
-    // Reduced motion: no scan, the read is there at once.
+    if (run === 0) return;
+    // Reduced motion: no scan delay, the next sample lands at once.
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const t = setTimeout(() => setPhase("read"), reduce ? 0 : 1100);
+    if (reduce) {
+      const t = setTimeout(() => setPhase("read"), 0);
+      return () => clearTimeout(t);
+    }
+    const t = setTimeout(() => setPhase("read"), 1100);
     return () => clearTimeout(t);
-  }, [run, seen]);
+  }, [run]);
 
   const next = () => {
     playSplitFlapTick();
@@ -169,7 +174,13 @@ export function RouteBoardDemo() {
               <p className="relative text-[0.8rem] text-on-red-2">จ่ายให้</p>
               <p
                 className="sign relative min-h-[2.8em] pt-0.5 text-[1.05rem] leading-[1.35] sm:min-h-0 sm:text-2xl"
-                style={phase === "read" ? { animation: "write-on 0.9s cubic-bezier(0.65, 0, 0.35, 1) both" } : { visibility: "hidden" }}
+                style={
+                  phase === "read"
+                    ? run > 0
+                      ? { animation: "write-on 0.9s cubic-bezier(0.65, 0, 0.35, 1) both" }
+                      : undefined
+                    : { visibility: "hidden" }
+                }
               >
                 <ThaiPhrases text={slip.payee} />
               </p>
@@ -182,7 +193,16 @@ export function RouteBoardDemo() {
               <span aria-hidden className="pointer-events-none absolute inset-x-0 top-1/2 h-px bg-black/25" />
               <p className="relative mb-1 text-[0.8rem] text-on-red-2">ยอด</p>
               <span className="plate relative text-[1.6rem] sm:text-[2rem]">
-                ฿{phase === "read" ? <RollingNumber text={slip.amount} delayMs={250} /> : <span className="num">0.00</span>}
+                ฿
+                {phase === "read" ? (
+                  run > 0 ? (
+                    <RollingNumber text={slip.amount} delayMs={250} />
+                  ) : (
+                    <span className="font-plate num">{slip.amount}</span>
+                  )
+                ) : (
+                  <span className="num">0.00</span>
+                )}
               </span>
               <p className="relative mt-2 text-[0.75rem] leading-relaxed text-on-red-2">
                 <span className="inline-block">{slip.when}</span>
@@ -208,8 +228,14 @@ export function RouteBoardDemo() {
                     <li
                       key={s}
                       aria-current={on ? "true" : undefined}
-                      className={`rounded-full border px-2 py-0.5 text-[0.8rem] whitespace-nowrap ${on ? "border-plate font-semibold" : "border-white/25 text-on-red-2"}`}
-                      style={on ? { animation: "stop-light 0.35s ease-out 1.15s both" } : undefined}
+                      className={`rounded-full border px-2 py-0.5 text-[0.8rem] whitespace-nowrap ${
+                        on
+                          ? run === 0
+                            ? "border-plate bg-plate font-semibold text-ink"
+                            : "border-plate font-semibold"
+                          : "border-white/25 text-on-red-2"
+                      }`}
+                      style={on && run > 0 ? { animation: "stop-light 0.35s ease-out 1.15s both" } : undefined}
                     >
                       {s}
                     </li>
