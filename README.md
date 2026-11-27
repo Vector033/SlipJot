@@ -2,7 +2,7 @@
 
 **ถ่ายสลิป แล้วระบบบันทึกรายจ่ายและจัดหมวดให้.** Send the transfer slips you already have, and SlipJot turns them into a categorised expense log.
 
-**Live:** https://slipjot.vercel.app (press **ลองดูด้วยบัญชีเดโม** on the login page to open a shared demo account with fictional data)
+**Live:** https://slipjot.vercel.app (press **ลองดูด้วยบัญชีเดโม** on the login page to open a shared demo account with fictional data) · **[▶ Watch 16s Feature Showcase (1920×1080)](docs/demo/slipjot-showcase.mp4)**
 
 Thais pay almost everything by mobile banking and PromptPay, so the slips end up piling up in the photo album and nobody
 tracks where the money went. Expense apps that need every payment typed in get abandoned within a week. SlipJot reads the
